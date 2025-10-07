@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnkuOn2 – Investments</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://sdk.cashfree.com/js/v3/payments.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .btn-primary {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .tab {
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 500px;
+            position: relative;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-content.hidden {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #4b5563;
+        }
+
+        .modal-close:hover {
+            color: #2563eb;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 90%;
+            width: 400px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            margin-left: 16px;
+            font-size: 16px;
+        }
+
+        .toast-close:hover {
+            color: #e5e7eb;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 16px auto;
+            border: 4px solid #f3f3f3;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            background: #f3f3f3;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+        }
+
+        .progress-step.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .section-header {
+            cursor: pointer;
+        }
+
+        .payment-method-box {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .payment-method-box.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .payment-method-box:hover {
+            border-color: #2563eb;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2563eb;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .input-valid {
+            border-color: #10b981 !important;
+        }
+
+        .input-invalid {
+            border-color: #ef4444 !important;
+        }
+
+        /* Dark mode styles */
+        .dark body {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+
+        .dark .bg-white {
+            background-color: #374151;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #4b5563;
+        }
+
+        .dark .text-gray-800 {
+            color: #d1d5db;
+        }
+
+        .dark .text-gray-600 {
+            color: #9ca3af;
+        }
+
+        .dark .border-gray-300 {
+            border-color: #6b7280;
+        }
+
+        /* Add more dark mode overrides as needed */
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback, memo } = React;
+        const { createRoot } = ReactDOM;
+
+        // Constants
+        const MIN_INVEST_AMOUNT = 10000;
+        const MONTHLY_RETURN_RATE = 0.02;
+        const OTP_RESEND_COOLDOWN = 60;
+        const WITHDRAWAL_CANCELLATION_WINDOW_MS = 2 * 24 * 60 * 60 * 1000; // 2 days
+        const WITHDRAWAL_PROCESSING_DAYS = 3;
+
+        // Error Boundary Component
+        class ErrorBoundary extends React.Component {
+            state = { error: null };
+            static getDerivedStateFromError(error) {
+                return { error: error.message };
+            }
+            render() {
+                if (this.state.error) {
+                    return (
+                        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+                            <h1 className="text-4xl font-extrabold text-red-600 mb-8">Something Went Wrong</h1>
+                            <div className="mb-6 p-6 bg-red-100 text-red-800 rounded-lg shadow-lg max-w-md text-center">
+                                <p>{this.state.error}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="mt-4 p-2 bg-blue-600 text-white rounded-lg btn-primary"
+                                >
+                                    Retry
+                                </button>
+                            </div>
+                        </div>
+                    );
+                }
+                return this.props.children;
+            }
+        }
+
+        // Mock backend data - Now persisted via localStorage
+        const loadMockUsers = () => {
+            const stored = localStorage.getItem('mockUsers');
+            return stored ? JSON.parse(stored) : {};
+        };
+
+        const saveMockUsers = (users) => {
+            localStorage.setItem('mockUsers', JSON.stringify(users));
+        };
+
+        let mockUsers = loadMockUsers();
+
+        // Mock resources data
+        const resourcesData = {
+            information: [
+                { id: 1, title: 'App Update', content: 'Version 4.2 improves payment clarity for QR and UPI Request methods.' },
+                { id: 2, title: 'Investment Tip', content: 'Start small, diversify, and stay consistent for long-term wealth.' },
+            ],
+            notes: [
+                { id: 1, content: 'Use QR code for instant payments or UPI Request for direct approval.' },
+                { id: 2, content: 'Verify your UPI ID to ensure smooth transactions.' },
+            ],
+            quotes: [
+                { id: 1, content: '"Investing should be more like watching paint dry or watching grass grow." - Paul Samuelson' },
+                { id: 2, content: '"The best investment you can make is in yourself." - Warren Buffett' },
+            ],
+        };
+
+        // Sound effects
+        const clickSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/click.wav');
+        clickSound.volume = 0.5;
+        clickSound.preload = 'auto';
+        const notificationSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/notification.wav');
+        notificationSound.volume = 0.5;
+        notificationSound.preload = 'auto';
+        const depositSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/deposit.wav');
+        depositSound.volume = 0.5;
+        depositSound.preload = 'auto';
+
+        // Debounce utility
+        const useDebounce = (value, delay) => {
+            const [debouncedValue, setDebouncedValue] = useState(value);
+            useEffect(() => {
+                const handler = setTimeout(() => setDebouncedValue(value), delay);
+                return () => clearTimeout(handler);
+            }, [value, delay]);
+            return debouncedValue;
+        };
+
+        // Sanitize input utility
+        const sanitizeInput = (input) => input.replace(/[<>&'"]/g, '');
+
+        // Clock Component
+        const Clock = memo(() => {
+            const [currentTime, setCurrentTime] = useState(new Date());
+            useEffect(() => {
+                const timer = setInterval(() => setCurrentTime(new Date()), 10000); // Update every 10 seconds
+                return () => clearInterval(timer);
+            }, []);
+            const formatDateTime = (date) => new Intl.DateTimeFormat('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZone: 'Asia/Kolkata',
+                timeZoneName: 'short',
+            }).format(date);
+            return <p className="text-gray-600 text-base dark:text-gray-400">{formatDateTime(currentTime)}</p>;
+        });
+
+        // Login Form Component
+        const LoginForm = memo(({ setUser, setMessage, setLoading, isSoundEnabled, playSound }) => {
+            const [formState, setFormState] = useState({ email: '', name: '', otp: '' });
+            const [otpSent, setOtpSent] = useState(false);
+            const [resendCooldown, setResendCooldown] = useState(0);
+
+            useEffect(() => {
+                if (otpSent && resendCooldown > 0) {
+                    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+                    return () => clearTimeout(timer);
+                }
+            }, [otpSent, resendCooldown]);
+
+            const sendOtp = useCallback((e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                let { email, name } = formState;
+                const trimmedEmail = sanitizeInput(email.trim());
+                const trimmedName = sanitizeInput(name.trim());
+                if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+                    setMessage('Please enter a valid email address.');
+                    return;
+                }
+                if (!trimmedName) {
+                    setMessage('Please enter your full name.');
+                    return;
+                }
+                setLoading(true);
+                const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                mockUsers[trimmedEmail] = mockUsers[trimmedEmail] || {
+                    name: trimmedName,
+                    otp: null,
+                    verified: false,
+                    investments: [],
+                    withdrawals: [],
+                    upiId: '',
+                    kycStatus: 'Not Verified'
+                };
+                mockUsers[trimmedEmail].otp = generatedOtp;
+                mockUsers[trimmedEmail].name = trimmedName;
+                saveMockUsers(mockUsers);
+                setTimeout(() => {
+                    setOtpSent(true);
+                    setResendCooldown(OTP_RESEND_COOLDOWN);
+                    setMessage(`OTP sent to ${trimmedEmail}.`); // Removed console.log for security
+                    setLoading(false);
+                    playSound(notificationSound);
+                }, 1000);
+            }, [formState, setMessage, setLoading, playSound]);
+
+            const verifyOtp = useCallback((e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                const { email, otp } = formState;
+                const trimmedEmail = sanitizeInput(email.trim());
+                if (!mockUsers[trimmedEmail] || mockUsers[trimmedEmail].otp !== otp) {
+                    setMessage('Invalid OTP. Please try again.');
+                    return;
+                }
+                setLoading(true);
+                setTimeout(() => {
+                    mockUsers[trimmedEmail].verified = true;
+                    saveMockUsers(mockUsers);
+                    const userData = { email: trimmedEmail, ...mockUsers[trimmedEmail] };
+                    setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    setOtpSent(false);
+                    setFormState({ email: '', name: '', otp: '' });
+                    setMessage('Login successful! Welcome to AnkuOn2.');
+                    setLoading(false);
+                    playSound(notificationSound);
+                }, 1000);
+            }, [formState, setUser, setMessage, setLoading, playSound]);
+
+            return (
+                <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 dark:text-gray-200">{otpSent ? 'Enter OTP' : 'Login / Register'}</h2>
+                    {!otpSent ? (
+                        <form onSubmit={sendOtp} className="space-y-4">
+                            <div>
+                                <label htmlFor="name" className="block text-base font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Enter your full name"
+                                    value={formState.name}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required
+                                    autoFocus
+                                    aria-required="true"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="email" className="block text-base font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={formState.email}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, email: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required
+                                    aria-required="true"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full p-3 bg-blue-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                disabled={setLoading}
+                                aria-label="Send OTP"
+                            >
+                                <i className="fas fa-paper-plane mr-2"></i> Send OTP
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={verifyOtp} className="space-y-4">
+                            <div>
+                                <label htmlFor="otp" className="block text-base font-medium text-gray-700 dark:text-gray-300">OTP</label>
+                                <input
+                                    id="otp"
+                                    type="text"
+                                    placeholder="Enter 6-digit OTP"
+                                    value={formState.otp}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, otp: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required
+                                    maxLength="6"
+                                    autoFocus
+                                    aria-required="true"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full p-3 bg-blue-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                disabled={setLoading}
+                                aria-label="Verify OTP"
+                            >
+                                <i className="fas fa-check mr-2"></i> Verify OTP
+                            </button>
+                            <button
+                                type="button"
+                                onClick={sendOtp}
+                                className="w-full p-3 bg-green-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                disabled={resendCooldown > 0 || setLoading}
+                                aria-label="Resend OTP"
+                            >
+                                <i className="fas fa-redo mr-2"></i> {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
+                            </button>
+                            <button
+                                onClick={() => { playSound(clickSound); setOtpSent(false); setMessage(''); }}
+                                className="w-full p-3 bg-gray-500 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                disabled={setLoading}
+                                aria-label="Go back"
+                            >
+                                <i className="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                        </form>
+                    )}
+                </div>
+            );
+        });
+
+        // Resources Component
+        const Resources = memo(({ activeTab, setActiveTab, playSound }) => (
+            <div className="mt-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center dark:text-gray-200">
+                    <i className="fas fa-info-circle mr-2 text-blue-600"></i> Resources
+                </h3>
+                <div className="flex mb-4 border-b border-gray-200 dark:border-gray-600">
+                    {['information', 'notes', 'quotes'].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => { playSound(clickSound); setActiveTab(tab); }}
+                            className={`flex-1 p-3 text-gray-700 font-medium text-base dark:text-gray-300 ${activeTab === tab ? 'tab-active' : 'tab'}`}
+                            aria-label={`View ${tab}`}
+                        >
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg shadow-sm dark:bg-gray-700">
+                    {resourcesData[activeTab].length === 0 ? (
+                        <p className="text-gray-600 text-base dark:text-gray-400">No {activeTab} available.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {resourcesData[activeTab].map((item) => (
+                                <li key={item.id} className="text-gray-800 text-base dark:text-gray-200">
+                                    {item.title ? <strong>{item.title}: </strong> : null}
+                                    {item.content}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </div>
+        ));
+
+        // Dashboard Component
+        const Dashboard = memo(({ user }) => {
+            const calculateTotalInvestments = useMemo(() => {
+                if (!user || user.investments.length === 0) return { total: 0, returns: 0 };
+                const activeInvestments = user.investments.filter(
+                    (inv) => !user.withdrawals.some((wd) => wd.investmentId === inv.id && wd.status === 'Completed')
+                );
+                const total = activeInvestments.reduce((sum, inv) => sum + inv.amount, 0);
+                const returns = activeInvestments.reduce((sum, inv) => sum + inv.returns, 0);
+                return { total, returns };
+            }, [user]);
+
+            return (
+                <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md dark:from-gray-800 dark:to-gray-900">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center dark:text-gray-200">
+                        <i className="fas fa-chart-pie mr-2 text-blue-600"></i> Investment Summary
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="p-4 bg-white rounded-lg shadow-sm flex items-center dark:bg-gray-700">
+                            <i className="fas fa-rupee-sign text-blue-600 mr-3 text-xl"></i>
+                            <div>
+                                <p className="text-gray-600 dark:text-gray-400">Total Invested</p>
+                                <p className="text-2xl font-bold text-blue-600">₹{calculateTotalInvestments.total.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                        <div className="p-4 bg-white rounded-lg shadow-sm flex items-center dark:bg-gray-700">
+                            <i className="fas fa-chart-line text-green-600 mr-3 text-xl"></i>
+                            <div>
+                                <p className="text-gray-600 dark:text-gray-400">Total Returns</p>
+                                <p className="text-2xl font-bold text-green-600">₹{calculateTotalInvestments.returns.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p className="mt-4 text-gray-600 text-base dark:text-gray-400">Projected returns: 2% monthly, compounded.</p>
+                </div>
+            );
+        });
+
+        // Modal Component
+        const Modal = memo(({ modal, setModal, confirmPayment, confirmUpiCollect, confirmWithdraw, confirmCancelWithdrawal, confirmUpdateProfile, confirmKycVerification, loading, playSound }) => {
+            if (!modal.open) return null;
+            let title, content, onConfirm, showCancel = true;
+            switch (modal.type) {
+                case 'showQRCode':
+                    title = 'Scan QR Code to Pay';
+                    content = (
+                        <div className="text-center">
+                            <div className="progress-bar">
+                                <div className="progress-step">Enter Amount</div>
+                                <div className="progress-step active">Scan QR</div>
+                                <div className="progress-step">Confirm</div>
+                            </div>
+                            <p className="text-gray-700 text-lg mb-4 font-semibold dark:text-gray-300">
+                                Pay ₹{modal.data.amount.toLocaleString('en-IN')} to invest
+                            </p>
+                            <img
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(modal.data.qrData)}`}
+                                alt={`QR Code for paying ₹${modal.data.amount.toLocaleString('en-IN')}`}
+                                className="qr-code"
+                                aria-describedby="qr-instructions"
+                            />
+                            <div id="qr-instructions" className="mt-4 text-left text-gray-600 bg-gray-50 p-4 rounded-lg dark:text-gray-400 dark:bg-gray-700">
+                                <p className="font-semibold mb-2 text-base">Steps to Pay:</p>
+                                <ol className="list-decimal list-inside space-y-2 text-base">
+                                    <li>Open your UPI app (e.g., PhonePe, Google Pay).</li>
+                                    <li>Scan the QR code above.</li>
+                                    <li>Confirm ₹{modal.data.amount.toLocaleString('en-IN')} payment.</li>
+                                </ol>
+                            </div>
+                            <p className="text-gray-500 text-sm mt-4 dark:text-gray-500">Order ID: {modal.data.orderId}</p>
+                            {loading && (
+                                <div className="mt-4 flex items-center justify-center">
+                                    <div className="spinner mr-2"></div>
+                                    <span>Checking payment...</span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                    onConfirm = confirmPayment;
+                    break;
+                case 'upiCollectPending':
+                    title = 'Approve UPI Request';
+                    content = (
+                        <div className="text-center">
+                            <div className="progress-bar">
+                                <div className="progress-step">Enter Amount</div>
+                                <div className="progress-step active">Approve</div>
+                                <div className="progress-step">Confirm</div>
+                            </div>
+                            <p className="text-gray-700 text-lg mb-4 font-semibold dark:text-gray-300">
+                                Approve ₹{modal.data.amount.toLocaleString('en-IN')} to {modal.data.upiId}
+                            </p>
+                            <div className="mt-4 text-left text-gray-600 bg-gray-50 p-4 rounded-lg dark:text-gray-400 dark:bg-gray-700">
+                                <p className="font-semibold mb-2 text-base">Steps to Approve:</p>
+                                <ol className="list-decimal list-inside space-y-2 text-base">
+                                    <li>Open your UPI app (e.g., PhonePe, Google Pay).</li>
+                                    <li>Find the payment request from AnkuOn2.</li>
+                                    <li>Approve ₹{modal.data.amount.toLocaleString('en-IN')}.</li>
+                                </ol>
+                            </div>
+                            <p className="text-gray-500 text-sm mt-4 dark:text-gray-500">Order ID: {modal.data.orderId}</p>
+                            {loading && (
+                                <div className="mt-4 flex items-center justify-center">
+                                    <div className="spinner mr-2"></div>
+                                    <span>Checking approval...</span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                    onConfirm = confirmUpiCollect;
+                    break;
+                case 'confirmWithdraw':
+                    title = 'Confirm Withdrawal';
+                    content = (
+                        <p className="text-gray-600 text-base dark:text-gray-400">
+                            Withdraw ₹{modal.data.amount.toLocaleString('en-IN')} to {modal.data.upiId}?
+                        </p>
+                    );
+                    onConfirm = confirmWithdraw;
+                    break;
+                case 'confirmCancelWithdrawal':
+                    title = 'Cancel Withdrawal';
+                    content = <p className="text-gray-600 text-base dark:text-gray-400">Cancel this withdrawal request?</p>;
+                    onConfirm = confirmCancelWithdrawal;
+                    break;
+                case 'confirmUpdateProfile':
+                    title = 'Confirm Profile Update';
+                    content = (
+                        <p className="text-gray-600 text-base dark:text-gray-400">
+                            Update name to {modal.data.name}? {modal.data.upiId ? `Update UPI ID to ${modal.data.upiId}?` : ''}
+                        </p>
+                    );
+                    onConfirm = confirmUpdateProfile;
+                    break;
+                case 'confirmKyc':
+                    title = 'Confirm KYC';
+                    content = <p className="text-gray-600 text-base dark:text-gray-400">Proceed with KYC verification?</p>;
+                    onConfirm = confirmKycVerification;
+                    break;
+                default:
+                    return null;
+            }
+            return (
+                <div className={`modal-overlay ${modal.open ? 'fade-in' : 'hidden'}`}>
+                    <div className={`modal-content ${modal.open ? 'fade-in' : 'hidden'} dark:bg-gray-800`}>
+                        <i
+                            className="fas fa-times modal-close"
+                            onClick={() => {
+                                playSound(clickSound);
+                                setModal({ open: false, type: '', data: null });
+                            }}
+                            aria-label="Close modal"
+                        ></i>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4 dark:text-gray-200">{title}</h3>
+                        {content}
+                        <div className="flex justify-end space-x-4 mt-6">
+                            {showCancel && (
+                                <button
+                                    onClick={() => {
+                                        playSound(clickSound);
+                                        setModal({ open: false, type: '', data: null });
+                                    }}
+                                    className="p-3 bg-gray-500 text-white rounded-lg btn-primary text-base"
+                                    disabled={loading}
+                                    aria-label="Cancel"
+                                >
+                                    Cancel
+                                </button>
+                            )}
+                            <button
+                                onClick={() => {
+                                    playSound(clickSound);
+                                    onConfirm();
+                                }}
+                                className="p-3 bg-blue-600 text-white rounded-lg btn-primary text-base"
+                                disabled={loading}
+                                aria-label="Confirm"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+
+        // Investment List Component
+        const InvestmentList = memo(({ user, handleWithdraw, handleCancelWithdrawal, selectedInvestmentId, setSelectedInvestmentId, showAllInvestments, setShowAllInvestments, loading, playSound }) => {
+            const ITEMS_PER_PAGE = 3;
+            const calculateProjectedReturns = useCallback((investment) => {
+                const returns = [];
+                for (let month = 1; month <= 12; month++) {
+                    const monthlyReturn = investment.amount * (Math.pow(1 + MONTHLY_RETURN_RATE, month) - 1);
+                    returns.push({
+                        month,
+                        return: monthlyReturn.toFixed(2),
+                        total: (investment.amount + monthlyReturn).toFixed(2),
+                    });
+                }
+                return returns;
+            }, []);
+
+            return (
+                <>
+                    {user.investments.length === 0 ? (
+                        <p className="text-gray-600 text-base flex items-center dark:text-gray-400">
+                            <i className="fas fa-info-circle mr-2 text-blue-600"></i> No investments yet. Start investing now!
+                        </p>
+                    ) : (
+                        <>
+                            <ul className="mb-6 space-y-4">
+                                {user.investments
+                                    .slice(0, showAllInvestments ? user.investments.length : ITEMS_PER_PAGE)
+                                    .map((inv) => {
+                                        const pendingWithdrawal = user.withdrawals.find(
+                                            (wd) => wd.investmentId === inv.id && wd.status === 'Pending'
+                                        );
+                                        const isDetailsVisible = selectedInvestmentId === inv.id;
+                                        const projectedReturns = calculateProjectedReturns(inv);
+                                        return (
+                                            <li key={inv.id} className="p-4 bg-gray-50 rounded-lg shadow-sm dark:bg-gray-700">
+                                                <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{inv.amount.toLocaleString('en-IN')}</p>
+                                                <p className="text-gray-800 text-base dark:text-gray-200">Returns (2% monthly): ₹{inv.returns.toLocaleString('en-IN')}</p>
+                                                <p className="text-gray-600 text-sm dark:text-gray-400">Date: {new Date(inv.date).toLocaleDateString('en-IN')}</p>
+                                                <p className="text-gray-600 text-sm dark:text-gray-400">Order ID: {inv.order_id || 'N/A'}</p>
+                                                <p className="text-gray-600 text-sm dark:text-gray-400">Status: {inv.status}</p>
+                                                <div className="mt-3 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
+                                                    {pendingWithdrawal ? (
+                                                        isWithdrawalCancellable(pendingWithdrawal.requested) ? (
+                                                            <button
+                                                                onClick={() => handleCancelWithdrawal(pendingWithdrawal.id)}
+                                                                className="p-2 bg-red-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                                disabled={loading}
+                                                                aria-label="Cancel withdrawal"
+                                                            >
+                                                                <i className="fas fa-ban mr-2"></i> Cancel Withdrawal
+                                                            </button>
+                                                        ) : (
+                                                            <p className="text-orange-600 text-base flex items-center dark:text-orange-400">
+                                                                <i className="fas fa-clock mr-2"></i> Withdrawal processing
+                                                            </p>
+                                                        )
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => handleWithdraw(inv.id)}
+                                                            className="p-2 bg-yellow-500 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                            disabled={user.withdrawals.some((wd) => wd.investmentId === inv.id) || loading || user.kycStatus !== 'Verified'}
+                                                            aria-label="Request withdrawal"
+                                                        >
+                                                            <i className="fas fa-money-bill-wave mr-2"></i> Withdraw
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => {
+                                                            playSound(clickSound);
+                                                            setSelectedInvestmentId(isDetailsVisible ? null : inv.id);
+                                                        }}
+                                                        className="p-2 bg-green-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                        disabled={loading}
+                                                        aria-label={isDetailsVisible ? 'Hide details' : 'View details'}
+                                                    >
+                                                        <i className="fas fa-eye mr-2"></i> {isDetailsVisible ? 'Hide Details' : 'View Details'}
+                                                    </button>
+                                                </div>
+                                                {isDetailsVisible && (
+                                                    <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-inner dark:bg-gray-600">
+                                                        <h4 className="text-base font-semibold text-gray-800 mb-2 dark:text-gray-200">Investment Details</h4>
+                                                        <p className="text-gray-800 text-base dark:text-gray-200">Date: {new Date(inv.date).toLocaleDateString('en-IN')}</p>
+                                                        <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{inv.amount.toLocaleString('en-IN')}</p>
+                                                        <p className="text-gray-800 text-base dark:text-gray-200">Order ID: {inv.order_id || 'N/A'}</p>
+                                                        <h5 className="text-base font-semibold text-gray-800 mt-3 mb-1 dark:text-gray-200">Projected Returns (2% monthly)</h5>
+                                                        {projectedReturns.length === 0 ? (
+                                                            <p className="text-gray-600 text-base dark:text-gray-400">No returns projected yet.</p>
+                                                        ) : (
+                                                            <ul className="space-y-2">
+                                                                {projectedReturns.slice(0, 3).map((ret) => (
+                                                                    <li key={ret.month} className="text-gray-800 text-base dark:text-gray-200">
+                                                                        Month {ret.month}: ₹{ret.return} (Total: ₹{ret.total})
+                                                                    </li>
+                                                                ))}
+                                                                {projectedReturns.length > 3 && (
+                                                                    <p className="text-gray-600 text-sm dark:text-gray-400">...and more (up to 12 months)</p>
+                                                                )}
+                                                            </ul>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
+                            </ul>
+                            {user.investments.length > ITEMS_PER_PAGE && (
+                                <button
+                                    onClick={() => { playSound(clickSound); setShowAllInvestments(!showAllInvestments); }}
+                                    className="p-2 text-blue-600 hover:text-blue-800 font-medium text-base flex items-center dark:text-blue-400 dark:hover:text-blue-300"
+                                    aria-label={showAllInvestments ? 'Show fewer investments' : 'Show more investments'}
+                                >
+                                    <i className="fas fa-arrow-down mr-2"></i> {showAllInvestments ? 'Show Less' : 'See More'}
+                                </button>
+                            )}
+                        </>
+                    )}
+                </>
+            );
+        });
+
+        // Withdrawal List Component
+        const WithdrawalList = memo(({ user, showAllWithdrawals, setShowAllWithdrawals, playSound }) => {
+            const ITEMS_PER_PAGE = 3;
+            return (
+                <>
+                    {user.withdrawals.length === 0 ? (
+                        <p className="text-gray-600 text-base flex items-center dark:text-gray-400">
+                            <i className="fas fa-info-circle mr-2 text-blue-600"></i> No withdrawal requests yet.
+                        </p>
+                    ) : (
+                        <>
+                            <ul className="mb-6 space-y-4">
+                                {user.withdrawals
+                                    .slice(0, showAllWithdrawals ? user.withdrawals.length : ITEMS_PER_PAGE)
+                                    .map((wd) => (
+                                        <li key={wd.id} className="p-4 bg-gray-50 rounded-lg shadow-sm dark:bg-gray-700">
+                                            <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{wd.amount.toLocaleString('en-IN')}</p>
+                                            <p className="text-gray-800 text-base dark:text-gray-200">Status: {wd.status}</p>
+                                            <p className="text-gray-600 text-sm dark:text-gray-400">Requested: {new Date(wd.requested).toLocaleDateString('en-IN')}</p>
+                                            <p className="text-gray-600 text-sm dark:text-gray-400">UPI ID: {wd.upiId}</p>
+                                            {wd.status === 'Pending' && (
+                                                <p className="text-gray-600 text-sm dark:text-gray-400">
+                                                    Processing Until: {new Date(wd.processingEnd).toLocaleDateString('en-IN')}
+                                                </p>
+                                            )}
+                                            {wd.status === 'Pending' && !isWithdrawalCancellable(wd.requested) && (
+                                                <p className="mt-2 text-orange-600 text-base flex items-center dark:text-orange-400">
+                                                    <i className="fas fa-clock mr-2"></i> Withdrawal processing
+                                                </p>
+                                            )}
+                                        </li>
+                                    ))}
+                            </ul>
+                            {user.withdrawals.length > ITEMS_PER_PAGE && (
+                                <button
+                                    onClick={() => { playSound(clickSound); setShowAllWithdrawals(!showAllWithdrawals); }}
+                                    className="p-2 text-blue-600 hover:text-blue-800 font-medium text-base flex items-center dark:text-blue-400 dark:hover:text-blue-300"
+                                    aria-label={showAllWithdrawals ? 'Show fewer withdrawals' : 'Show more withdrawals'}
+                                >
+                                    <i className="fas fa-arrow-down mr-2"></i> {showAllWithdrawals ? 'Show Less' : 'See More'}
+                                </button>
+                            )}
+                        </>
+                    )}
+                </>
+            );
+        });
+
+        // Main App Component
+        const App = () => {
+            const [user, setUser] = useState(() => {
+                const stored = localStorage.getItem('user');
+                return stored ? JSON.parse(stored) : null;
+            });
+            const [message, setMessage] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [isSoundEnabled, setIsSoundEnabled] = useState(() => localStorage.getItem('isSoundEnabled') !== 'false');
+            const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('isDarkMode') === 'true');
+            const [audioError, setAudioError] = useState('');
+            const [activeTab, setActiveTab] = useState('information');
+            const [showAllInvestments, setShowAllInvestments] = useState(false);
+            const [showAllWithdrawals, setShowAllWithdrawals] = useState(false);
+            const [selectedInvestmentId, setSelectedInvestmentId] = useState(null);
+            const [showInvestments, setShowInvestments] = useState(true);
+            const [showWithdrawals, setShowWithdrawals] = useState(true);
+            const [modal, setModal] = useState({ open: false, type: '', data: null });
+            const [toast, setToast] = useState({ message: '', type: 'success' });
+            const [toastQueue, setToastQueue] = useState([]);
+            const [investmentAmount, setInvestmentAmount] = useState('');
+            const [upiId, setUpiId] = useState('');
+            const [updatedName, setUpdatedName] = useState('');
+            const [paymentMethod, setPaymentMethod] = useState('qr');
+            const [userUpiIdForCollect, setUserUpiIdForCollect] = useState('');
+            const debouncedUpiId = useDebounce(userUpiIdForCollect, 300);
+            const [isUpiValid, setIsUpiValid] = useState(null);
+
+            // Persist sound and dark mode settings
+            useEffect(() => {
+                localStorage.setItem('isSoundEnabled', isSoundEnabled);
+            }, [isSoundEnabled]);
+
+            useEffect(() => {
+                localStorage.setItem('isDarkMode', isDarkMode);
+                if (isDarkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [isDarkMode]);
+
+            // Unlock audio on first interaction
+            useEffect(() => {
+                const unlockAudio = () => {
+                    if (isSoundEnabled) {
+                        clickSound.play().catch(() => { });
+                        notificationSound.play().catch(() => { });
+                        depositSound.play().catch(() => { });
+                        [clickSound, notificationSound, depositSound].forEach(audio => { audio.pause(); audio.currentTime = 0; });
+                        window.removeEventListener('click', unlockAudio);
+                    }
+                };
+                window.addEventListener('click', unlockAudio);
+                return () => window.removeEventListener('click', unlockAudio);
+            }, [isSoundEnabled]);
+
+            // UPI ID validation (real-time)
+            useEffect(() => {
+                if (userUpiIdForCollect) {
+                    const isValid = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(userUpiIdForCollect);
+                    setIsUpiValid(isValid);
+                } else {
+                    setIsUpiValid(null);
+                }
+            }, [userUpiIdForCollect]); // Removed debounce for real-time feedback
+
+            // Reset UPI ID when switching to QR
+            useEffect(() => {
+                if (paymentMethod === 'qr') {
+                    setUserUpiIdForCollect('');
+                    setIsUpiValid(null);
+                }
+            }, [paymentMethod]);
+
+            // Update returns periodically with accurate month calculation
+            const monthsBetween = (startDate, endDate) => {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                return (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + (end.getDate() >= start.getDate() ? 0 : -1);
+            };
+
+            const calculateCompoundReturns = useCallback((investment) => {
+                const months = monthsBetween(investment.date, new Date());
+                const totalReturn = investment.amount * (Math.pow(1 + MONTHLY_RETURN_RATE, months) - 1);
+                return totalReturn.toFixed(2);
+            }, []);
+
+            useEffect(() => {
+                if (user) {
+                    const interval = setInterval(() => {
+                        try {
+                            mockUsers[user.email].investments = mockUsers[user.email].investments.map((inv) => ({
+                                ...inv,
+                                returns: parseFloat(calculateCompoundReturns(inv)),
+                            }));
+                            saveMockUsers(mockUsers);
+                            setUser({ ...user, investments: mockUsers[user.email].investments });
+                        } catch (error) {
+                            console.error('Returns calculation error:', error);
+                        }
+                    }, 1000 * 60 * 60 * 24); // Update daily
+                    return () => clearInterval(interval);
+                }
+            }, [user, calculateCompoundReturns]);
+
+            // Simulate withdrawal processing
+            useEffect(() => {
+                if (user) {
+                    const interval = setInterval(() => {
+                        try {
+                            mockUsers[user.email].withdrawals = mockUsers[user.email].withdrawals.map((wd) => {
+                                if (wd.status === 'Pending' && new Date() >= new Date(wd.processingEnd)) {
+                                    return { ...wd, status: 'Completed' };
+                                }
+                                return wd;
+                            });
+                            saveMockUsers(mockUsers);
+                            setUser({ ...user, withdrawals: mockUsers[user.email].withdrawals });
+                        } catch (error) {
+                            console.error('Withdrawal processing error:', error);
+                        }
+                    }, 1000 * 60); // Check every minute
+                    return () => clearInterval(interval);
+                }
+            }, [user]);
+
+            // Toast management
+            useEffect(() => {
+                let timer;
+                if (toast.message) {
+                    timer = setTimeout(() => {
+                        setToast({ message: '', type: 'success' });
+                        if (toastQueue.length > 0) {
+                            const nextToast = toastQueue[0];
+                            setToast(nextToast);
+                            setToastQueue((prev) => prev.slice(1));
+                            if (isSoundEnabled) {
+                                notificationSound.play().catch((err) => console.error('Sound error:', err));
+                            }
+                        }
+                    }, 7000);
+                }
+                return () => clearTimeout(timer);
+            }, [toast, toastQueue, isSoundEnabled]);
+
+            const showToast = useCallback((message, type = 'success') => {
+                if (toast.message) {
+                    if (!toastQueue.some((t) => t.message === message)) {
+                        setToastQueue((prev) => [...prev, { message, type }]);
+                    }
+                } else {
+                    setToast({ message, type });
+                    if (isSoundEnabled) {
+                        notificationSound.play().catch((err) => console.error('Sound error:', err));
+                    }
+                }
+            }, [toast.message, toastQueue, isSoundEnabled]);
+
+            const dismissToast = useCallback(() => {
+                playSound(clickSound);
+                setToast({ message: '', type: 'success' });
+                setToastQueue([]);
+            }, [playSound]);
+
+            const playSound = useCallback((audio) => {
+                if (isSoundEnabled) {
+                    audio.play().catch((err) => {
+                        console.error('Sound error:', err);
+                        setAudioError('Audio playback failed. Please enable sound permissions.');
+                    });
+                }
+            }, [isSoundEnabled]);
+
+            // Investment and withdrawal handlers
+            const generateDynamicQRCode = useCallback(async (amount, email) => {
+                try {
+                    // Mock for demo; in real, use Cashfree
+                    const mockResponse = {
+                        status: 'SUCCESS',
+                        qrData: `upi://pay?pa=ankuon@bank&pn=AnkuOn&am=${amount}&cu=INR&tn=Investment_${Date.now()}`,
+                        order_id: `order_${Date.now()}`,
+                    };
+                    return mockResponse;
+                } catch (error) {
+                    console.error('QR code generation error:', error);
+                    return { status: 'ERROR', message: 'Failed to generate QR code. Please try again.' };
+                }
+            }, []);
+
+            const sendUpiCollectRequest = useCallback(async (amount, userUpi) => {
+                try {
+                    // Mock for demo; in real, use Cashfree UPI collect API
+                    const mockResponse = {
+                        status: 'SUCCESS',
+                        order_id: `collect_${Date.now()}`,
+                    };
+                    return mockResponse;
+                } catch (error) {
+                    console.error('UPI Collect error:', error);
+                    return { status: 'ERROR', message: 'Failed to send payment request. Please try again.' };
+                }
+            }, []);
+
+            const checkTransactionStatus = useCallback(async (orderId) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({ status: 'SUCCESS', order_id: orderId });
+                    }, 2000);
+                });
+            }, []);
+
+            const handleInvest = useCallback(async (e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                const amount = parseFloat(investmentAmount.replace(/[^0-9]/g, '')); // Clean input
+                if (!user) {
+                    setMessage('Please log in to invest.');
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                if (isNaN(amount) || amount < MIN_INVEST_AMOUNT) {
+                    setMessage(`Please enter an amount of at least ₹${MIN_INVEST_AMOUNT.toLocaleString('en-IN')}.`);
+                    showToast(`Minimum amount is ₹${MIN_INVEST_AMOUNT.toLocaleString('en-IN')}.`, 'error');
+                    return;
+                }
+                if (user.kycStatus !== 'Verified') {
+                    setMessage('Please complete KYC verification to proceed.');
+                    showToast('KYC verification required.', 'error');
+                    return;
+                }
+                if (paymentMethod === 'collect' && !isUpiValid) {
+                    setMessage('Please enter a valid UPI ID.');
+                    showToast('Invalid UPI ID.', 'error');
+                    return;
+                }
+                setLoading(true);
+                try {
+                    let response;
+                    if (paymentMethod === 'qr') {
+                        response = await generateDynamicQRCode(amount, user.email);
+                        if (response.status === 'SUCCESS') {
+                            setModal({
+                                open: true,
+                                type: 'showQRCode',
+                                data: { qrData: response.qrData, amount, orderId: response.order_id },
+                            });
+                        }
+                    } else if (paymentMethod === 'collect') {
+                        response = await sendUpiCollectRequest(amount, userUpiIdForCollect);
+                        if (response.status === 'SUCCESS') {
+                            setModal({
+                                open: true,
+                                type: 'upiCollectPending',
+                                data: { amount, orderId: response.order_id, upiId: userUpiIdForCollect },
+                            });
+                        }
+                    }
+                    if (response.status !== 'SUCCESS') {
+                        setMessage(response.message);
+                        showToast(response.message, 'error');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }
+                } catch (error) {
+                    setMessage('Error processing your investment. Please try again.');
+                    showToast('Investment processing failed.', 'error');
+                    setLoading(false);
+                    console.error('handleInvest error:', error);
+                    playSound(notificationSound);
+                }
+            }, [user, investmentAmount, userUpiIdForCollect, isUpiValid, paymentMethod, playSound, showToast, generateDynamicQRCode, sendUpiCollectRequest]);
+
+            const confirmPayment = useCallback(async () => {
+                const { orderId, amount } = modal.data;
+                setLoading(true);
+                try {
+                    const paymentStatus = await checkTransactionStatus(orderId);
+                    if (paymentStatus.status === 'SUCCESS') {
+                        const investment = {
+                            id: Date.now(),
+                            amount,
+                            date: new Date().toISOString(),
+                            returns: 0,
+                            order_id: orderId,
+                            status: 'Confirmed',
+                        };
+                        mockUsers[user.email].investments.push(investment);
+                        saveMockUsers(mockUsers);
+                        setUser({ ...user, investments: mockUsers[user.email].investments });
+                        setMessage(`Invested ₹${amount.toLocaleString('en-IN')} via QR code. Order ID: ${orderId}`);
+                        showToast(`Invested ₹${amount.toLocaleString('en-IN')} successfully!`, 'success');
+                        setInvestmentAmount('');
+                        setLoading(false);
+                        playSound(depositSound);
+                    } else {
+                        setMessage('Payment verification failed. Please try again.');
+                        showToast('Payment verification failed.', 'error');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }
+                } catch (error) {
+                    setMessage('Error verifying payment. Please try again.');
+                    showToast('Payment verification error.', 'error');
+                    setLoading(false);
+                    console.error('confirmPayment error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, checkTransactionStatus, showToast, playSound]);
+
+            const confirmUpiCollect = useCallback(async () => {
+                const { orderId, amount } = modal.data;
+                setLoading(true);
+                try {
+                    const paymentStatus = await checkTransactionStatus(orderId);
+                    if (paymentStatus.status === 'SUCCESS') {
+                        const investment = {
+                            id: Date.now(),
+                            amount,
+                            date: new Date().toISOString(),
+                            returns: 0,
+                            order_id: orderId,
+                            status: 'Confirmed',
+                        };
+                        mockUsers[user.email].investments.push(investment);
+                        saveMockUsers(mockUsers);
+                        setUser({ ...user, investments: mockUsers[user.email].investments });
+                        setMessage(`Invested ₹${amount.toLocaleString('en-IN')} via UPI request. Order ID: ${orderId}`);
+                        showToast(`Invested ₹${amount.toLocaleString('en-IN')} successfully!`, 'success');
+                        setInvestmentAmount('');
+                        setUserUpiIdForCollect('');
+                        setIsUpiValid(null);
+                        setLoading(false);
+                        playSound(depositSound);
+                    } else {
+                        setMessage('Payment not approved. Check your UPI app and try again.');
+                        showToast('Payment not approved.', 'error');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }
+                } catch (error) {
+                    setMessage('Error verifying payment. Please try again.');
+                    showToast('Payment verification error.', 'error');
+                    setLoading(false);
+                    console.error('confirmUpiCollect error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, checkTransactionStatus, showToast, playSound]);
+
+            const handleWithdraw = useCallback((investmentId) => {
+                playSound(clickSound);
+                if (!user) {
+                    setMessage('Please log in to withdraw.');
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                if (!user.upiId || !/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(user.upiId)) {
+                    setMessage('Please set a valid UPI ID in your profile.');
+                    showToast('Valid UPI ID required.', 'error');
+                    return;
+                }
+                if (user.kycStatus !== 'Verified') {
+                    setMessage('Please complete KYC verification to withdraw.');
+                    showToast('KYC verification required.', 'error');
+                    return;
+                }
+                const investment = mockUsers[user.email].investments.find(
+                    (inv) => inv.id === investmentId
+                );
+                if (!investment) {
+                    setMessage('Investment not found.');
+                    showToast('Investment not found.', 'error');
+                    return;
+                }
+                setModal({
+                    open: true,
+                    type: 'confirmWithdraw',
+                    data: { investmentId, amount: investment.amount + investment.returns, upiId: user.upiId },
+                });
+            }, [user, playSound, showToast]);
+
+            const confirmWithdraw = useCallback(() => {
+                const { investmentId, amount } = modal.data;
+                setLoading(true);
+                try {
+                    setTimeout(() => {
+                        const withdrawal = {
+                            id: Date.now(),
+                            investmentId,
+                            amount,
+                            requested: new Date().toISOString(),
+                            status: 'Pending',
+                            processingEnd: new Date(Date.now() + WITHDRAWAL_PROCESSING_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+                            upiId: user.upiId,
+                        };
+                        mockUsers[user.email].withdrawals.push(withdrawal);
+                        saveMockUsers(mockUsers);
+                        setUser({ ...user, withdrawals: mockUsers[user.email].withdrawals });
+                        setMessage(`Withdrawal of ₹${amount.toLocaleString('en-IN')} requested to ${user.upiId}. Processing in ${WITHDRAWAL_PROCESSING_DAYS} days.`);
+                        showToast('Withdrawal requested successfully!', 'success');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }, 1000);
+                } catch (error) {
+                    setMessage('Error requesting withdrawal. Please try again.');
+                    showToast('Withdrawal request failed.', 'error');
+                    setLoading(false);
+                    console.error('handleWithdraw error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, playSound, showToast]);
+
+            const handleCancelWithdrawal = useCallback((withdrawalId) => {
+                playSound(clickSound);
+                if (!user) {
+                    setMessage('Please log in to cancel withdrawal.');
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                const withdrawal = mockUsers[user.email].withdrawals.find(
+                    (wd) => wd.id === withdrawalId
+                );
+                if (!withdrawal) {
+                    setMessage('Withdrawal not found.');
+                    showToast('Withdrawal not found.', 'error');
+                    return;
+                }
+                if (!isWithdrawalCancellable(withdrawal.requested)) {
+                    setMessage('Cannot cancel: Withdrawal is past 2 days and in processing.');
+                    showToast('Cannot cancel withdrawal.', 'error');
+                    return;
+                }
+                setModal({
+                    open: true,
+                    type: 'confirmCancelWithdrawal',
+                    data: { withdrawalId },
+                });
+            }, [user, playSound, showToast]);
+
+            const confirmCancelWithdrawal = useCallback(() => {
+                const { withdrawalId } = modal.data;
+                setLoading(true);
+                try {
+                    setTimeout(() => {
+                        mockUsers[user.email].withdrawals = mockUsers[user.email].withdrawals.filter(
+                            (wd) => wd.id !== withdrawalId
+                        );
+                        saveMockUsers(mockUsers);
+                        setUser({ ...user, withdrawals: mockUsers[user.email].withdrawals });
+                        setMessage('Withdrawal request cancelled.');
+                        showToast('Withdrawal cancelled successfully!', 'success');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }, 1000);
+                } catch (error) {
+                    setMessage('Error cancelling withdrawal. Please try again.');
+                    showToast('Withdrawal cancellation failed.', 'error');
+                    setLoading(false);
+                    console.error('handleCancelWithdrawal error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, playSound, showToast]);
+
+            const handleUpdateProfile = useCallback((e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                if (!user) {
+                    setMessage('Please log in to update profile.');
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                const trimmedName = sanitizeInput(updatedName.trim());
+                if (!trimmedName) {
+                    setMessage('Please enter your full name.');
+                    showToast('Name is required.', 'error');
+                    return;
+                }
+                const trimmedUpi = sanitizeInput(upiId.trim());
+                if (trimmedUpi && !/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(trimmedUpi)) {
+                    setMessage('Please enter a valid UPI ID (e.g., user@upi).');
+                    showToast('Invalid UPI ID.', 'error');
+                    return;
+                }
+                setModal({
+                    open: true,
+                    type: 'confirmUpdateProfile',
+                    data: { name: trimmedName, upiId: trimmedUpi },
+                });
+            }, [user, updatedName, upiId, playSound, showToast]);
+
+            const confirmUpdateProfile = useCallback(() => {
+                const { name, upiId } = modal.data;
+                setLoading(true);
+                try {
+                    setTimeout(() => {
+                        mockUsers[user.email].name = name;
+                        if (upiId) {
+                            mockUsers[user.email].upiId = upiId;
+                        }
+                        saveMockUsers(mockUsers);
+                        const updatedUser = { ...user, name, upiId: upiId || user.upiId };
+                        setUser(updatedUser);
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                        setMessage('Profile updated successfully.');
+                        showToast('Profile updated!', 'success');
+                        setUpiId('');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }, 1000);
+                } catch (error) {
+                    setMessage('Error updating profile. Please try again.');
+                    showToast('Profile update failed.', 'error');
+                    setLoading(false);
+                    console.error('handleUpdateProfile error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, playSound, showToast]);
+
+            const handleKycVerification = useCallback(() => {
+                playSound(clickSound);
+                setModal({
+                    open: true,
+                    type: 'confirmKyc',
+                    data: null,
+                });
+            }, [playSound]);
+
+            const confirmKycVerification = useCallback(() => {
+                setLoading(true);
+                try {
+                    setTimeout(() => {
+                        mockUsers[user.email].kycStatus = 'Verified';
+                        saveMockUsers(mockUsers);
+                        const updatedUser = { ...user, kycStatus: 'Verified' };
+                        setUser(updatedUser);
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                        setMessage('KYC verification completed.');
+                        showToast('KYC verified successfully!', 'success');
+                        setLoading(false);
+                        playSound(notificationSound);
+                    }, 1000);
+                } catch (error) {
+                    setMessage('Error verifying KYC. Please try again.');
+                    showToast('KYC verification failed.', 'error');
+                    setLoading(false);
+                    console.error('handleKycVerification error:', error);
+                    playSound(notificationSound);
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, playSound, showToast]);
+
+            const isWithdrawalCancellable = useCallback((requestedDate) => {
+                return Date.now() - new Date(requestedDate).getTime() < WITHDRAWAL_CANCELLATION_WINDOW_MS;
+            }, []);
+
+            return (
+                <ErrorBoundary>
+                    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex flex-col items-center p-4 sm:p-6 font-sans dark:from-gray-900 dark:to-gray-800">
+                        <header className="w-full max-w-5xl mb-8 flex items-center justify-center">
+                            <i className="fas fa-wallet text-blue-600 text-3xl mr-3"></i>
+                            <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 fade-in dark:text-blue-400">AnkuOn2 – Investments company</h1>
+                        </header>
+                        {message && (
+                            <div className="w-full max-w-md mb-6 p-4 bg-blue-100 text-blue-800 rounded-lg shadow-md fade-in text-base dark:bg-blue-900 dark:text-blue-200">{message}</div>
+                        )}
+                        {audioError && (
+                            <div className="w-full max-w-md mb-6 p-4 bg-red-100 text-red-800 rounded-lg shadow-md fade-in text-base dark:bg-red-900 dark:text-red-200">{audioError}</div>
+                        )}
+                        {loading && (
+                            <div className="w-full max-w-md mb-6 p-4 bg-gray-200 text-gray-800 rounded-lg shadow-md fade-in flex items-center justify-center dark:bg-gray-700 dark:text-gray-200">
+                                <div className="spinner mr-2"></div>
+                                <span>Loading...</span>
+                            </div>
+                        )}
+                        {toast.message && (
+                            <div className={`toast ${toast.type === 'error' ? 'toast-error' : ''} ${toast.message ? 'fade-in' : 'hidden'}`}>
+                                {toast.message}
+                                <i className="fas fa-times toast-close" onClick={dismissToast} aria-label="Close toast"></i>
+                            </div>
+                        )}
+                        {!user ? (
+                            <LoginForm
+                                setUser={setUser}
+                                setMessage={setMessage}
+                                setLoading={setLoading}
+                                isSoundEnabled={isSoundEnabled}
+                                playSound={playSound}
+                            />
+                        ) : (
+                            <div className="w-full max-w-5xl space-y-6">
+                                <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                                        <div>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200">Welcome, {user.name}</h2>
+                                            <Clock />
+                                        </div>
+                                        <div className="flex items-center mt-4 sm:mt-0 space-x-4">
+                                            <label htmlFor="sound-toggle" className="mr-2 text-gray-800 text-base dark:text-gray-200">Sound Effects</label>
+                                            <label className="toggle">
+                                                <input
+                                                    id="sound-toggle"
+                                                    type="checkbox"
+                                                    checked={isSoundEnabled}
+                                                    onChange={() => setIsSoundEnabled(!isSoundEnabled)}
+                                                    onClick={() => playSound(clickSound)}
+                                                    aria-label="Toggle sound effects"
+                                                />
+                                                <span className="slider"></span>
+                                            </label>
+                                            <label htmlFor="dark-toggle" className="mr-2 text-gray-800 text-base dark:text-gray-200">Dark Mode</label>
+                                            <label className="toggle">
+                                                <input
+                                                    id="dark-toggle"
+                                                    type="checkbox"
+                                                    checked={isDarkMode}
+                                                    onChange={() => setIsDarkMode(!isDarkMode)}
+                                                    onClick={() => playSound(clickSound)}
+                                                    aria-label="Toggle dark mode"
+                                                />
+                                                <span className="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <Dashboard user={user} />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center dark:text-gray-200">
+                                                <i className="fas fa-user-cog mr-2 text-blue-600"></i> Profile Settings
+                                            </h3>
+                                            <form onSubmit={handleUpdateProfile} className="space-y-4">
+                                                <div>
+                                                    <label htmlFor="updatedName" className="block text-base font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                                                    <input
+                                                        id="updatedName"
+                                                        type="text"
+                                                        placeholder="Enter your full name"
+                                                        value={updatedName}
+                                                        onChange={(e) => setUpdatedName(e.target.value)}
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        required
+                                                        aria-required="true"
+                                                    />
+                                                </div>
+                                                <p className="text-gray-600 text-base dark:text-gray-400">Email: {user.email}</p>
+                                                <div>
+                                                    <label htmlFor="upiId" className="block text-base font-medium text-gray-700 dark:text-gray-300">UPI ID for Payouts</label>
+                                                    <input
+                                                        id="upiId"
+                                                        type="text"
+                                                        placeholder="e.g., user@upi"
+                                                        value={upiId}
+                                                        onChange={(e) => setUpiId(e.target.value)}
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        aria-describedby="upiId-hint"
+                                                    />
+                                                    <p id="upiId-hint" className="text-sm text-gray-500 mt-1 dark:text-gray-500">Enter a valid UPI ID for payouts (optional)</p>
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    className="w-full p-3 bg-green-600 text-white rounded-lg btn-primary disabled:opacity-50 tooltip flex items-center justify-center text-base"
+                                                    disabled={loading}
+                                                    data-tooltip="Update your profile details"
+                                                    aria-label="Update Profile"
+                                                >
+                                                    <i className="fas fa-sync-alt mr-2"></i> Update Profile
+                                                </button>
+                                            </form>
+                                            {user.upiId && (
+                                                <p className="mt-2 text-gray-600 text-base flex items-center dark:text-gray-400">
+                                                    <i className="fas fa-check-circle text-green-600 mr-1"></i> Current UPI ID: {user.upiId}
+                                                </p>
+                                            )}
+                                            <div className="mt-4">
+                                                <p className="text-gray-600 text-base flex items-center dark:text-gray-400">
+                                                    <i className="fas fa-shield-alt mr-1 text-blue-600"></i> KYC Status: {user.kycStatus}
+                                                </p>
+                                                {user.kycStatus !== 'Verified' && (
+                                                    <button
+                                                        onClick={handleKycVerification}
+                                                        className="mt-2 p-3 bg-blue-600 text-white rounded-lg btn-primary disabled:opacity-50 tooltip flex items-center justify-center w-full text-base"
+                                                        disabled={loading}
+                                                        data-tooltip="Complete KYC for full access"
+                                                        aria-label="Verify KYC"
+                                                    >
+                                                        <i className="fas fa-id-badge mr-2"></i> Verify KYC
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center dark:text-gray-200">
+                                                <i className="fas fa-money-check-alt mr-2 text-blue-600"></i> Invest
+                                            </h3>
+                                            <form onSubmit={handleInvest} className="space-y-4">
+                                                <div className="progress-bar">
+                                                    <div className="progress-step active">Enter Amount</div>
+                                                    <div className="progress-step">Choose Method</div>
+                                                    <div className="progress-step">Pay</div>
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="investmentAmount" className="block text-base font-medium text-gray-700 dark:text-gray-300">Amount</label>
+                                                    <input
+                                                        id="investmentAmount"
+                                                        type="text" // Changed to text for formatting
+                                                        placeholder={`₹${MIN_INVEST_AMOUNT.toLocaleString('en-IN')} or more`}
+                                                        value={investmentAmount ? `₹${parseInt(investmentAmount.replace(/[^0-9]/g, '')).toLocaleString('en-IN')}` : ''}
+                                                        onChange={(e) => setInvestmentAmount(e.target.value)}
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        required
+                                                        aria-required="true"
+                                                        aria-describedby="investmentAmount-hint"
+                                                    />
+                                                    <p id="investmentAmount-hint" className="text-sm text-gray-500 mt-1 dark:text-gray-500">Minimum: ₹{MIN_INVEST_AMOUNT.toLocaleString('en-IN')}</p>
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    <button type="button" onClick={() => { playSound(clickSound); setInvestmentAmount('10000'); }} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm btn-primary dark:bg-blue-900 dark:text-blue-300">₹10k</button>
+                                                    <button type="button" onClick={() => { playSound(clickSound); setInvestmentAmount('25000'); }} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm btn-primary dark:bg-blue-900 dark:text-blue-300">₹25k</button>
+                                                    <button type="button" onClick={() => { playSound(clickSound); setInvestmentAmount('50000'); }} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm btn-primary dark:bg-blue-900 dark:text-blue-300">₹50k</button>
+                                                    <button type="button" onClick={() => { playSound(clickSound); setInvestmentAmount('100000'); }} className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm btn-primary dark:bg-blue-900 dark:text-blue-300">₹1L</button>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div
+                                                        className={`payment-method-box ${paymentMethod === 'qr' ? 'active' : ''} dark:border-gray-600`}
+                                                        onClick={() => { playSound(clickSound); setPaymentMethod('qr'); }}
+                                                    >
+                                                        <div className="flex items-center mb-2">
+                                                            <i className="fas fa-qrcode mr-2 text-blue-600 text-xl"></i>
+                                                            <input
+                                                                type="radio"
+                                                                id="qrMethod"
+                                                                name="paymentMethod"
+                                                                value="qr"
+                                                                checked={paymentMethod === 'qr'}
+                                                                onChange={() => setPaymentMethod('qr')}
+                                                                className="mr-2"
+                                                                aria-label="Select QR Code payment"
+                                                            />
+                                                            <label htmlFor="qrMethod" className="text-base font-medium text-gray-700 dark:text-gray-300">Pay with QR Code</label>
+                                                        </div>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">Scan a QR code using any UPI app to pay instantly.</p>
+                                                    </div>
+                                                    <div
+                                                        className={`payment-method-box ${paymentMethod === 'collect' ? 'active' : ''} dark:border-gray-600`}
+                                                        onClick={() => { playSound(clickSound); setPaymentMethod('collect'); }}
+                                                    >
+                                                        <div className="flex items-center mb-2">
+                                                            <i className="fas fa-mobile-alt mr-2 text-blue-600 text-xl"></i>
+                                                            <input
+                                                                type="radio"
+                                                                id="collectMethod"
+                                                                name="paymentMethod"
+                                                                value="collect"
+                                                                checked={paymentMethod === 'collect'}
+                                                                onChange={() => setPaymentMethod('collect')}
+                                                                className="mr-2"
+                                                                aria-label="Select UPI Request payment"
+                                                            />
+                                                            <label htmlFor="collectMethod" className="text-base font-medium text-gray-700 dark:text-gray-300">Pay with UPI Request</label>
+                                                        </div>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">Approve a payment request sent to your UPI app.</p>
+                                                        {paymentMethod === 'collect' && (
+                                                            <div className="mt-3">
+                                                                <label htmlFor="userUpiIdForCollect" className="block text-base font-medium text-gray-700 dark:text-gray-300">Your UPI ID</label>
+                                                                <input
+                                                                    id="userUpiIdForCollect"
+                                                                    type="text"
+                                                                    placeholder="e.g., yourname@upi"
+                                                                    value={userUpiIdForCollect}
+                                                                    onChange={(e) => setUserUpiIdForCollect(e.target.value)}
+                                                                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${isUpiValid === true ? 'input-valid' : isUpiValid === false ? 'input-invalid' : 'border-gray-300 dark:border-gray-600'}`}
+                                                                    aria-describedby="userUpiIdForCollect-hint"
+                                                                />
+                                                                <p id="userUpiIdForCollect-hint" className="text-sm mt-1">
+                                                                    {isUpiValid === true ? (
+                                                                        <span className="text-green-600 flex items-center dark:text-green-400">
+                                                                            <i className="fas fa-check-circle mr-1"></i> Valid UPI ID
+                                                                        </span>
+                                                                    ) : isUpiValid === false ? (
+                                                                        <span className="text-red-600 flex items-center dark:text-red-400">
+                                                                            <i className="fas fa-exclamation-circle mr-1"></i> Invalid UPI ID
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="text-gray-500 dark:text-gray-500">Enter your UPI ID for the payment request</span>
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    className="w-full p-3 bg-blue-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                    disabled={loading || user.kycStatus !== 'Verified' || (paymentMethod === 'collect' && !isUpiValid)}
+                                                    aria-label="Proceed to payment"
+                                                >
+                                                    <i className="fas fa-arrow-right mr-2"></i> Proceed
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => { playSound(clickSound); setUser(null); localStorage.removeItem('user'); }}
+                                        className="w-full p-3 bg-red-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                        disabled={loading}
+                                        aria-label="Logout"
+                                    >
+                                        <i className="fas fa-sign-out-alt mr-2"></i> Logout
+                                    </button>
+                                </div>
+                                <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 section-header flex items-center dark:text-gray-200" onClick={() => { playSound(clickSound); setShowInvestments(!showInvestments); }}>
+                                        <i className="fas fa-chart-bar mr-2 text-blue-600"></i> Your Investments {showInvestments ? '▼' : '▶'}
+                                    </h3>
+                                    {showInvestments && (
+                                        <InvestmentList
+                                            user={user}
+                                            handleWithdraw={handleWithdraw}
+                                            handleCancelWithdrawal={handleCancelWithdrawal}
+                                            selectedInvestmentId={selectedInvestmentId}
+                                            setSelectedInvestmentId={setSelectedInvestmentId}
+                                            showAllInvestments={showAllInvestments}
+                                            setShowAllInvestments={setShowAllInvestments}
+                                            loading={loading}
+                                            playSound={playSound}
+                                        />
+                                    )}
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 section-header mt-6 flex items-center dark:text-gray-200" onClick={() => { playSound(clickSound); setShowWithdrawals(!showWithdrawals); }}>
+                                        <i className="fas fa-hand-holding-usd mr-2 text-blue-600"></i> Withdrawal Requests {showWithdrawals ? '▼' : '▶'}
+                                    </h3>
+                                    {showWithdrawals && (
+                                        <WithdrawalList
+                                            user={user}
+                                            showAllWithdrawals={showAllWithdrawals}
+                                            setShowAllWithdrawals={setShowAllWithdrawals}
+                                            playSound={playSound}
+                                        />
+                                    )}
+                                    <Resources activeTab={activeTab} setActiveTab={setActiveTab} playSound={playSound} />
+                                </div>
+                            </div>
+                        )}
+                        <Modal
+                            modal={modal}
+                            setModal={setModal}
+                            confirmPayment={confirmPayment}
+                            confirmUpiCollect={confirmUpiCollect}
+                            confirmWithdraw={confirmWithdraw}
+                            confirmCancelWithdrawal={confirmCancelWithdrawal}
+                            confirmUpdateProfile={confirmUpdateProfile}
+                            confirmKycVerification={confirmKycVerification}
+                            loading={loading}
+                            playSound={playSound}
+                        />
+                        <footer className="mt-8 p-6 bg-gradient-to-r from-gray-800 to-gray-900 text-white w-full text-center rounded-t-xl shadow-lg dark:from-gray-700 dark:to-gray-800">
+                            <p className="text-base">© 2025 AnkuOn2. All rights reserved.</p>
+                            <p className="text-sm mt-2">Invest responsibly. Terms and conditions apply.</p>
+                        </footer>
+                    </div>
+                </ErrorBoundary>
+            );
+        };
+
+        // Render the app
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
