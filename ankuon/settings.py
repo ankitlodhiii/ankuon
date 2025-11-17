@@ -16,7 +16,7 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production
 
-ALLOWED_HOSTS = ['*.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['*.onrender.com', 'localhost', '127.0.0.1']
 
 # Installed apps
 INSTALLED_APPS = [
@@ -30,7 +30,7 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
-    'whitenoise.runserver_nostatic',  # Add WhiteNoise for static file serving
+    'whitenoise.runserver_nostatic',  # WhiteNoise for static files
 
     # Local apps
     'app',  # Your Django app name
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,7 +74,7 @@ TEMPLATES = [
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=os.getenv('DATABASE_URL'),  # No SQLite fallback - enforce PostgreSQL
         conn_max_age=600
     )
 }
@@ -96,12 +96,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'app' / 'static',
-    BASE_DIR / 'static',
-    BASE_DIR / 'frontend',  # Include frontend if it contains static files
+    BASE_DIR / 'app' / 'static',  # C:\Users\ankit\OneDrive\Desktop\PORTFOLIO\ankuon\app\static
+    BASE_DIR / 'static',  # C:\Users\ankit\OneDrive\Desktop\PORTFOLIO\ankuon\static
+    BASE_DIR / 'frontend',  # Include frontend if it contains Django static files/templates
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # WhiteNoise for production
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
@@ -127,7 +127,7 @@ CASHFREE_APP_ID = os.getenv('CASHFREE_APP_ID', '')
 CASHFREE_SECRET_KEY = os.getenv('CASHFREE_SECRET_KEY', '')
 
 # Celery configuration
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', None)
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', None)  # Default to None to avoid errors
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', None)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
