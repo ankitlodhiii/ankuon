@@ -101,7 +101,11 @@ STATICFILES_DIRS = [
     BASE_DIR / 'frontend',  # Include frontend if it contains Django static files/templates
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # WhiteNoise for production
+
+# ──── FIXED HERE ────
+# Changed from CompressedManifestStaticFilesStorage to CompressedStaticFilesStorage
+# This skips sourcemap reference checks → fixes MissingFileError on .map files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
