@@ -1,154 +1,345 @@
 from pathlib import Path
 import os
+
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load environment variables from .env
+
+# Load .env locally
 load_dotenv()
+
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security
-SECRET_KEY = os.getenv('SECRET_KEY')
+
+# =========================
+# SECURITY
+# =========================
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 if not SECRET_KEY:
-    raise ValueError("The SECRET_KEY setting must not be empty.")
+    raise ValueError("SECRET_KEY is missing")
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production
 
-ALLOWED_HOSTS = ['*.onrender.com', 'localhost', '127.0.0.1']
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# Installed apps
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+]
+
+
+# Render automatic hostname
+RENDER_EXTERNAL_HOSTNAME = os.getenv(
+    "RENDER_EXTERNAL_HOSTNAME"
+)
+
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(
+        RENDER_EXTERNAL_HOSTNAME
+    )
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://ankuon.onrender.com",
+]
+
+
+# =========================
+# APPLICATIONS
+# =========================
+
 INSTALLED_APPS = [
-    # Django default apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
 
-    # Third-party apps
-    'rest_framework',
-    'whitenoise.runserver_nostatic',  # WhiteNoise for static files
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 
-    # Local apps
-    'app',  # Your Django app name
+    # Third party
+    "rest_framework",
+
+    # Local
+    "app",
 ]
 
-# Middleware
+
+# =========================
+# MIDDLEWARE
+# =========================
+
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "django.middleware.security.SecurityMiddleware",
+
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
+    "django.contrib.sessions.middleware.SessionMiddleware",
+
+    "django.middleware.common.CommonMiddleware",
+
+    "django.middleware.csrf.CsrfViewMiddleware",
+
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+
+    "django.contrib.messages.middleware.MessageMiddleware",
+
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# URL & WSGI
-ROOT_URLCONF = 'ankuon.urls'
-WSGI_APPLICATION = 'ankuon.wsgi.application'
 
-# Templates
+# =========================
+# URL
+# =========================
+
+ROOT_URLCONF = "ankuon.urls"
+
+WSGI_APPLICATION = "ankuon.wsgi.application"
+
+
+
+# =========================
+# TEMPLATES
+# =========================
+
 TEMPLATES = [
+
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates',
+        "BACKEND":
+        "django.template.backends.django.DjangoTemplates",
+
+        "DIRS": [
+            BASE_DIR / "templates",
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+
+        "APP_DIRS": True,
+
+        "OPTIONS": {
+
+            "context_processors": [
+
+                "django.template.context_processors.debug",
+
+                "django.template.context_processors.request",
+
+                "django.contrib.auth.context_processors.auth",
+
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-# Database
+
+
+# =========================
+# DATABASE
+# =========================
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),  # No SQLite fallback - enforce PostgreSQL
-        conn_max_age=600
+
+    "default": dj_database_url.config(
+
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+
+        conn_max_age=600,
+
     )
 }
 
-# Password validation
+
+
+# =========================
+# PASSWORD VALIDATION
+# =========================
+
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+
+    {
+        "NAME":
+        "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+
+    {
+        "NAME":
+        "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+
+    {
+        "NAME":
+        "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+
+    {
+        "NAME":
+        "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
-# Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
+
+
+# =========================
+# LANGUAGE
+# =========================
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "Asia/Kolkata"
+
 USE_I18N = True
+
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'app' / 'static',  # C:\Users\ankit\OneDrive\Desktop\PORTFOLIO\ankuon\app\static
-    BASE_DIR / 'static',  # C:\Users\ankit\OneDrive\Desktop\PORTFOLIO\ankuon\static
-    BASE_DIR / 'frontend',  # Include frontend if it contains Django static files/templates
-]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ──── FIXED HERE ────
-# Changed from CompressedManifestStaticFilesStorage to CompressedStaticFilesStorage
-# This skips sourcemap reference checks → fixes MissingFileError on .map files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Media files (User uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# =========================
+# STATIC FILES
+# =========================
 
-# Django REST Framework
+STATIC_URL = "/static/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+STATICFILES_DIRS = []
+
+if (BASE_DIR / "static").exists():
+    STATICFILES_DIRS.append(
+        BASE_DIR / "static"
+    )
+
+
+if (BASE_DIR / "app" / "static").exists():
+    STATICFILES_DIRS.append(
+        BASE_DIR / "app" / "static"
+    )
+
+
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedStaticFilesStorage"
+)
+
+
+
+# =========================
+# MEDIA
+# =========================
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+
+# =========================
+# REST FRAMEWORK
+# =========================
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+
+        "rest_framework.authentication.SessionAuthentication",
+
     ],
 }
 
-# Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 
-# Cashfree payment configuration
-CASHFREE_APP_ID = os.getenv('CASHFREE_APP_ID', '')
-CASHFREE_SECRET_KEY = os.getenv('CASHFREE_SECRET_KEY', '')
 
-# Celery configuration
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', None)  # Default to None to avoid errors
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', None)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+# =========================
+# EMAIL
+# =========================
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+)
 
-# Static file usage notes
-# 1. Place assets in app/static/assets/ or static/assets/
-#    Example: app/static/assets/ankit.webp or static/assets/ankit.webp
-#
-# 2. In templates, load static and use:
-#    {% load static %}
-#    <img src="{% static 'assets/ankit.webp' %}" alt="Ankit">
-#
-# 3. In production (DEBUG=False), run:
-#    python manage.py collectstatic
-#
-# 4. Verify detection with:
-#    python manage.py findstatic assets/ankit.webp
+
+EMAIL_HOST = os.getenv(
+    "EMAIL_HOST",
+    "smtp.gmail.com"
+)
+
+
+EMAIL_PORT = int(
+    os.getenv(
+        "EMAIL_PORT",
+        "587"
+    )
+)
+
+
+EMAIL_USE_TLS = (
+    os.getenv(
+        "EMAIL_USE_TLS",
+        "True"
+    ) == "True"
+)
+
+
+EMAIL_HOST_USER = os.getenv(
+    "EMAIL_HOST_USER",
+    ""
+)
+
+
+EMAIL_HOST_PASSWORD = os.getenv(
+    "EMAIL_HOST_PASSWORD",
+    ""
+)
+
+
+
+# =========================
+# CASHFREE
+# =========================
+
+CASHFREE_APP_ID = os.getenv(
+    "CASHFREE_APP_ID",
+    ""
+)
+
+
+CASHFREE_SECRET_KEY = os.getenv(
+    "CASHFREE_SECRET_KEY",
+    ""
+)
+
+
+
+# =========================
+# CELERY
+# =========================
+
+CELERY_BROKER_URL = os.getenv(
+    "CELERY_BROKER_URL"
+)
+
+
+CELERY_RESULT_BACKEND = os.getenv(
+    "CELERY_RESULT_BACKEND"
+)
+
+
+CELERY_ACCEPT_CONTENT = [
+    "json"
+]
+
+
+CELERY_TASK_SERIALIZER = "json"
+
+
+
+# =========================
+# DEFAULT ID FIELD
+# =========================
+
+DEFAULT_AUTO_FIELD = (
+    "django.db.models.BigAutoField"
+)
