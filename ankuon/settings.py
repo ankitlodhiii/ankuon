@@ -13,9 +13,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# =========================
+# =====================================================
 # SECURITY
-# =========================
+# =====================================================
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -26,22 +26,10 @@ if not SECRET_KEY:
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    ".onrender.com",
-]
-
-
-# Render automatic hostname
-RENDER_EXTERNAL_HOSTNAME = os.getenv(
-    "RENDER_EXTERNAL_HOSTNAME"
-)
-
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(
-        RENDER_EXTERNAL_HOSTNAME
-    )
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1"
+).split(",")
 
 
 CSRF_TRUSTED_ORIGINS = [
@@ -49,12 +37,23 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-# =========================
+# Render HTTPS support
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+USE_X_FORWARDED_HOST = True
+
+
+
+# =====================================================
 # APPLICATIONS
-# =========================
+# =====================================================
 
 INSTALLED_APPS = [
 
+    # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -65,19 +64,21 @@ INSTALLED_APPS = [
     # Third party
     "rest_framework",
 
-    # Local
+    # Local apps
     "app",
 ]
 
 
-# =========================
+
+# =====================================================
 # MIDDLEWARE
-# =========================
+# =====================================================
 
 MIDDLEWARE = [
 
     "django.middleware.security.SecurityMiddleware",
 
+    # WhiteNoise
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -94,9 +95,10 @@ MIDDLEWARE = [
 ]
 
 
-# =========================
-# URL
-# =========================
+
+# =====================================================
+# URL CONFIG
+# =====================================================
 
 ROOT_URLCONF = "ankuon.urls"
 
@@ -104,9 +106,9 @@ WSGI_APPLICATION = "ankuon.wsgi.application"
 
 
 
-# =========================
+# =====================================================
 # TEMPLATES
-# =========================
+# =====================================================
 
 TEMPLATES = [
 
@@ -138,9 +140,9 @@ TEMPLATES = [
 
 
 
-# =========================
+# =====================================================
 # DATABASE
-# =========================
+# =====================================================
 
 DATABASES = {
 
@@ -155,9 +157,9 @@ DATABASES = {
 
 
 
-# =========================
+# =====================================================
 # PASSWORD VALIDATION
-# =========================
+# =====================================================
 
 AUTH_PASSWORD_VALIDATORS = [
 
@@ -180,13 +182,14 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME":
         "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+
 ]
 
 
 
-# =========================
+# =====================================================
 # LANGUAGE
-# =========================
+# =====================================================
 
 LANGUAGE_CODE = "en-us"
 
@@ -198,9 +201,9 @@ USE_TZ = True
 
 
 
-# =========================
+# =====================================================
 # STATIC FILES
-# =========================
+# =====================================================
 
 STATIC_URL = "/static/"
 
@@ -209,16 +212,20 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = []
 
+
 if (BASE_DIR / "static").exists():
+
     STATICFILES_DIRS.append(
         BASE_DIR / "static"
     )
 
 
 if (BASE_DIR / "app" / "static").exists():
+
     STATICFILES_DIRS.append(
         BASE_DIR / "app" / "static"
     )
+
 
 
 STATICFILES_STORAGE = (
@@ -227,9 +234,9 @@ STATICFILES_STORAGE = (
 
 
 
-# =========================
-# MEDIA
-# =========================
+# =====================================================
+# MEDIA FILES
+# =====================================================
 
 MEDIA_URL = "/media/"
 
@@ -237,9 +244,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 
-# =========================
-# REST FRAMEWORK
-# =========================
+# =====================================================
+# DJANGO REST FRAMEWORK
+# =====================================================
 
 REST_FRAMEWORK = {
 
@@ -248,13 +255,14 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
 
     ],
+
 }
 
 
 
-# =========================
+# =====================================================
 # EMAIL
-# =========================
+# =====================================================
 
 EMAIL_BACKEND = (
     "django.core.mail.backends.smtp.EmailBackend"
@@ -270,7 +278,7 @@ EMAIL_HOST = os.getenv(
 EMAIL_PORT = int(
     os.getenv(
         "EMAIL_PORT",
-        "587"
+        587
     )
 )
 
@@ -296,9 +304,9 @@ EMAIL_HOST_PASSWORD = os.getenv(
 
 
 
-# =========================
+# =====================================================
 # CASHFREE
-# =========================
+# =====================================================
 
 CASHFREE_APP_ID = os.getenv(
     "CASHFREE_APP_ID",
@@ -313,17 +321,19 @@ CASHFREE_SECRET_KEY = os.getenv(
 
 
 
-# =========================
+# =====================================================
 # CELERY
-# =========================
+# =====================================================
 
 CELERY_BROKER_URL = os.getenv(
-    "CELERY_BROKER_URL"
+    "CELERY_BROKER_URL",
+    None
 )
 
 
 CELERY_RESULT_BACKEND = os.getenv(
-    "CELERY_RESULT_BACKEND"
+    "CELERY_RESULT_BACKEND",
+    None
 )
 
 
@@ -336,9 +346,9 @@ CELERY_TASK_SERIALIZER = "json"
 
 
 
-# =========================
-# DEFAULT ID FIELD
-# =========================
+# =====================================================
+# DEFAULT PRIMARY KEY
+# =====================================================
 
 DEFAULT_AUTO_FIELD = (
     "django.db.models.BigAutoField"
