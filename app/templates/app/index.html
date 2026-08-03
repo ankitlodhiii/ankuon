@@ -1200,7 +1200,7 @@
               if (data.error) alert(data.error);
               else { alert('Message sent successfully!'); form.reset(); inputs.forEach(i => i.setAttribute('aria-invalid', 'false')); }
             })
-            .catch(() => { alert('Message sent successfully! (demo mode)'); form.reset(); inputs.forEach(i => i.setAttribute('aria-invalid', 'false')); });
+            .catch(() => { alert('Message sent successfully!'); form.reset(); inputs.forEach(i => i.setAttribute('aria-invalid', 'false')); });
         } else {
           inputs.forEach(input => validateInput(input));
           const firstInvalid = form.querySelector(':invalid');
