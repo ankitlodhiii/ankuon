@@ -921,34 +921,85 @@
         Have a project or investment inquiry? Reach out to discuss how we can collaborate.
       </p>
       <form id="contact-form" class="mt-10 flex flex-col gap-6" novalidate>
-        <div class="form-group">
-          <input type="text" name="name" id="name" placeholder=" "
-            class="p-4 bg-gray-900/50 border border-emerald-500 rounded-lg text-white text-lg w-full" required
-            aria-label="Your Name" aria-describedby="name-error" autocomplete="name">
-          <label for="name">Your Name</label>
-          <span id="name-error" class="error-message">Please enter your name</span>
+        <!-- Founder Contact -->
+        <div class="mt-7 text-center">
+
+          <!-- Founder Card -->
+          <div class="mt-5 rounded-2xl
+                                border border-white/10
+                                bg-white/5 p-5">
+
+            <div class="flex items-center justify-center gap-3">
+
+              <!-- Founder Icon -->
+              <div class="flex h-11 w-11
+                                        items-center justify-center
+                                        rounded-full
+                                        bg-emerald-500/10
+                                        text-emerald-400">
+
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                    d="M20 21a8 8 0 00-16 0M12 13a4 4 0 100-8 4 4 0 000 8z" />
+                </svg>
+
+              </div>
+
+
+              <!-- Founder Name -->
+              <div class="text-left">
+
+                <p class="text-xs text-slate-500">
+                  Founder
+                </p>
+
+                <p class="font-semibold text-white">
+                  Ankit Lodhi
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <!-- Gmail Compose Button -->
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ankitlodhiii06@gmail.com&su=AnkuOn2%20Investment%20Inquiry"
+              target="_blank" rel="noopener noreferrer" class="mt-5 flex w-full items-center
+                                   justify-center gap-2
+                                   rounded-xl
+                                   bg-emerald-500
+                                   px-5 py-3
+                                   text-sm font-semibold
+                                   text-slate-950
+                                   transition
+                                   hover:bg-emerald-400
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-emerald-400
+                                   focus:ring-offset-2
+                                   focus:ring-offset-slate-950">
+
+              Email Founder
+
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+
+            </a>
+
+
+            <!-- Email Address -->
+            <p class="mt-3 text-xs text-slate-500">
+
+
+          </div>
+
         </div>
-        <div class="form-group">
-          <input type="email" name="email" id="email" placeholder=" "
-            class="p-4 bg-gray-900/50 border border-emerald-500 rounded-lg text-white text-lg w-full" required
-            aria-label="Your Email" aria-describedby="email-error" autocomplete="email">
-          <label for="email">Your Email</label>
-          <span id="email-error" class="error-message">Please enter a valid email</span>
-        </div>
-        <div class="form-group">
-          <textarea name="message" id="message" rows="5" placeholder=" "
-            class="p-4 bg-gray-900/50 border border-emerald-500 rounded-lg text-white text-lg w-full" required
-            aria-label="Your Message" aria-describedby="message-error"></textarea>
-          <label for="message">Your Message</label>
-          <span id="message-error" class="error-message">Please enter your message</span>
-        </div>
-        <button type="submit"
-          class="bg-emerald-500 text-white py-3 px-8 rounded-lg hover:bg-yellow-500 transition font-semibold hover-glow text-lg">
-          Send Message
-        </button>
-      </form>
-    </div>
+
   </section>
+
+
 
   <footer class="bg-gray-900/95 py-12 text-center">
     <div class="container mx-auto px-4 max-w-6xl">
