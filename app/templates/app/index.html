@@ -609,19 +609,196 @@
     }
 
     @media (max-width: 640px) {
+
+      /* Typography – readable, not oversized */
+      h1 {
+        font-size: 1.35rem !important;
+      }
+
+      .text-5xl {
+        font-size: 1.85rem !important;
+        line-height: 1.25 !important;
+      }
+
+      .text-3xl {
+        font-size: 1.4rem !important;
+      }
+
+      .text-xl {
+        font-size: 1.05rem !important;
+      }
+
+      .text-lg {
+        font-size: 0.95rem !important;
+      }
+
+      /* Section padding – less empty space */
+      .py-32 {
+        padding-top: 3.5rem !important;
+        padding-bottom: 3.5rem !important;
+      }
+
+      .pt-24 {
+        padding-top: 5.5rem !important;
+      }
+
+      .mt-12 {
+        margin-top: 1.75rem !important;
+      }
+
+      .mt-14 {
+        margin-top: 2rem !important;
+      }
+
+      .gap-12 {
+        gap: 1.75rem !important;
+      }
+
+      .gap-8 {
+        gap: 1.25rem !important;
+      }
+
+      /* Header */
+      header .rounded-full {
+        width: 42px !important;
+        height: 42px !important;
+      }
+
+      header h1 {
+        font-size: 1.2rem !important;
+      }
+
+      header p {
+        font-size: 0.7rem !important;
+      }
+
+      /* Hero image */
+      #home img.rounded-full {
+        width: 200px !important;
+        height: 200px !important;
+        max-width: 70vw;
+      }
+
+      /* About image */
+      #about img.rounded-full {
+        width: 180px !important;
+        height: 180px !important;
+        max-width: 55vw;
+      }
+
+      /* Cards – tighter padding */
+      .glassmorphism.rounded-xl,
+      .glassmorphism.rounded-2xl {
+        padding: 1.1rem !important;
+      }
+
+      .contact-card .w-12 {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+      }
+
+      .contact-card .w-6 {
+        width: 1.15rem !important;
+        height: 1.15rem !important;
+      }
+
+      /* Skills grid */
+      #skills .grid {
+        gap: 0.85rem !important;
+      }
+
+      #skills .p-8 {
+        padding: 1.15rem !important;
+      }
+
+      #skills svg.w-12 {
+        width: 2rem !important;
+        height: 2rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+
+      /* Buttons */
+      .dashboard-button {
+        width: 100%;
+        max-width: 260px;
+        font-size: 1rem;
+        padding: 0.9rem 1.25rem;
+      }
+
+      a.bg-emerald-500,
+      a.border {
+        padding-top: 0.7rem !important;
+        padding-bottom: 0.7rem !important;
+        font-size: 0.95rem !important;
+      }
+
+      /* Social footer */
       .social-link {
-        font-size: 15px;
-        margin: 0 10px;
+        font-size: 13px;
+        margin: 0 6px;
       }
 
       .social-link svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
 
-      .dashboard-button {
-        width: 240px;
-        font-size: 18px;
+      footer .social-container {
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* Portfolio */
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .portfolio-card:nth-child(3n) {
+        grid-row: span 1;
+      }
+
+      .portfolio-card.p-6 {
+        padding: 0.9rem !important;
+      }
+
+      .carousel img {
+        height: 200px;
+      }
+
+      /* Modal */
+      .modal-inner {
+        padding: 1.25rem;
+        width: 94%;
+      }
+
+      /* Scroll top */
+      .scroll-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 14px;
+        right: 14px;
+      }
+
+      /* Section toggle */
+      .section-toggle {
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 1.5rem !important;
+      }
+
+      .section-toggle .chevron-wrap {
+        width: 30px;
+        height: 30px;
+      }
+
+      .section-toggle svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .toggle-hint {
+        font-size: 11px !important;
       }
 
       .parallax {
@@ -629,30 +806,31 @@
       }
 
       .section-content.expanded {
-        max-height: 3000px;
+        max-height: 4000px;
       }
 
-      .portfolio-grid {
-        grid-template-columns: 1fr;
+      /* Invest cards */
+      #invest .p-8 {
+        padding: 1.15rem !important;
       }
 
-      .portfolio-card:nth-child(3n) {
-        grid-row: span 1;
+      /* Email Me button full width on phone */
+      #contact a.inline-flex {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+    }
+
+    /* Slightly larger phones / small tablets */
+    @media (min-width: 641px) and (max-width: 768px) {
+      .text-5xl {
+        font-size: 2.25rem !important;
       }
 
-      .carousel img {
-        height: 220px;
-      }
-
-      .scroll-to-top {
-        width: 42px;
-        height: 42px;
-        bottom: 16px;
-        right: 16px;
-      }
-
-      .modal-inner {
-        padding: 20px;
+      #home img.rounded-full {
+        width: 240px !important;
+        height: 240px !important;
       }
     }
   </style>
