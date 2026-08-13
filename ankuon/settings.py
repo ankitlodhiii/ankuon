@@ -5,11 +5,17 @@ from dotenv import load_dotenv
 import dj_database_url
 
 
-# Load .env locally
+# =====================================================
+# LOAD ENVIRONMENT VARIABLES
+# =====================================================
+
 load_dotenv()
 
 
-# Base directory
+# =====================================================
+# BASE DIRECTORY
+# =====================================================
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,18 +28,26 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY is missing")
 
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
 
-
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1"
-).split(",")
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "localhost,127.0.0.1,ankuon.onrender.com"
+    ).split(",")
+    if host.strip()
+]
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://ankuon.onrender.com",
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        "https://ankuon.onrender.com"
+    ).split(",")
+    if origin.strip()
 ]
 
 
@@ -44,7 +58,6 @@ SECURE_PROXY_SSL_HEADER = (
 )
 
 USE_X_FORWARDED_HOST = True
-
 
 
 # =====================================================
@@ -61,13 +74,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Third party
+    # Third-party apps
     "rest_framework",
+    "corsheaders",
 
     # Local apps
     "app",
 ]
-
 
 
 # =====================================================
@@ -77,6 +90,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 
     "django.middleware.security.SecurityMiddleware",
+
+    "corsheaders.middleware.CorsMiddleware",
 
     # WhiteNoise
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -95,15 +110,13 @@ MIDDLEWARE = [
 ]
 
 
-
 # =====================================================
-# URL CONFIG
+# URL CONFIGURATION
 # =====================================================
 
 ROOT_URLCONF = "ankuon.urls"
 
 WSGI_APPLICATION = "ankuon.wsgi.application"
-
 
 
 # =====================================================
@@ -113,8 +126,7 @@ WSGI_APPLICATION = "ankuon.wsgi.application"
 TEMPLATES = [
 
     {
-        "BACKEND":
-        "django.template.backends.django.DjangoTemplates",
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
 
         "DIRS": [
             BASE_DIR / "templates",
@@ -139,7 +151,6 @@ TEMPLATES = [
 ]
 
 
-
 # =====================================================
 # DATABASE
 # =====================================================
@@ -154,7 +165,6 @@ DATABASES = {
 
     )
 }
-
 
 
 # =====================================================
@@ -182,13 +192,11 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME":
         "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
-
 ]
 
 
-
 # =====================================================
-# LANGUAGE
+# LANGUAGE / TIMEZONE
 # =====================================================
 
 LANGUAGE_CODE = "en-us"
@@ -198,7 +206,6 @@ TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 
 USE_TZ = True
-
 
 
 # =====================================================
@@ -211,7 +218,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 STATICFILES_DIRS = []
-
 
 if (BASE_DIR / "static").exists():
 
@@ -227,11 +233,17 @@ if (BASE_DIR / "app" / "static").exists():
     )
 
 
+# Django + WhiteNoise
+STORAGES = {
 
-STATICFILES_STORAGE = (
-    "whitenoise.storage.CompressedStaticFilesStorage"
-)
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
 
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 # =====================================================
@@ -241,7 +253,6 @@ STATICFILES_STORAGE = (
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = BASE_DIR / "media"
-
 
 
 # =====================================================
@@ -255,9 +266,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
 
     ],
-
 }
-
 
 
 # =====================================================
@@ -268,40 +277,34 @@ EMAIL_BACKEND = (
     "django.core.mail.backends.smtp.EmailBackend"
 )
 
-
 EMAIL_HOST = os.getenv(
     "EMAIL_HOST",
     "smtp.gmail.com"
 )
 
-
 EMAIL_PORT = int(
     os.getenv(
         "EMAIL_PORT",
-        587
+        "587"
     )
 )
-
 
 EMAIL_USE_TLS = (
     os.getenv(
         "EMAIL_USE_TLS",
         "True"
-    ) == "True"
+    ).lower() == "true"
 )
-
 
 EMAIL_HOST_USER = os.getenv(
     "EMAIL_HOST_USER",
     ""
 )
 
-
 EMAIL_HOST_PASSWORD = os.getenv(
     "EMAIL_HOST_PASSWORD",
     ""
 )
-
 
 
 # =====================================================
@@ -313,12 +316,21 @@ CASHFREE_APP_ID = os.getenv(
     ""
 )
 
-
 CASHFREE_SECRET_KEY = os.getenv(
     "CASHFREE_SECRET_KEY",
     ""
 )
 
+# sandbox | production
+CASHFREE_ENV = os.getenv(
+    "CASHFREE_ENV",
+    "sandbox"
+)
+
+CASHFREE_API_VERSION = os.getenv(
+    "CASHFREE_API_VERSION",
+    "2023-08-01"
+)
 
 
 # =====================================================
@@ -330,20 +342,68 @@ CELERY_BROKER_URL = os.getenv(
     None
 )
 
-
 CELERY_RESULT_BACKEND = os.getenv(
     "CELERY_RESULT_BACKEND",
     None
 )
 
-
 CELERY_ACCEPT_CONTENT = [
     "json"
 ]
 
-
 CELERY_TASK_SERIALIZER = "json"
 
+CELERY_RESULT_SERIALIZER = "json"
+
+
+# =====================================================
+# CORS (for frontend)
+# =====================================================
+
+CORS_ALLOW_CREDENTIALS = True
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv(
+            "CORS_ALLOWED_ORIGINS",
+            "https://ankuon.onrender.com"
+        ).split(",")
+        if origin.strip()
+    ]
+
+
+# =====================================================
+# ADMIN
+# =====================================================
+
+ADMIN_PASSWORD = os.getenv(
+    "ADMIN_PASSWORD",
+    "AnkuOn2Admin@2026"
+)
+
+
+# =====================================================
+# SECURITY SETTINGS FOR PRODUCTION
+# =====================================================
+
+if not DEBUG:
+
+    SECURE_SSL_REDIRECT = True
+
+    SESSION_COOKIE_SECURE = True
+
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_BROWSER_XSS_FILTER = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    X_FRAME_OPTIONS = "DENY"
+
+    SECURE_REFERRER_POLICY = "same-origin"
 
 
 # =====================================================
@@ -353,3 +413,5 @@ CELERY_TASK_SERIALIZER = "json"
 DEFAULT_AUTO_FIELD = (
     "django.db.models.BigAutoField"
 )
+
+

@@ -4,9 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnkuOn2 — Investment Access</title>
+    <title>AnkuOn2 — Investment Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://sdk.cashfree.com/js/v3/payments.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         body {
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -21,9 +26,7 @@
         }
 
         .soft-glow {
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.35),
-                0 0 40px rgba(16, 185, 129, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(16, 185, 129, 0.08);
         }
 
         .btn-mail {
@@ -39,169 +42,2649 @@
             transform: scale(0.98);
         }
 
-        @media (max-width: 640px) {
-            .main-card {
-                padding: 1.35rem !important;
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
             }
 
-            h1 {
-                font-size: 1.65rem !important;
+            to {
+                opacity: 1;
             }
+        }
+
+        .btn-primary {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .tab {
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #10b981;
+            color: #10b981;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 500px;
+            position: relative;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-content.hidden {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #4b5563;
+        }
+
+        .modal-close:hover {
+            color: #10b981;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 90%;
+            width: 400px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            margin-left: 16px;
+            font-size: 16px;
+        }
+
+        .toast-close:hover {
+            color: #e5e7eb;
+        }
+
+        .spinner {
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 16px auto;
+            border: 4px solid #f3f3f3;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            background: #f3f3f3;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+        }
+
+        .progress-step.active {
+            background: #10b981;
+            color: white;
+        }
+
+        .section-header {
+            cursor: pointer;
+        }
+
+        .payment-method-box {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .payment-method-box.active {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .payment-method-box:hover {
+            border-color: #10b981;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #10b981;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .input-valid {
+            border-color: #10b981 !important;
+        }
+
+        .input-invalid {
+            border-color: #ef4444 !important;
+        }
+
+        .dark body {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+
+        .dark .bg-white {
+            background-color: #374151;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #4b5563;
+        }
+
+        .dark .bg-gray-100 {
+            background-color: #4b5563;
+        }
+
+        .dark .text-gray-800 {
+            color: #d1d5db;
+        }
+
+        .dark .text-gray-700 {
+            color: #d1d5db;
+        }
+
+        .dark .text-gray-600 {
+            color: #9ca3af;
+        }
+
+        .dark .text-gray-500 {
+            color: #9ca3af;
+        }
+
+        .dark .border-gray-300 {
+            border-color: #6b7280;
+        }
+
+        .dark .border-gray-200 {
+            border-color: #4b5563;
+        }
+
+        .dark .modal-content {
+            background: #374151;
+            color: #f3f4f6;
+        }
+
+        .dark .payment-method-box {
+            border-color: #6b7280;
+        }
+
+        .dark .payment-method-box.active {
+            border-color: #34d399;
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .dark body,
+        body.dark-shell {
+            background-color: #0f172a;
+            color: #f1f5f9;
         }
     </style>
 </head>
 
-<body class="min-h-screen bg-slate-950 text-white">
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback, memo } = React;
+        const { createRoot } = ReactDOM;
 
-    <!-- Background -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
-        <div class="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"></div>
-    </div>
+        // ============================================================
+        // PRODUCTION CONFIG — replace with your real values
+        // ============================================================
+        const CONFIG = {
+            // Local:  'http://127.0.0.1:8000/api'
+            // Live:   'https://ankuon.onrender.com/api'
+            API_BASE: 'http://127.0.0.1:8000/api',
+            CASHFREE_MODE: 'sandbox',
+            CASHFREE_APP_ID: 'YOUR_CASHFREE_APP_ID',
+            MIN_INVEST_AMOUNT: 10000,
+            MAX_INVEST_AMOUNT: 10000000,
+            MAX_UPI_AMOUNT: 500000,
+            MONTHLY_RETURN_RATE: 0.02,
+            OTP_RESEND_COOLDOWN: 60,
+            WITHDRAWAL_CANCELLATION_WINDOW_MS: 2 * 24 * 60 * 60 * 1000,
+            WITHDRAWAL_PROCESSING_DAYS: 3,
+            USE_VIRTUAL_ACCOUNT: true,
+            COMPANY_BANK: {
+                accountName: 'AnkuOn2',
+                accountNumber: '42452996309',
+                ifsc: 'SBIN0012171',
+                bankName: 'State Bank of India',
+            },
+        };
 
-    <main class="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6 sm:py-12">
-        <div class="w-full max-w-lg">
+        // ============================================================
+        // API LAYER — all network calls go through here
+        // Replace the fetch paths with your real backend routes.
+        // ============================================================
+        const api = {
+            async request(path, options = {}) {
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    ...options.headers,
+                };
+                // credentials: 'include' required for Django session cookies
+                const res = await fetch(`${CONFIG.API_BASE}${path}`, {
+                    ...options,
+                    headers,
+                    credentials: 'include',
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const err = new Error(data.message || data.error || `Request failed (${res.status})`);
+                    err.status = res.status;
+                    err.data = data;
+                    throw err;
+                }
+                return data;
+            },
 
-            <!-- Brand -->
-            <div class="mb-9 text-center">
-                <div class="inline-flex flex-col items-center">
-                    <!-- Professional logo mark -->
-                    <div class="relative mb-5">
-                        <div class="absolute inset-0 scale-125 rounded-2xl bg-emerald-500/10 blur-2xl"></div>
-                        <div
-                            class="relative flex h-16 w-16 sm:h-[4.5rem] sm:w-[4.5rem] items-center justify-center rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 ring-1 ring-emerald-500/25 shadow-[0_8px_32px_-4px_rgba(16,185,129,0.3)]">
-                            <svg class="h-9 w-9 sm:h-10 sm:w-10" viewBox="0 0 48 48" fill="none"
-                                xmlns="http://www.w3.org/2000/svg" aria-label="AnkuOn2">
-                                <!-- Shield / trust shape -->
-                                <path d="M24 6 L38 12 V22 C38 32 31 38 24 42 C17 38 10 32 10 22 V12 Z" stroke="#34d399"
-                                    stroke-width="1.75" fill="rgba(16,185,129,0.08)" stroke-linejoin="round" />
-                                <!-- A letter -->
-                                <path d="M17 32 L24 14 L31 32" stroke="#34d399" stroke-width="2.1"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M19.5 26.5 H28.5" stroke="#34d399" stroke-width="2.1" stroke-linecap="round" />
-                                <!-- 2 badge -->
-                                <circle cx="34" cy="14" r="5.5" fill="#0f172a" stroke="#fbbf24" stroke-width="1.4" />
-                                <text x="34" y="17.2" text-anchor="middle" fill="#fbbf24" font-size="7.5"
-                                    font-weight="700" font-family="Inter, system-ui, sans-serif">2</text>
-                            </svg>
+            // Auth — matches Django: /api/send-otp/ , /api/verify-otp/
+            sendOtp: (email, name) =>
+                api.request('/send-otp/', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, name }),
+                }),
+            verifyOtp: (email, otp) =>
+                api.request('/verify-otp/', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, otp }),
+                }),
+            logout: () =>
+                api.request('/update-profile/', { method: 'POST', body: JSON.stringify({}) }).catch(() => ({})),
+            logoutAllDevices: () => Promise.resolve({}),
+
+            // Profile — /api/profile/
+            getProfile: () => api.request('/profile/'),
+            updateProfile: (payload) =>
+                api.request('/update-profile/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+
+            // KYC — single endpoint /api/kyc-verification/
+            submitKycIdentity: (payload) =>
+                api.request('/kyc-verification/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+            verifyKycOtp: (payload) =>
+                api.request('/kyc-verification/', {
+                    method: 'POST',
+                    body: JSON.stringify({ ...payload, otp_verified: true }),
+                }),
+            submitKycBank: (payload) =>
+                api.request('/kyc-verification/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+            addBank: (payload) =>
+                api.request('/kyc-verification/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+            setPrimaryBank: (bankId) =>
+                api.request('/kyc-verification/', {
+                    method: 'POST',
+                    body: JSON.stringify({ bankId }),
+                }),
+
+            // Investments — /api/invest/
+            createPaymentOrder: (payload) =>
+                api.request('/invest/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount: payload.amount,
+                        payment_method: payload.paymentMethod || payload.payment_method,
+                        paymentMethod: payload.paymentMethod || payload.payment_method,
+                        requestVirtualAccount: payload.requestVirtualAccount !== false,
+                        upiId: payload.upiId,
+                    }),
+                }),
+            verifyPayment: (payload) =>
+                api.request(`/check-transaction/${payload.orderId || payload.order_id}/`, {
+                    method: 'GET',
+                }),
+            getInvestments: () => api.request('/profile/'),
+            requestWithdrawal: (payload) =>
+                api.request('/withdraw/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        investment_id: payload.investmentId || payload.investment_id,
+                        amount: payload.amount,
+                    }),
+                }),
+            cancelWithdrawal: (withdrawalId) =>
+                api.request('/cancel-withdrawal/', {
+                    method: 'POST',
+                    body: JSON.stringify({ withdrawal_id: withdrawalId }),
+                }),
+            getWithdrawals: () => api.request('/profile/'),
+
+            // Security / UPI
+            toggle2FA: (enable) => Promise.resolve({}),
+            verifySensitiveAction: (payload) => Promise.resolve({ ok: true }),
+            updateUpi: (payload) =>
+                api.request('/update-profile/', {
+                    method: 'POST',
+                    body: JSON.stringify({ upi_id: payload.upiId || payload.upi_id }),
+                }),
+        };
+
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        const isWithdrawalCancellable = (requestedDate) =>
+            Date.now() - new Date(requestedDate).getTime() < CONFIG.WITHDRAWAL_CANCELLATION_WINDOW_MS;
+
+        const maskUpi = (upi) => {
+            if (!upi || upi.length < 5) return upi || '—';
+            const [name, handle] = upi.split('@');
+            if (!handle) return '••••••';
+            const maskedName = name.length <= 2 ? '••' : name.slice(0, 2) + '••••';
+            return `${maskedName}@${handle}`;
+        };
+        const maskPan = (pan) => {
+            if (!pan || pan.length < 6) return '••••••••••';
+            return pan.slice(0, 3) + '••••' + pan.slice(-1);
+        };
+        const maskAadhaar = (aadhaar) => {
+            if (!aadhaar || aadhaar.length < 4) return 'XXXX-XXXX-XXXX';
+            return 'XXXX-XXXX-' + aadhaar.slice(-4);
+        };
+        const maskMobile = (mobile) => {
+            if (!mobile || mobile.length < 4) return '******';
+            return '******' + mobile.slice(-4);
+        };
+        const maskBank = (acc) => {
+            if (!acc || acc.length < 4) return '****';
+            return '****' + acc.slice(-4);
+        };
+        const maskIfsc = (ifsc) => {
+            if (!ifsc || ifsc.length < 6) return '***********';
+            return ifsc.slice(0, 4) + '*******';
+        };
+
+        const sanitizeInput = (input) =>
+            String(input || '').replace(/[<>&'"]/g, '');
+
+        const useDebounce = (value, delay) => {
+            const [debouncedValue, setDebouncedValue] = useState(value);
+            useEffect(() => {
+                const handler = setTimeout(() => setDebouncedValue(value), delay);
+                return () => clearTimeout(handler);
+            }, [value, delay]);
+            return debouncedValue;
+        };
+
+        // Optional sound (disabled by default in production until user enables)
+        const clickSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/click.wav');
+        clickSound.volume = 0.4;
+        clickSound.preload = 'auto';
+        const notificationSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/notification.wav');
+        notificationSound.volume = 0.4;
+        notificationSound.preload = 'auto';
+        const depositSound = new Audio('https://cdn.jsdelivr.net/gh/xai-org/grok-artifact-assets@sounds/deposit.wav');
+        depositSound.volume = 0.4;
+        depositSound.preload = 'auto';
+
+        const resourcesData = {
+            information: [
+                { id: 1, title: 'Platform Update', content: 'Seamless settlement via UPI, QR, and high-value bank transfers (NEFT / RTGS / IMPS) for all client allocations.' },
+                { id: 2, title: 'Investment Philosophy', content: 'Disciplined capital deployment, transparent monthly returns, and institutional-grade reporting for every client.' },
+                { id: 3, title: 'Client Focus', content: 'Serving individual and institutional investors with secure, compliant investment solutions.' },
+            ],
+            notes: [
+                { id: 1, content: 'UPI and QR payments are available up to ₹5 Lakh. Higher amounts are processed via NEFT / RTGS / IMPS.' },
+                { id: 2, content: 'All withdrawals are paid only to your verified bank account via NEFT / RTGS / IMPS.' },
+                { id: 3, content: 'KYC verification is mandatory before investing or requesting a withdrawal.' },
+            ],
+            quotes: [
+                { id: 1, content: '"In investing, what is comfortable is rarely profitable." – Robert Arnott' },
+                { id: 2, content: '"The stock market is a device for transferring money from the impatient to the patient." – Warren Buffett' },
+                { id: 3, content: '"Risk comes from not knowing what you are doing." – Warren Buffett' },
+            ],
+        };
+
+        // ============================================================
+        // ERROR BOUNDARY
+        // ============================================================
+        class ErrorBoundary extends React.Component {
+            state = { error: null };
+            static getDerivedStateFromError(error) {
+                return { error: error.message || 'Unexpected error' };
+            }
+            render() {
+                if (this.state.error) {
+                    return (
+                        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+                            <h1 className="text-4xl font-extrabold text-red-600 mb-8">Something Went Wrong</h1>
+                            <div className="mb-6 p-6 bg-red-100 text-red-800 rounded-lg shadow-lg max-w-md text-center">
+                                <p>{this.state.error}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="mt-4 p-2 bg-emerald-600 text-white rounded-lg btn-primary"
+                                >
+                                    Retry
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    );
+                }
+                return this.props.children;
+            }
+        }
 
-                    <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">AnkuOn2</h1>
-                    <div class="mt-2.5 flex items-center justify-center gap-2.5">
-                        <span class="h-px w-5 bg-gradient-to-r from-transparent to-emerald-500/40"></span>
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Investment
-                            Management Platform</p>
-                        <span class="h-px w-5 bg-gradient-to-l from-transparent to-emerald-500/40"></span>
-                    </div>
+        // ============================================================
+        // CLOCK
+        // ============================================================
+        const Clock = memo(() => {
+            const [currentTime, setCurrentTime] = useState(new Date());
+            useEffect(() => {
+                const timer = setInterval(() => setCurrentTime(new Date()), 10000);
+                return () => clearInterval(timer);
+            }, []);
+            const formatDateTime = (date) =>
+                new Intl.DateTimeFormat('en-IN', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    timeZone: 'Asia/Kolkata', timeZoneName: 'short',
+                }).format(date);
+            return <p className="text-gray-600 text-base dark:text-gray-400">{formatDateTime(currentTime)}</p>;
+        });
+
+        // ============================================================
+        // LOGIN FORM
+        // ============================================================
+        const LoginForm = memo(({ setUser, setMessage, setLoading, loading, playSound }) => {
+            const [formState, setFormState] = useState({ email: '', name: '', otp: '' });
+            const [otpSent, setOtpSent] = useState(false);
+            const [resendCooldown, setResendCooldown] = useState(0);
+
+            useEffect(() => {
+                if (otpSent && resendCooldown > 0) {
+                    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+                    return () => clearTimeout(timer);
+                }
+            }, [otpSent, resendCooldown]);
+
+            const sendOtp = useCallback(async (e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                const email = sanitizeInput(formState.email.trim());
+                const name = sanitizeInput(formState.name.trim());
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    setMessage('Please enter a valid email address.');
+                    return;
+                }
+                if (!name) {
+                    setMessage('Please enter your full name.');
+                    return;
+                }
+                setLoading(true);
+                try {
+                    await api.sendOtp(email, name);
+                    setOtpSent(true);
+                    setResendCooldown(CONFIG.OTP_RESEND_COOLDOWN);
+                    setMessage(`OTP sent to ${email}. Please check your email / SMS.`);
+                    playSound(notificationSound);
+                } catch (err) {
+                    setMessage(err.message || 'Failed to send OTP. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            }, [formState, setMessage, setLoading, playSound]);
+
+            const verifyOtp = useCallback(async (e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                const email = sanitizeInput(formState.email.trim());
+                const otp = formState.otp.trim();
+                if (!otp || otp.length !== 6) {
+                    setMessage('Please enter the 6-digit OTP.');
+                    return;
+                }
+                setLoading(true);
+                try {
+                    const data = await api.verifyOtp(email, otp);
+                    // Expect: { token, user: { email, name, ... } }
+                    if (data.token) {
+                        localStorage.setItem('authToken', data.token);
+                    }
+                    const userData = data.user || { email, name: formState.name, ...data };
+                    setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    setOtpSent(false);
+                    setFormState({ email: '', name: '', otp: '' });
+                    setMessage('Login successful. Welcome to AnkuOn2.');
+                    playSound(notificationSound);
+                } catch (err) {
+                    setMessage(err.message || 'Invalid OTP. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            }, [formState, setUser, setMessage, setLoading, playSound]);
+
+            return (
+                <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 dark:text-gray-200">
+                        {otpSent ? 'Enter OTP' : 'Login / Register'}
+                    </h2>
+                    {!otpSent ? (
+                        <form onSubmit={sendOtp} className="space-y-4">
+                            <div>
+                                <label htmlFor="name" className="block text-base font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                                <input
+                                    id="name" type="text" placeholder="Enter your full name"
+                                    value={formState.name}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required autoFocus aria-required="true"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="email" className="block text-base font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                                <input
+                                    id="email" type="email" placeholder="Enter your email"
+                                    value={formState.email}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, email: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required aria-required="true"
+                                />
+                            </div>
+                            <button type="submit" className="w-full p-3 bg-emerald-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base" disabled={loading} aria-label="Send OTP">
+                                <i className="fas fa-paper-plane mr-2"></i> Send OTP
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={verifyOtp} className="space-y-4">
+                            <div>
+                                <label htmlFor="otp" className="block text-base font-medium text-gray-700 dark:text-gray-300">OTP</label>
+                                <input
+                                    id="otp" type="text" placeholder="Enter 6-digit OTP"
+                                    value={formState.otp}
+                                    onChange={(e) => setFormState(prev => ({ ...prev, otp: e.target.value.replace(/\D/g, '').slice(0, 6) }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    required maxLength="6" autoFocus aria-required="true" autoComplete="one-time-code"
+                                />
+                            </div>
+                            <button type="submit" className="w-full p-3 bg-emerald-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base" disabled={loading} aria-label="Verify OTP">
+                                <i className="fas fa-check mr-2"></i> Verify OTP
+                            </button>
+                            <button type="button" onClick={sendOtp} className="w-full p-3 bg-green-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base" disabled={resendCooldown > 0 || loading} aria-label="Resend OTP">
+                                <i className="fas fa-redo mr-2"></i> {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
+                            </button>
+                            <button onClick={() => { playSound(clickSound); setOtpSent(false); setMessage(''); }} className="w-full p-3 bg-gray-500 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base" disabled={loading} aria-label="Go back">
+                                <i className="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                        </form>
+                    )}
+                </div>
+            );
+        });
+
+        // ============================================================
+        // RESOURCES
+        // ============================================================
+        const Resources = memo(({ activeTab, setActiveTab, playSound }) => (
+            <div className="mt-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center dark:text-gray-200">
+                    <i className="fas fa-info-circle mr-2 text-emerald-600"></i> Resources
+                </h3>
+                <div className="flex mb-4 border-b border-gray-200 dark:border-gray-600">
+                    {['information', 'notes', 'quotes'].map((tab) => (
+                        <button key={tab} onClick={() => { playSound(clickSound); setActiveTab(tab); }}
+                            className={`flex-1 p-3 text-gray-700 font-medium text-base dark:text-gray-300 ${activeTab === tab ? 'tab-active' : 'tab'}`}
+                            aria-label={`View ${tab}`}>
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg shadow-sm dark:bg-gray-700">
+                    {resourcesData[activeTab].length === 0 ? (
+                        <p className="text-gray-600 text-base dark:text-gray-400">No {activeTab} available.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {resourcesData[activeTab].map((item) => (
+                                <li key={item.id} className="text-gray-800 text-base dark:text-gray-200">
+                                    {item.title ? <strong>{item.title}: </strong> : null}
+                                    {item.content}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
+        ));
 
-            <!-- Main Card -->
-            <section class="glass soft-glow rounded-3xl p-6 sm:p-9 main-card">
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        const Dashboard = memo(({ user }) => {
+            const calculateTotalInvestments = useMemo(() => {
+                if (!user || !user.investments || user.investments.length === 0) return { total: 0, returns: 0 };
+                const active = user.investments.filter(
+                    (inv) => !(user.withdrawals || []).some((wd) => wd.investmentId === inv.id && wd.status === 'Completed')
+                );
+                const total = active.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+                const returns = active.reduce((sum, inv) => sum + (inv.returns || 0), 0);
+                return { total, returns };
+            }, [user]);
 
-                <!-- Status -->
-                <div class="mb-7 flex justify-center">
-                    <span
-                        class="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/10 px-4 py-2 text-xs font-semibold text-amber-300">
-                        <span class="h-2 w-2 rounded-full bg-amber-400"></span>
-                        Investment Access — Coming Soon
-                    </span>
-                </div>
-
-                <!-- Icon -->
-                <div
-                    class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-800/80 ring-1 ring-white/10">
-                    <svg class="h-8 w-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
-                            d="M9 12l2 2 4-4m5.5 2a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z" />
-                    </svg>
-                </div>
-
-                <!-- Compliance -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
-                    <div class="flex gap-4">
-                        <div
-                            class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10">
-                            <svg class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                    d="M9 12l2 2 4-4m5.5 2a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z" />
-                            </svg>
+            return (
+                <div className="mb-6 p-6 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg shadow-md dark:from-gray-800 dark:to-gray-900">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center dark:text-gray-200">
+                        <i className="fas fa-chart-pie mr-2 text-emerald-600"></i> Portfolio Summary
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="p-4 bg-white rounded-lg shadow-sm flex items-center dark:bg-gray-700">
+                            <i className="fas fa-rupee-sign text-emerald-600 mr-3 text-xl"></i>
+                            <div>
+                                <p className="text-gray-600 dark:text-gray-400">Total Invested</p>
+                                <p className="text-2xl font-bold text-emerald-600">₹{calculateTotalInvestments.total.toLocaleString('en-IN')}</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-sm font-semibold text-white">Regulatory & Compliance Review</h3>
-                            <p class="mt-1 text-xs leading-5 text-slate-400">
-                                Investment functionality will be enabled only after the applicable legal, regulatory,
-                                and compliance requirements have been completed.
-                            </p>
+                        <div className="p-4 bg-white rounded-lg shadow-sm flex items-center dark:bg-gray-700">
+                            <i className="fas fa-chart-line text-green-600 mr-3 text-xl"></i>
+                            <div>
+                                <p className="text-gray-600 dark:text-gray-400">Total Returns</p>
+                                <p className="text-2xl font-bold text-green-600">₹{calculateTotalInvestments.returns.toLocaleString('en-IN')}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Founder / Direct mail -->
-                <div class="mt-7 text-center">
-                    <p class="text-sm text-slate-400">
-                        For investment-related information, contact the founder directly.
+                    <p className="mt-4 text-gray-600 text-sm dark:text-gray-400">
+                        Target: up to 2% monthly on invested capital. Returns are not guaranteed. See investment disclosure in your profile.
                     </p>
+                </div>
+            );
+        });
 
-                    <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-5">
-                        <div class="flex items-center justify-center gap-3">
-                            <div
-                                class="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                        d="M20 21a8 8 0 00-16 0M12 13a4 4 0 100-8 4 4 0 000 8z" />
-                                </svg>
+        // ============================================================
+        // MODAL
+        // ============================================================
+        const Modal = memo(({
+            modal, setModal, confirmPayment, confirmUpiCollect, confirmWithdraw,
+            confirmCancelWithdrawal, confirmUpdateProfile, confirmBankTransfer,
+            confirmSensitiveAction, logoutAllDevices, loading, playSound,
+            kycStep, kycForm, setKycForm, submitKycDetails, verifyKycMobileOtp,
+            submitKycBank, submitAddBank, sensitiveOtp, setSensitiveOtp
+        }) => {
+            if (!modal.open) return null;
+            let title, content, onConfirm, showCancel = true;
+
+            switch (modal.type) {
+                case 'showQRCode':
+                    title = 'Scan QR Code to Pay';
+                    content = (
+                        <div className="text-center">
+                            <div className="progress-bar">
+                                <div className="progress-step">Enter Amount</div>
+                                <div className="progress-step active">Scan QR</div>
+                                <div className="progress-step">Confirm</div>
                             </div>
-                            <div class="text-left">
-                                <p class="text-xs text-slate-500">Founder</p>
-                                <p class="font-semibold text-white">Ankit Lodhi</p>
+                            <p className="text-gray-700 text-lg mb-4 font-semibold dark:text-gray-300">
+                                Pay ₹{modal.data.amount.toLocaleString('en-IN')} to invest
+                            </p>
+                            {modal.data.qrData ? (
+                                <img
+                                    src={modal.data.qrData.startsWith('http') || modal.data.qrData.startsWith('data:')
+                                        ? modal.data.qrData
+                                        : `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(modal.data.qrData)}`}
+                                    alt={`QR Code for ₹${modal.data.amount.toLocaleString('en-IN')}`}
+                                    className="qr-code"
+                                />
+                            ) : (
+                                <div className="py-8 text-gray-500">QR will appear once payment session is ready.</div>
+                            )}
+                            <div className="mt-4 text-left text-gray-600 bg-gray-50 p-4 rounded-lg dark:text-gray-400 dark:bg-gray-700">
+                                <p className="font-semibold mb-2 text-base">Steps to Pay:</p>
+                                <ol className="list-decimal list-inside space-y-2 text-base">
+                                    <li>Open your UPI app (PhonePe, Google Pay, etc.).</li>
+                                    <li>Scan the QR code above.</li>
+                                    <li>Confirm ₹{modal.data.amount.toLocaleString('en-IN')} payment.</li>
+                                </ol>
+                            </div>
+                            <p className="text-gray-500 text-sm mt-4 dark:text-gray-500">Order ID: {modal.data.orderId}</p>
+                            {loading && (
+                                <div className="mt-4 flex items-center justify-center">
+                                    <div className="spinner mr-2"></div>
+                                    <span>Checking payment...</span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                    onConfirm = confirmPayment;
+                    break;
+
+                case 'upiCollectPending':
+                    title = 'Approve UPI Request';
+                    content = (
+                        <div className="text-center">
+                            <div className="progress-bar">
+                                <div className="progress-step">Enter Amount</div>
+                                <div className="progress-step active">Approve</div>
+                                <div className="progress-step">Confirm</div>
+                            </div>
+                            <p className="text-gray-700 text-lg mb-4 font-semibold dark:text-gray-300">
+                                Approve ₹{modal.data.amount.toLocaleString('en-IN')} to {modal.data.upiId}
+                            </p>
+                            <div className="mt-4 text-left text-gray-600 bg-gray-50 p-4 rounded-lg dark:text-gray-400 dark:bg-gray-700">
+                                <p className="font-semibold mb-2 text-base">Steps to Approve:</p>
+                                <ol className="list-decimal list-inside space-y-2 text-base">
+                                    <li>Open your UPI app.</li>
+                                    <li>Find the payment request from AnkuOn2.</li>
+                                    <li>Approve ₹{modal.data.amount.toLocaleString('en-IN')}.</li>
+                                </ol>
+                            </div>
+                            <p className="text-gray-500 text-sm mt-4 dark:text-gray-500">Order ID: {modal.data.orderId}</p>
+                            {loading && (
+                                <div className="mt-4 flex items-center justify-center">
+                                    <div className="spinner mr-2"></div>
+                                    <span>Checking approval...</span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                    onConfirm = confirmUpiCollect;
+                    break;
+
+                case 'confirmWithdraw':
+                    title = 'Confirm Withdrawal';
+                    content = (
+                        <p className="text-gray-600 text-base dark:text-gray-400">
+                            Withdraw ₹{modal.data.amount.toLocaleString('en-IN')} to your verified bank account {maskBank(modal.data.bankAccount || '')} via NEFT / RTGS / IMPS?
+                        </p>
+                    );
+                    onConfirm = confirmWithdraw;
+                    break;
+
+                case 'confirmCancelWithdrawal':
+                    title = 'Cancel Withdrawal';
+                    content = <p className="text-gray-600 text-base dark:text-gray-400">Cancel this withdrawal request?</p>;
+                    onConfirm = confirmCancelWithdrawal;
+                    break;
+
+                case 'confirmUpdateProfile':
+                    title = 'Confirm Profile Update';
+                    content = (
+                        <p className="text-gray-600 text-base dark:text-gray-400">
+                            Update name to {modal.data.name}? {modal.data.upiId ? `Update UPI ID to ${modal.data.upiId}?` : ''}
+                        </p>
+                    );
+                    onConfirm = confirmUpdateProfile;
+                    break;
+
+                case 'sensitiveVerify':
+                    title = 'Verification Required';
+                    content = (
+                        <div className="space-y-3 text-left">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                This is a sensitive action. Enter the OTP sent to your registered email / mobile.
+                            </p>
+                            <input
+                                type="password" inputMode="numeric" maxLength="6" placeholder="••••••"
+                                value={sensitiveOtp}
+                                onChange={(e) => setSensitiveOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white tracking-widest"
+                                autoFocus autoComplete="one-time-code"
+                            />
+                        </div>
+                    );
+                    onConfirm = confirmSensitiveAction;
+                    break;
+
+                case 'confirmLogoutAll':
+                    title = 'Log out of all devices?';
+                    content = (
+                        <p className="text-gray-600 text-base dark:text-gray-400">
+                            This will end all other active sessions. You will stay logged in on this device.
+                        </p>
+                    );
+                    onConfirm = logoutAllDevices;
+                    break;
+
+                case 'kycFlow':
+                    title = kycStep === 1 ? 'KYC – Identity Details'
+                        : kycStep === 2 ? 'KYC – Aadhaar & Mobile OTP'
+                            : 'KYC – Link Bank Account';
+                    content = (
+                        <div className="text-left space-y-4">
+                            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-2 gap-1">
+                                <span className={kycStep >= 1 ? 'text-emerald-600 font-semibold' : ''}>1. Identity</span>
+                                <span className={kycStep >= 2 ? 'text-emerald-600 font-semibold' : ''}>2. OTP Verify</span>
+                                <span className={kycStep >= 3 ? 'text-emerald-600 font-semibold' : ''}>3. Bank</span>
+                            </div>
+                            {kycStep === 1 && (
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">PAN Number</label>
+                                        <input type="text" maxLength="10" placeholder="ABCDE1234F" value={kycForm.pan}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, pan: e.target.value.toUpperCase() }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Aadhaar Number</label>
+                                        <input type="text" maxLength="12" placeholder="12-digit Aadhaar" value={kycForm.aadhaar}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, aadhaar: e.target.value.replace(/\D/g, '') }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Mobile Number (linked to Aadhaar)</label>
+                                        <input type="text" maxLength="10" placeholder="10-digit mobile" value={kycForm.mobile}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, mobile: e.target.value.replace(/\D/g, '') }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">OTP will be sent to this mobile to verify Aadhaar & mobile linkage.</p>
+                                </div>
+                            )}
+                            {kycStep === 2 && (
+                                <div className="space-y-3">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        OTP sent to <strong>+91 {kycForm.mobile}</strong> to verify Aadhaar XXXX-XXXX-{kycForm.aadhaar.slice(-4)} linkage.
+                                    </p>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Enter OTP</label>
+                                        <input type="password" inputMode="numeric" maxLength="6" placeholder="••••••" value={kycForm.mobileOtp}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, mobileOtp: e.target.value.replace(/\D/g, '').slice(0, 6) }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white tracking-widest"
+                                            autoFocus autoComplete="one-time-code" />
+                                    </div>
+                                </div>
+                            )}
+                            {kycStep === 3 && (
+                                <div className="space-y-3">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Link your bank account for payouts. Required for withdrawals (NEFT / RTGS / IMPS).
+                                    </p>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Account Holder Name</label>
+                                        <input type="text" placeholder="As per bank records" value={kycForm.accountName}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, accountName: e.target.value }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bank Account Number</label>
+                                        <input type="text" placeholder="9–18 digit account number" value={kycForm.bankAccount}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, bankAccount: e.target.value.replace(/\D/g, '') }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">IFSC Code</label>
+                                        <input type="text" maxLength="11" placeholder="e.g. SBIN0001234" value={kycForm.ifsc}
+                                            onChange={(e) => setKycForm(prev => ({ ...prev, ifsc: e.target.value.toUpperCase() }))}
+                                            className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                    onConfirm = kycStep === 1 ? submitKycDetails : kycStep === 2 ? verifyKycMobileOtp : submitKycBank;
+                    break;
+
+                case 'bankTransfer': {
+                    const isVA = !!(modal.data.virtualAccount && modal.data.virtualAccount.accountNumber);
+                    const bank = isVA ? modal.data.virtualAccount : CONFIG.COMPANY_BANK;
+                    title = isVA ? 'Pay via Virtual Account' : 'High-Value Bank Transfer';
+                    content = (
+                        <div className="text-left space-y-4">
+                            <p className="text-gray-700 dark:text-gray-300">
+                                You are investing <strong>₹{modal.data.amount.toLocaleString('en-IN')}</strong> via NEFT / RTGS / IMPS.
+                            </p>
+
+                            {isVA && (
+                                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-800 dark:bg-emerald-900/30 dark:border-emerald-700 dark:text-emerald-100">
+                                    <i className="fas fa-check-circle mr-1.5"></i>
+                                    <strong>Automatic matching enabled.</strong> You do <u>not</u> need to write Order ID in remarks. Payment will be linked automatically.
+                                </div>
+                            )}
+
+                            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl dark:bg-slate-800 dark:border-slate-600 space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                    {isVA ? 'Transfer to this unique account (valid for this order only)' : 'Transfer to this account'}
+                                </p>
+                                <div className="grid grid-cols-1 gap-1.5 text-sm">
+                                    <p><span className="text-slate-500">Account Name:</span> <span className="font-semibold text-slate-900 dark:text-white">{bank.accountName || bank.beneficiaryName || 'AnkuOn2'}</span></p>
+                                    <p><span className="text-slate-500">Account Number:</span> <span className="font-semibold text-slate-900 dark:text-white select-all">{bank.accountNumber}</span></p>
+                                    <p><span className="text-slate-500">IFSC:</span> <span className="font-semibold text-slate-900 dark:text-white select-all">{bank.ifsc}</span></p>
+                                    {(bank.bankName || bank.bank) && (
+                                        <p><span className="text-slate-500">Bank:</span> <span className="font-medium text-slate-800 dark:text-slate-200">{bank.bankName || bank.bank}</span></p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900 dark:bg-amber-900/30 dark:border-amber-700 dark:text-amber-100">
+                                <p className="font-semibold mb-1">Important</p>
+                                <ul className="list-disc list-inside space-y-1">
+                                    <li>Transfer the <strong>exact amount</strong>: ₹{modal.data.amount.toLocaleString('en-IN')}</li>
+                                    {!isVA && (
+                                        <>
+                                            <li>In payment remarks / reference, write this <strong>Order ID</strong>:</li>
+                                        </>
+                                    )}
+                                </ul>
+                                {!isVA && (
+                                    <p className="mt-2 text-center font-mono text-base font-bold tracking-wide bg-white dark:bg-slate-900 py-2 rounded-lg border border-amber-300 dark:border-amber-600 select-all">
+                                        {modal.data.orderId}
+                                    </p>
+                                )}
+                                {isVA && (
+                                    <p className="mt-2 text-xs text-amber-800 dark:text-amber-200">
+                                        Order ID (for your records): <span className="font-mono font-semibold select-all">{modal.data.orderId}</span>
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="p-3 bg-emerald-50 rounded-lg text-sm text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
+                                <p className="font-semibold mb-1">Next steps:</p>
+                                <ol className="list-decimal list-inside space-y-1">
+                                    <li>Open your bank app / net banking.</li>
+                                    <li>Send NEFT / RTGS / IMPS to the account above.</li>
+                                    {!isVA && <li>Put the Order ID in the remarks / reference field.</li>}
+                                    <li>Investment will be confirmed after funds are received (usually T+0 / T+1).</li>
+                                </ol>
                             </div>
                         </div>
+                    );
+                    onConfirm = confirmBankTransfer;
+                    break;
+                }
 
-                        <!-- Direct mail — works on all devices (opens default mail app) -->
-                        <a href="mailto:ankitlodhiii06@gmail.com?subject=AnkuOn2%20Investment%20Inquiry&body=Hello%20Ankit%2C%0A%0AI%20am%20interested%20in%20learning%20more%20about%20AnkuOn2%20investment%20opportunities.%0A%0APlease%20share%20the%20relevant%20details%20when%20convenient.%0A%0AThank%20you."
-                            class="btn-mail mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-slate-950 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            Email
-                        </a>
+                case 'addBank':
+                    title = 'Add Payout Bank Account';
+                    content = (
+                        <div className="text-left space-y-3">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Link a second bank account for withdrawals. You can set which account is primary for payouts.
+                            </p>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Account Holder Name</label>
+                                <input type="text" placeholder="As per bank records" value={kycForm.accountName}
+                                    onChange={(e) => setKycForm(prev => ({ ...prev, accountName: e.target.value }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bank Account Number</label>
+                                <input type="text" placeholder="9–18 digit account number" value={kycForm.bankAccount}
+                                    onChange={(e) => setKycForm(prev => ({ ...prev, bankAccount: e.target.value.replace(/\D/g, '') }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">IFSC Code</label>
+                                <input type="text" maxLength="11" placeholder="e.g. SBIN0001234" value={kycForm.ifsc}
+                                    onChange={(e) => setKycForm(prev => ({ ...prev, ifsc: e.target.value.toUpperCase() }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
+                            </div>
+                        </div>
+                    );
+                    onConfirm = submitAddBank;
+                    break;
 
-                        <!-- Optional: open in Gmail web (desktop) -->
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ankitlodhiii06@gmail.com&su=AnkuOn2%20Investment%20Inquiry&body=Hello%20Ankit%2C%0A%0AI%20am%20interested%20in%20learning%20more%20about%20AnkuOn2%20investment%20opportunities.%0A%0APlease%20share%20the%20relevant%20details%20when%20convenient.%0A%0AThank%20you."
-                            target="_blank" rel="noopener noreferrer"
-                            class="mt-3 block text-xs text-slate-500 transition hover:text-emerald-400">
-                            Or open in Gmail →
-                        </a>
+                default:
+                    return null;
+            }
 
-                        <p class="mt-3 text-xs text-slate-400 select-all">
-                            ankitlodhiii06@gmail.com
-                        </p>
+            return (
+                <div className={`modal-overlay ${modal.open ? 'fade-in' : 'hidden'}`}>
+                    <div className={`modal-content ${modal.open ? 'fade-in' : 'hidden'} dark:bg-gray-800`}>
+                        <i className="fas fa-times modal-close"
+                            onClick={() => { playSound(clickSound); setModal({ open: false, type: '', data: null }); }}
+                            aria-label="Close modal"></i>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4 dark:text-gray-200">{title}</h3>
+                        {content}
+                        <div className="flex justify-end space-x-4 mt-6">
+                            {showCancel && (
+                                <button onClick={() => { playSound(clickSound); setModal({ open: false, type: '', data: null }); }}
+                                    className="p-3 bg-gray-500 text-white rounded-lg btn-primary text-base" disabled={loading} aria-label="Cancel">
+                                    Cancel
+                                </button>
+                            )}
+                            <button onClick={() => { playSound(clickSound); if (typeof onConfirm === 'function') onConfirm(); }}
+                                className="p-3 bg-emerald-600 text-white rounded-lg btn-primary text-base" disabled={loading} aria-label="Confirm">
+                                {modal.type === 'kycFlow'
+                                    ? (kycStep === 1 ? 'Send OTP' : kycStep === 2 ? 'Verify OTP' : 'Complete KYC')
+                                    : modal.type === 'addBank' ? 'Add Bank Account' : 'Confirm'}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </section>
+            );
+        });
 
-            <!-- Back -->
-            <div class="mt-6 text-center">
-                <button type="button" onclick="history.back()"
-                    class="text-sm text-slate-500 transition hover:text-white">
-                    ← Back
-                </button>
-            </div>
+        // ============================================================
+        // INVESTMENT LIST
+        // ============================================================
+        const InvestmentList = memo(({
+            user, handleWithdraw, handleCancelWithdrawal, selectedInvestmentId,
+            setSelectedInvestmentId, showAllInvestments, setShowAllInvestments, loading, playSound
+        }) => {
+            const ITEMS_PER_PAGE = 3;
+            const calculateProjectedReturns = useCallback((investment) => {
+                const returns = [];
+                for (let month = 1; month <= 12; month++) {
+                    const totalReturn = investment.amount * CONFIG.MONTHLY_RETURN_RATE * month;
+                    returns.push({
+                        month,
+                        return: totalReturn.toFixed(2),
+                        total: (investment.amount + totalReturn).toFixed(2),
+                    });
+                }
+                return returns;
+            }, []);
 
-            <footer class="mt-8 text-center">
-                <p class="text-xs text-slate-600">© 2026 AnkuOn2. All rights reserved.</p>
-                <p class="mt-2 text-xs leading-5 text-slate-600">
-                    Investment services are currently unavailable.<br class="sm:hidden">
-                    Terms and applicable regulatory requirements apply.
-                </p>
-            </footer>
+            if (!user.investments || user.investments.length === 0) {
+                return (
+                    <p className="text-gray-600 text-base flex items-center dark:text-gray-400">
+                        <i className="fas fa-info-circle mr-2 text-emerald-600"></i> No active investments yet. Begin by entering an amount above.
+                    </p>
+                );
+            }
 
-        </div>
-    </main>
+            return (
+                <>
+                    <ul className="mb-6 space-y-4">
+                        {user.investments
+                            .slice(0, showAllInvestments ? user.investments.length : ITEMS_PER_PAGE)
+                            .map((inv) => {
+                                const pendingWithdrawal = (user.withdrawals || []).find(
+                                    (wd) => wd.investmentId === inv.id && wd.status === 'Pending'
+                                );
+                                const completedWithdrawal = (user.withdrawals || []).find(
+                                    (wd) => wd.investmentId === inv.id && wd.status === 'Completed'
+                                );
+                                const isWithdrawn = !!completedWithdrawal;
+                                const isDetailsVisible = selectedInvestmentId === inv.id;
+                                const projectedReturns = calculateProjectedReturns(inv);
+                                const displayStatus = isWithdrawn ? 'Withdrawn' : (pendingWithdrawal ? 'Withdrawal Pending' : inv.status);
+                                return (
+                                    <li key={inv.id} className={`p-4 rounded-lg shadow-sm dark:bg-gray-700 ${isWithdrawn ? 'bg-gray-100 opacity-75' : 'bg-gray-50'}`}>
+                                        <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{inv.amount.toLocaleString('en-IN')}</p>
+                                        <p className="text-gray-800 text-base dark:text-gray-200">Returns (2% monthly): ₹{(inv.returns || 0).toLocaleString('en-IN')}</p>
+                                        <p className="text-gray-600 text-sm dark:text-gray-400">Date: {new Date(inv.date).toLocaleDateString('en-IN')}</p>
+                                        <p className="text-gray-600 text-sm dark:text-gray-400">Order ID: {inv.order_id || 'N/A'}</p>
+                                        <p className={`text-sm font-medium ${isWithdrawn ? 'text-gray-500' : pendingWithdrawal ? 'text-orange-600' : 'text-green-600'}`}>
+                                            Status: {displayStatus}
+                                        </p>
+                                        <div className="mt-3 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
+                                            {isWithdrawn ? (
+                                                <p className="text-gray-500 text-base flex items-center dark:text-gray-400">
+                                                    <i className="fas fa-check-circle mr-2"></i> Fully withdrawn
+                                                </p>
+                                            ) : pendingWithdrawal ? (
+                                                isWithdrawalCancellable(pendingWithdrawal.requested) ? (
+                                                    <button onClick={() => handleCancelWithdrawal(pendingWithdrawal.id)}
+                                                        className="p-2 bg-red-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                        disabled={loading} aria-label="Cancel withdrawal">
+                                                        <i className="fas fa-ban mr-2"></i> Cancel Withdrawal
+                                                    </button>
+                                                ) : (
+                                                    <p className="text-orange-600 text-base flex items-center dark:text-orange-400">
+                                                        <i className="fas fa-clock mr-2"></i> Withdrawal processing
+                                                    </p>
+                                                )
+                                            ) : (
+                                                <button onClick={() => handleWithdraw(inv.id)}
+                                                    className="p-2 bg-yellow-500 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                    disabled={loading || user.kycStatus !== 'Verified'} aria-label="Request withdrawal">
+                                                    <i className="fas fa-money-bill-wave mr-2"></i> Withdraw
+                                                </button>
+                                            )}
+                                            <button onClick={() => { playSound(clickSound); setSelectedInvestmentId(isDetailsVisible ? null : inv.id); }}
+                                                className="p-2 bg-green-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                disabled={loading} aria-label={isDetailsVisible ? 'Hide details' : 'View details'}>
+                                                <i className="fas fa-eye mr-2"></i> {isDetailsVisible ? 'Hide Details' : 'View Details'}
+                                            </button>
+                                        </div>
+                                        {isDetailsVisible && (
+                                            <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-inner dark:bg-gray-600">
+                                                <h4 className="text-base font-semibold text-gray-800 mb-2 dark:text-gray-200">Investment Details</h4>
+                                                <p className="text-gray-800 text-base dark:text-gray-200">Date: {new Date(inv.date).toLocaleDateString('en-IN')}</p>
+                                                <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{inv.amount.toLocaleString('en-IN')}</p>
+                                                <p className="text-gray-800 text-base dark:text-gray-200">Order ID: {inv.order_id || 'N/A'}</p>
+                                                <h5 className="text-base font-semibold text-gray-800 mt-3 mb-1 dark:text-gray-200">Projected Returns (2% monthly)</h5>
+                                                <ul className="space-y-2">
+                                                    {projectedReturns.slice(0, 3).map((ret) => (
+                                                        <li key={ret.month} className="text-gray-800 text-base dark:text-gray-200">
+                                                            Month {ret.month}: ₹{ret.return} (Total: ₹{ret.total})
+                                                        </li>
+                                                    ))}
+                                                    {projectedReturns.length > 3 && (
+                                                        <p className="text-gray-600 text-sm dark:text-gray-400">...and more (up to 12 months)</p>
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </li>
+                                );
+                            })}
+                    </ul>
+                    {user.investments.length > ITEMS_PER_PAGE && (
+                        <button onClick={() => { playSound(clickSound); setShowAllInvestments(!showAllInvestments); }}
+                            className="p-2 text-emerald-600 hover:text-emerald-800 font-medium text-base flex items-center dark:text-emerald-400 dark:hover:text-emerald-300"
+                            aria-label={showAllInvestments ? 'Show fewer investments' : 'Show more investments'}>
+                            <i className="fas fa-arrow-down mr-2"></i> {showAllInvestments ? 'Show Less' : 'See More'}
+                        </button>
+                    )}
+                </>
+            );
+        });
 
+        // ============================================================
+        // WITHDRAWAL LIST
+        // ============================================================
+        const WithdrawalList = memo(({ user, showAllWithdrawals, setShowAllWithdrawals, playSound }) => {
+            const ITEMS_PER_PAGE = 3;
+            if (!user.withdrawals || user.withdrawals.length === 0) {
+                return (
+                    <p className="text-gray-600 text-base flex items-center dark:text-gray-400">
+                        <i className="fas fa-info-circle mr-2 text-emerald-600"></i> No withdrawal requests yet.
+                    </p>
+                );
+            }
+            return (
+                <>
+                    <ul className="mb-6 space-y-4">
+                        {user.withdrawals
+                            .slice(0, showAllWithdrawals ? user.withdrawals.length : ITEMS_PER_PAGE)
+                            .map((wd) => (
+                                <li key={wd.id} className="p-4 bg-gray-50 rounded-lg shadow-sm dark:bg-gray-700">
+                                    <p className="text-gray-800 text-base dark:text-gray-200">Amount: ₹{wd.amount.toLocaleString('en-IN')}</p>
+                                    <p className="text-gray-800 text-base dark:text-gray-200">Status: {wd.status}</p>
+                                    <p className="text-gray-600 text-sm dark:text-gray-400">Requested: {new Date(wd.requested).toLocaleDateString('en-IN')}</p>
+                                    <p className="text-gray-600 text-sm dark:text-gray-400">
+                                        Bank: {maskBank(wd.bankAccount || '')}
+                                        {wd.ifsc ? ` · ${maskIfsc(wd.ifsc)}` : ''}
+                                    </p>
+                                    <p className="text-gray-600 text-sm dark:text-gray-400">Method: {wd.method || 'NEFT/RTGS/IMPS'}</p>
+                                    {wd.status === 'Pending' && wd.processingEnd && (
+                                        <p className="text-gray-600 text-sm dark:text-gray-400">
+                                            Processing Until: {new Date(wd.processingEnd).toLocaleDateString('en-IN')}
+                                        </p>
+                                    )}
+                                    {wd.status === 'Pending' && !isWithdrawalCancellable(wd.requested) && (
+                                        <p className="mt-2 text-orange-600 text-base flex items-center dark:text-orange-400">
+                                            <i className="fas fa-clock mr-2"></i> Withdrawal processing
+                                        </p>
+                                    )}
+                                </li>
+                            ))}
+                    </ul>
+                    {user.withdrawals.length > ITEMS_PER_PAGE && (
+                        <button onClick={() => { playSound(clickSound); setShowAllWithdrawals(!showAllWithdrawals); }}
+                            className="p-2 text-emerald-600 hover:text-emerald-800 font-medium text-base flex items-center dark:text-emerald-400 dark:hover:text-emerald-300"
+                            aria-label={showAllWithdrawals ? 'Show fewer withdrawals' : 'Show more withdrawals'}>
+                            <i className="fas fa-arrow-down mr-2"></i> {showAllWithdrawals ? 'Show Less' : 'See More'}
+                        </button>
+                    )}
+                </>
+            );
+        });
+
+        // ============================================================
+        // MAIN APP
+        // ============================================================
+        const App = () => {
+            const [user, setUser] = useState(() => {
+                try {
+                    const stored = localStorage.getItem('user');
+                    return stored ? JSON.parse(stored) : null;
+                } catch {
+                    return null;
+                }
+            });
+            const [message, setMessage] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [isSoundEnabled, setIsSoundEnabled] = useState(() => localStorage.getItem('isSoundEnabled') === 'true');
+            const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('isDarkMode') === 'true');
+            const [activeTab, setActiveTab] = useState('information');
+            const [showAllInvestments, setShowAllInvestments] = useState(false);
+            const [showAllWithdrawals, setShowAllWithdrawals] = useState(false);
+            const [selectedInvestmentId, setSelectedInvestmentId] = useState(null);
+            const [showInvestments, setShowInvestments] = useState(true);
+            const [showWithdrawals, setShowWithdrawals] = useState(true);
+            const [openLayer, setOpenLayer] = useState(1);
+            const [modal, setModal] = useState({ open: false, type: '', data: null });
+            const [toast, setToast] = useState({ message: '', type: 'success' });
+            const [toastQueue, setToastQueue] = useState([]);
+            const [investmentAmount, setInvestmentAmount] = useState('');
+            const [upiId, setUpiId] = useState('');
+            const [updatedName, setUpdatedName] = useState('');
+            const [paymentMethod, setPaymentMethod] = useState('qr');
+            const [userUpiIdForCollect, setUserUpiIdForCollect] = useState('');
+            const [isUpiValid, setIsUpiValid] = useState(null);
+
+            // KYC
+            const [kycStep, setKycStep] = useState(1);
+            const [kycForm, setKycForm] = useState({
+                pan: '', aadhaar: '', mobile: '', mobileOtp: '',
+                bankAccount: '', ifsc: '', accountName: '',
+            });
+            const [kycDetailOpen, setKycDetailOpen] = useState(null);
+
+            // Sensitive actions
+            const [sensitiveAction, setSensitiveAction] = useState(null);
+            const [sensitiveOtp, setSensitiveOtp] = useState('');
+
+            // UPI change
+            const [showUpiChange, setShowUpiChange] = useState(false);
+            const [pendingUpi, setPendingUpi] = useState('');
+            const [upiVerifyOtp, setUpiVerifyOtp] = useState('');
+            const [upiOtpSent, setUpiOtpSent] = useState(false);
+
+            // Persist preferences
+            useEffect(() => { localStorage.setItem('isSoundEnabled', isSoundEnabled); }, [isSoundEnabled]);
+            useEffect(() => {
+                localStorage.setItem('isDarkMode', isDarkMode);
+                document.documentElement.classList.toggle('dark', isDarkMode);
+            }, [isDarkMode]);
+
+            // Unlock audio on first interaction
+            useEffect(() => {
+                const unlock = () => {
+                    if (isSoundEnabled) {
+                        [clickSound, notificationSound, depositSound].forEach(a => {
+                            a.play().catch(() => { });
+                            a.pause();
+                            a.currentTime = 0;
+                        });
+                        window.removeEventListener('click', unlock);
+                    }
+                };
+                window.addEventListener('click', unlock);
+                return () => window.removeEventListener('click', unlock);
+            }, [isSoundEnabled]);
+
+            // UPI validation
+            useEffect(() => {
+                if (userUpiIdForCollect) {
+                    setIsUpiValid(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(userUpiIdForCollect));
+                } else {
+                    setIsUpiValid(null);
+                }
+            }, [userUpiIdForCollect]);
+
+            useEffect(() => {
+                if (paymentMethod === 'qr') {
+                    setUserUpiIdForCollect('');
+                    setIsUpiValid(null);
+                }
+            }, [paymentMethod]);
+
+            // Re-hydrate user data from backend when session exists
+            useEffect(() => {
+                if (!user?.email || !localStorage.getItem('authToken')) return;
+                let cancelled = false;
+                (async () => {
+                    try {
+                        const profile = await api.getProfile();
+                        if (!cancelled && profile) {
+                            setUser(prev => ({ ...prev, ...profile }));
+                            localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                        }
+                    } catch (e) {
+                        // Token expired or network — force re-login
+                        if (e.status === 401) {
+                            localStorage.removeItem('authToken');
+                            localStorage.removeItem('user');
+                            setUser(null);
+                        }
+                    }
+                })();
+                return () => { cancelled = true; };
+            }, []); // only on mount
+
+            // Toast queue
+            useEffect(() => {
+                let timer;
+                if (toast.message) {
+                    timer = setTimeout(() => {
+                        setToast({ message: '', type: 'success' });
+                        if (toastQueue.length > 0) {
+                            const next = toastQueue[0];
+                            setToast(next);
+                            setToastQueue(prev => prev.slice(1));
+                            if (isSoundEnabled) notificationSound.play().catch(() => { });
+                        }
+                    }, 7000);
+                }
+                return () => clearTimeout(timer);
+            }, [toast, toastQueue, isSoundEnabled]);
+
+            const playSound = useCallback((audio) => {
+                if (!isSoundEnabled || !audio) return;
+                try {
+                    const p = audio.play();
+                    if (p && typeof p.catch === 'function') p.catch(() => { });
+                } catch (_) { }
+            }, [isSoundEnabled]);
+
+            const showToast = useCallback((msg, type = 'success') => {
+                if (toast.message) {
+                    if (!toastQueue.some(t => t.message === msg)) {
+                        setToastQueue(prev => [...prev, { message: msg, type }]);
+                    }
+                } else {
+                    setToast({ message: msg, type });
+                    if (isSoundEnabled) notificationSound.play().catch(() => { });
+                }
+            }, [toast.message, toastQueue, isSoundEnabled]);
+
+            const dismissToast = useCallback(() => {
+                playSound(clickSound);
+                setToast({ message: '', type: 'success' });
+                setToastQueue([]);
+            }, [playSound]);
+
+            const toggleLayer = useCallback((layer) => {
+                playSound(clickSound);
+                setOpenLayer(prev => (prev === layer ? null : layer));
+            }, [playSound]);
+
+            // ---------- Investment flow ----------
+            const handleInvest = useCallback(async (e) => {
+                e.preventDefault();
+                playSound(clickSound);
+                const amount = parseFloat(investmentAmount.replace(/[^0-9]/g, ''));
+                if (!user) {
+                    setMessage('Please log in to invest.');
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                if (isNaN(amount) || amount < CONFIG.MIN_INVEST_AMOUNT) {
+                    setMessage(`Minimum investment is ₹${CONFIG.MIN_INVEST_AMOUNT.toLocaleString('en-IN')}.`);
+                    showToast(`Minimum amount is ₹${CONFIG.MIN_INVEST_AMOUNT.toLocaleString('en-IN')}.`, 'error');
+                    return;
+                }
+                if (amount > CONFIG.MAX_INVEST_AMOUNT) {
+                    setMessage(`Maximum investment is ₹${CONFIG.MAX_INVEST_AMOUNT.toLocaleString('en-IN')}.`);
+                    showToast(`Maximum amount is ₹${CONFIG.MAX_INVEST_AMOUNT.toLocaleString('en-IN')}.`, 'error');
+                    return;
+                }
+                if (user.kycStatus !== 'Verified') {
+                    setMessage('Please complete KYC verification to proceed.');
+                    showToast('KYC verification required.', 'error');
+                    return;
+                }
+                if (amount > CONFIG.MAX_UPI_AMOUNT && (paymentMethod === 'qr' || paymentMethod === 'collect')) {
+                    setMessage(`Amounts above ₹${CONFIG.MAX_UPI_AMOUNT.toLocaleString('en-IN')} must use bank transfer.`);
+                    showToast('UPI/QR not available above ₹5 Lakh.', 'error');
+                    return;
+                }
+                if (paymentMethod === 'collect' && !isUpiValid) {
+                    setMessage('Please enter a valid UPI ID.');
+                    showToast('Invalid UPI ID.', 'error');
+                    return;
+                }
+
+                setLoading(true);
+                try {
+                    // Generate a readable Order ID (backend can override this later)
+                    const generateOrderId = () => {
+                        const d = new Date();
+                        const datePart = d.toISOString().slice(0, 10).replace(/-/g, '');
+                        const randomPart = Math.floor(10000 + Math.random() * 90000);
+                        return `AO2-${datePart}-${randomPart}`;
+                    };
+
+                    let order = { orderId: generateOrderId() };
+
+                    // Try real backend first
+                    try {
+                        const orderPayload = {
+                            amount,
+                            paymentMethod,
+                            upiId: paymentMethod === 'collect' ? userUpiIdForCollect : undefined,
+                            // Request virtual account for high-value bank transfers
+                            requestVirtualAccount: paymentMethod === 'bank' && CONFIG.USE_VIRTUAL_ACCOUNT,
+                        };
+                        const apiOrder = await api.createPaymentOrder(orderPayload);
+                        if (apiOrder && apiOrder.orderId) {
+                            order = apiOrder;
+                        }
+                    } catch (apiErr) {
+                        // Backend not ready yet — continue with client-generated Order ID + fixed account
+                        console.warn('Backend order creation not available, using local Order ID:', order.orderId);
+                    }
+
+                    if (paymentMethod === 'bank') {
+                        // Prefer virtual account from backend; otherwise fall back to fixed company account
+                        const virtualAccount = order.virtualAccount || order.va || null;
+                        setModal({
+                            open: true,
+                            type: 'bankTransfer',
+                            data: {
+                                amount,
+                                orderId: order.orderId,
+                                virtualAccount: virtualAccount && virtualAccount.accountNumber ? virtualAccount : null,
+                            },
+                        });
+                    } else if (paymentMethod === 'qr') {
+                        setModal({
+                            open: true,
+                            type: 'showQRCode',
+                            data: {
+                                qrData: order.qrData || order.paymentLink,
+                                amount,
+                                orderId: order.orderId,
+                                paymentSessionId: order.paymentSessionId,
+                            },
+                        });
+                        if (order.paymentSessionId && window.Cashfree) {
+                            const cashfree = window.Cashfree({ mode: CONFIG.CASHFREE_MODE });
+                            cashfree.checkout({
+                                paymentSessionId: order.paymentSessionId,
+                                redirectTarget: '_modal',
+                            }).then((result) => {
+                                if (result.error) {
+                                    showToast(result.error.message || 'Payment failed', 'error');
+                                }
+                            });
+                        }
+                    } else if (paymentMethod === 'collect') {
+                        setModal({
+                            open: true,
+                            type: 'upiCollectPending',
+                            data: {
+                                amount,
+                                orderId: order.orderId,
+                                upiId: userUpiIdForCollect,
+                                paymentSessionId: order.paymentSessionId,
+                            },
+                        });
+                    }
+                } catch (err) {
+                    setMessage(err.message || 'Could not initiate payment.');
+                    showToast(err.message || 'Payment initiation failed.', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            }, [user, investmentAmount, userUpiIdForCollect, isUpiValid, paymentMethod, playSound, showToast]);
+
+            const confirmPayment = useCallback(async () => {
+                if (!modal.data?.orderId) return;
+                setLoading(true);
+                try {
+                    const result = await api.verifyPayment({
+                        orderId: modal.data.orderId,
+                        paymentSessionId: modal.data.paymentSessionId,
+                    });
+                    // Refresh profile / investments
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    setMessage(`Invested ₹${modal.data.amount.toLocaleString('en-IN')} successfully. Order ID: ${modal.data.orderId}`);
+                    showToast(`Invested ₹${modal.data.amount.toLocaleString('en-IN')} successfully!`, 'success');
+                    setInvestmentAmount('');
+                    playSound(depositSound);
+                } catch (err) {
+                    setMessage(err.message || 'Payment verification failed.');
+                    showToast(err.message || 'Payment verification failed.', 'error');
+                } finally {
+                    setLoading(false);
+                    setModal({ open: false, type: '', data: null });
+                }
+            }, [user, modal, showToast, playSound]);
+
+            const confirmUpiCollect = useCallback(async () => {
+                // Same verification path as QR
+                await confirmPayment();
+            }, [confirmPayment]);
+
+            const confirmBankTransfer = useCallback(async () => {
+                if (!modal.data?.orderId) return;
+                setLoading(true);
+                try {
+                    // Try to register pending investment on backend (ignore if not ready)
+                    try {
+                        await api.createPaymentOrder({
+                            amount: modal.data.amount,
+                            paymentMethod: 'bank',
+                            orderId: modal.data.orderId,
+                            status: 'Pending Bank Transfer',
+                        });
+                    } catch (_) { }
+
+                    try {
+                        const profile = await api.getProfile();
+                        setUser(prev => ({ ...prev, ...profile }));
+                        localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    } catch (_) { }
+
+                    const isVA = !!(modal.data.virtualAccount && modal.data.virtualAccount.accountNumber);
+                    if (isVA) {
+                        setMessage(
+                            `Please transfer ₹${modal.data.amount.toLocaleString('en-IN')} to the unique virtual account shown. Order ID ${modal.data.orderId} will be matched automatically. We will confirm after receiving the money.`
+                        );
+                    } else {
+                        setMessage(
+                            `Please transfer ₹${modal.data.amount.toLocaleString('en-IN')} to Account 42452996309 (IFSC: SBIN0012171). Put Order ID ${modal.data.orderId} in the remarks. We will confirm after receiving the money.`
+                        );
+                    }
+                    showToast('Complete the bank transfer using the details shown.', 'success');
+                    setInvestmentAmount('');
+                    playSound(depositSound);
+                } catch (err) {
+                    setMessage(err.message || 'Request failed.');
+                    showToast(err.message || 'Request failed.', 'error');
+                } finally {
+                    setLoading(false);
+                    setModal({ open: false, type: '', data: null });
+                }
+            }, [user, modal, showToast, playSound]);
+
+            // ---------- Withdrawals ----------
+            const handleWithdraw = useCallback(async (investmentId) => {
+                playSound(clickSound);
+                if (!user) {
+                    showToast('Login required.', 'error');
+                    return;
+                }
+                if (user.kycStatus !== 'Verified') {
+                    showToast('KYC verification required.', 'error');
+                    return;
+                }
+                if (!user.kycData?.bankAccount) {
+                    showToast('Verified bank account required for withdrawals.', 'error');
+                    return;
+                }
+                const investment = (user.investments || []).find(inv => inv.id === investmentId);
+                if (!investment) {
+                    showToast('Investment not found.', 'error');
+                    return;
+                }
+                // Request OTP for sensitive action
+                try {
+                    await api.verifySensitiveAction({ action: 'withdraw', investmentId });
+                    setSensitiveAction('withdraw');
+                    setSensitiveOtp('');
+                    showToast('Verification OTP sent to your registered mobile / email.', 'success');
+                    setModal({
+                        open: true,
+                        type: 'sensitiveVerify',
+                        data: {
+                            action: 'withdraw',
+                            investmentId,
+                            amount: investment.amount + (investment.returns || 0),
+                            bankAccount: user.kycData.bankAccount,
+                            ifsc: user.kycData.ifsc,
+                            accountName: user.kycData.accountName,
+                        },
+                    });
+                } catch (err) {
+                    showToast(err.message || 'Could not initiate withdrawal verification.', 'error');
+                }
+            }, [user, playSound, showToast]);
+
+            const confirmWithdraw = useCallback(async () => {
+                const { investmentId, amount } = modal.data || {};
+                setLoading(true);
+                try {
+                    await api.requestWithdrawal({
+                        investmentId,
+                        amount,
+                        otp: sensitiveOtp, // if backend still needs it
+                    });
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    setMessage(`Withdrawal of ₹${amount.toLocaleString('en-IN')} requested. Processing in ${CONFIG.WITHDRAWAL_PROCESSING_DAYS} days.`);
+                    showToast('Withdrawal requested to your verified bank account.', 'success');
+                    playSound(notificationSound);
+                } catch (err) {
+                    showToast(err.message || 'Withdrawal request failed.', 'error');
+                } finally {
+                    setLoading(false);
+                    setModal({ open: false, type: '', data: null });
+                    setSensitiveAction(null);
+                    setSensitiveOtp('');
+                }
+            }, [user, modal, sensitiveOtp, playSound, showToast]);
+
+            const handleCancelWithdrawal = useCallback((withdrawalId) => {
+                playSound(clickSound);
+                const withdrawal = (user.withdrawals || []).find(wd => wd.id === withdrawalId);
+                if (!withdrawal) {
+                    showToast('Withdrawal not found.', 'error');
+                    return;
+                }
+                if (!isWithdrawalCancellable(withdrawal.requested)) {
+                    showToast('Cannot cancel: withdrawal is past the cancellation window.', 'error');
+                    return;
+                }
+                setModal({ open: true, type: 'confirmCancelWithdrawal', data: { withdrawalId } });
+            }, [user, playSound, showToast]);
+
+            const confirmCancelWithdrawal = useCallback(async () => {
+                const { withdrawalId } = modal.data || {};
+                setLoading(true);
+                try {
+                    await api.cancelWithdrawal(withdrawalId);
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    showToast('Withdrawal cancelled successfully.', 'success');
+                    playSound(notificationSound);
+                } catch (err) {
+                    showToast(err.message || 'Cancellation failed.', 'error');
+                } finally {
+                    setLoading(false);
+                    setModal({ open: false, type: '', data: null });
+                }
+            }, [user, modal, playSound, showToast]);
+
+            // ---------- Profile ----------
+            const handleUpdateProfile = useCallback((e) => {
+                if (e && e.preventDefault) e.preventDefault();
+                playSound(clickSound);
+                const name = sanitizeInput(updatedName.trim()) || (user?.name || '');
+                if (!name) {
+                    showToast('Name is required.', 'error');
+                    return;
+                }
+                const trimmedUpi = sanitizeInput(upiId.trim());
+                if (trimmedUpi && !/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(trimmedUpi)) {
+                    showToast('Invalid UPI ID.', 'error');
+                    return;
+                }
+                setModal({
+                    open: true,
+                    type: 'confirmUpdateProfile',
+                    data: { name, upiId: trimmedUpi },
+                });
+            }, [user, updatedName, upiId, playSound, showToast]);
+
+            const confirmUpdateProfile = useCallback(async () => {
+                const { name, upiId: newUpi } = modal.data || {};
+                try {
+                    await api.updateProfile({ name, upiId: newUpi || undefined });
+                    const updated = { ...user, name, upiId: newUpi || user.upiId };
+                    setUser(updated);
+                    localStorage.setItem('user', JSON.stringify(updated));
+                    showToast('Profile updated.', 'success');
+                    setUpiId('');
+                    playSound(notificationSound);
+                } catch (err) {
+                    showToast(err.message || 'Profile update failed.', 'error');
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [user, modal, playSound, showToast]);
+
+            // ---------- 2FA & sensitive ----------
+            const toggle2FA = useCallback(async () => {
+                playSound(clickSound);
+                try {
+                    if (user.twoFactorEnabled) {
+                        // Require OTP to disable
+                        await api.verifySensitiveAction({ action: 'disable2fa' });
+                        setSensitiveAction('disable2fa');
+                        setSensitiveOtp('');
+                        setModal({ open: true, type: 'sensitiveVerify', data: { action: 'disable2fa' } });
+                        showToast('Verification OTP sent.', 'success');
+                    } else {
+                        await api.toggle2FA(true);
+                        const updated = { ...user, twoFactorEnabled: true };
+                        setUser(updated);
+                        localStorage.setItem('user', JSON.stringify(updated));
+                        showToast('Two-factor authentication enabled.', 'success');
+                    }
+                } catch (err) {
+                    showToast(err.message || 'Could not update 2FA.', 'error');
+                }
+            }, [user, playSound, showToast]);
+
+            const confirmSensitiveAction = useCallback(async () => {
+                playSound(clickSound);
+                if (!sensitiveOtp || sensitiveOtp.length !== 6) {
+                    showToast('Enter a valid 6-digit OTP.', 'error');
+                    return;
+                }
+                try {
+                    if (sensitiveAction === 'disable2fa') {
+                        await api.toggle2FA(false);
+                        const updated = { ...user, twoFactorEnabled: false };
+                        setUser(updated);
+                        localStorage.setItem('user', JSON.stringify(updated));
+                        showToast('Two-factor authentication disabled.', 'success');
+                        setModal({ open: false, type: '', data: null });
+                    } else if (sensitiveAction === 'withdraw' && modal.data?.investmentId) {
+                        // Move to final confirm after OTP is accepted by backend
+                        await api.verifySensitiveAction({
+                            action: 'withdraw',
+                            investmentId: modal.data.investmentId,
+                            otp: sensitiveOtp,
+                        });
+                        setModal({
+                            open: true,
+                            type: 'confirmWithdraw',
+                            data: { ...modal.data },
+                        });
+                    }
+                } catch (err) {
+                    showToast(err.message || 'Invalid verification code.', 'error');
+                } finally {
+                    setSensitiveAction(null);
+                    setSensitiveOtp('');
+                }
+            }, [sensitiveOtp, sensitiveAction, modal, user, playSound, showToast]);
+
+            const logoutAllDevices = useCallback(async () => {
+                playSound(clickSound);
+                try {
+                    await api.logoutAllDevices();
+                    showToast('Logged out from all other devices.', 'success');
+                } catch (err) {
+                    showToast(err.message || 'Failed to logout other devices.', 'error');
+                }
+                setModal({ open: false, type: '', data: null });
+            }, [playSound, showToast]);
+
+            // ---------- KYC ----------
+            const handleKycVerification = useCallback(() => {
+                playSound(clickSound);
+                setKycStep(1);
+                setKycForm({ pan: '', aadhaar: '', mobile: '', mobileOtp: '', bankAccount: '', ifsc: '', accountName: '' });
+                setModal({ open: true, type: 'kycFlow', data: null });
+            }, [playSound]);
+
+            const submitKycDetails = useCallback(async () => {
+                playSound(clickSound);
+                const pan = kycForm.pan.trim().toUpperCase();
+                const aadhaar = kycForm.aadhaar.replace(/\s/g, '');
+                const mobile = kycForm.mobile.replace(/\s/g, '');
+                if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+                    showToast('Enter a valid PAN (e.g. ABCDE1234F).', 'error');
+                    return;
+                }
+                if (!/^\d{12}$/.test(aadhaar)) {
+                    showToast('Enter a valid 12-digit Aadhaar number.', 'error');
+                    return;
+                }
+                if (!/^[6-9]\d{9}$/.test(mobile)) {
+                    showToast('Enter a valid 10-digit mobile number.', 'error');
+                    return;
+                }
+                try {
+                    await api.submitKycIdentity({ pan, aadhaar, mobile });
+                    setKycStep(2);
+                    showToast('OTP sent to verify Aadhaar & mobile linkage.', 'success');
+                } catch (err) {
+                    showToast(err.message || 'Could not start KYC.', 'error');
+                }
+            }, [kycForm, playSound, showToast]);
+
+            const verifyKycMobileOtp = useCallback(async () => {
+                playSound(clickSound);
+                if (!kycForm.mobileOtp || kycForm.mobileOtp.length !== 6) {
+                    showToast('Enter the 6-digit OTP.', 'error');
+                    return;
+                }
+                try {
+                    await api.verifyKycOtp({
+                        mobile: kycForm.mobile,
+                        otp: kycForm.mobileOtp,
+                        aadhaar: kycForm.aadhaar,
+                    });
+                    setKycStep(3);
+                    showToast('Aadhaar & mobile verified successfully.', 'success');
+                } catch (err) {
+                    showToast(err.message || 'Invalid OTP.', 'error');
+                }
+            }, [kycForm, playSound, showToast]);
+
+            const submitKycBank = useCallback(async () => {
+                playSound(clickSound);
+                const { bankAccount, ifsc, accountName } = kycForm;
+                if (!accountName.trim()) {
+                    showToast('Enter account holder name.', 'error');
+                    return;
+                }
+                if (!/^\d{9,18}$/.test((bankAccount || '').replace(/\s/g, ''))) {
+                    showToast('Enter a valid bank account number (9–18 digits).', 'error');
+                    return;
+                }
+                if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test((ifsc || '').trim().toUpperCase())) {
+                    showToast('Enter a valid IFSC code.', 'error');
+                    return;
+                }
+                setLoading(true);
+                try {
+                    await api.submitKycBank({
+                        accountName: accountName.trim(),
+                        bankAccount: bankAccount.replace(/\s/g, ''),
+                        ifsc: ifsc.trim().toUpperCase(),
+                        pan: kycForm.pan,
+                        aadhaar: kycForm.aadhaar,
+                        mobile: kycForm.mobile,
+                    });
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    showToast('Identity verification completed.', 'success');
+                    playSound(notificationSound);
+                    setModal({ open: false, type: '', data: null });
+                    setKycStep(1);
+                } catch (err) {
+                    showToast(err.message || 'KYC completion failed.', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            }, [kycForm, user, playSound, showToast]);
+
+            const openAddBankModal = useCallback(() => {
+                playSound(clickSound);
+                if (user?.kycStatus !== 'Verified') {
+                    showToast('Complete KYC before adding a bank account.', 'error');
+                    return;
+                }
+                const banks = user?.kycData?.banks || [];
+                if (banks.length >= 2) {
+                    showToast('Maximum 2 bank accounts allowed.', 'error');
+                    return;
+                }
+                setKycForm({ pan: '', aadhaar: '', mobile: '', mobileOtp: '', bankAccount: '', ifsc: '', accountName: '' });
+                setModal({ open: true, type: 'addBank', data: null });
+            }, [user, playSound, showToast]);
+
+            const submitAddBank = useCallback(async () => {
+                playSound(clickSound);
+                const { bankAccount, ifsc, accountName } = kycForm;
+                if (!accountName.trim()) {
+                    showToast('Enter account holder name.', 'error');
+                    return;
+                }
+                if (!/^\d{9,18}$/.test((bankAccount || '').replace(/\s/g, ''))) {
+                    showToast('Enter a valid bank account number (9–18 digits).', 'error');
+                    return;
+                }
+                if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test((ifsc || '').trim().toUpperCase())) {
+                    showToast('Enter a valid IFSC code.', 'error');
+                    return;
+                }
+                try {
+                    await api.addBank({
+                        accountName: accountName.trim(),
+                        bankAccount: bankAccount.replace(/\s/g, ''),
+                        ifsc: ifsc.trim().toUpperCase(),
+                    });
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    showToast('Second bank account added for payouts.', 'success');
+                    playSound(notificationSound);
+                    setModal({ open: false, type: '', data: null });
+                } catch (err) {
+                    showToast(err.message || 'Could not add bank account.', 'error');
+                }
+            }, [kycForm, user, playSound, showToast]);
+
+            const setPrimaryBank = useCallback(async (bankId) => {
+                playSound(clickSound);
+                try {
+                    await api.setPrimaryBank(bankId);
+                    const profile = await api.getProfile();
+                    setUser(prev => ({ ...prev, ...profile }));
+                    localStorage.setItem('user', JSON.stringify({ ...user, ...profile }));
+                    showToast('Primary payout bank updated.', 'success');
+                } catch (err) {
+                    showToast(err.message || 'Could not update primary bank.', 'error');
+                }
+            }, [user, playSound, showToast]);
+
+            // ---------- Logout ----------
+            const handleLogout = useCallback(async () => {
+                playSound(clickSound);
+                try {
+                    await api.logout();
+                } catch (_) { }
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                setUser(null);
+                setMessage('');
+            }, [playSound]);
+
+            // ============================================================
+            // RENDER
+            // ============================================================
+            return (
+                <ErrorBoundary>
+                    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 flex flex-col items-center p-4 sm:p-6 font-sans dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+                        <header className="w-full max-w-5xl mb-8 flex flex-col items-center justify-center text-center">
+                            <div className="relative mb-4">
+                                <div className="absolute inset-0 scale-125 rounded-2xl bg-emerald-500/10 blur-2xl"></div>
+                                <div className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 ring-1 ring-emerald-500/25 shadow-[0_8px_32px_-4px_rgba(16,185,129,0.3)]">
+                                    <svg className="h-8 w-8 sm:h-9 sm:w-9" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AnkuOn2">
+                                        <path d="M24 6 L38 12 V22 C38 32 31 38 24 42 C17 38 10 32 10 22 V12 Z" stroke="#34d399" strokeWidth="1.75" fill="rgba(16,185,129,0.08)" strokeLinejoin="round" />
+                                        <path d="M17 32 L24 14 L31 32" stroke="#34d399" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M19.5 26.5 H28.5" stroke="#34d399" strokeWidth="2.1" strokeLinecap="round" />
+                                        <circle cx="34" cy="14" r="5.5" fill="#0f172a" stroke="#fbbf24" strokeWidth="1.4" />
+                                        <text x="34" y="17.2" textAnchor="middle" fill="#fbbf24" fontSize="7.5" fontWeight="700" fontFamily="Inter, system-ui, sans-serif">2</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 fade-in dark:text-white">AnkuOn2</h1>
+                            <div className="mt-2 flex items-center justify-center gap-2.5">
+                                <span className="h-px w-5 bg-gradient-to-r from-transparent to-emerald-500/40"></span>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Investment Management Platform</p>
+                                <span className="h-px w-5 bg-gradient-to-l from-transparent to-emerald-500/40"></span>
+                            </div>
+                            <p className="text-slate-500 text-sm mt-2 dark:text-slate-400">Target up to 2% monthly · Returns not guaranteed</p>
+                        </header>
+
+                        {message && (
+                            <div className="w-full max-w-md mb-6 p-4 bg-emerald-100 text-emerald-800 rounded-lg shadow-md fade-in text-base dark:bg-emerald-900 dark:text-emerald-200">{message}</div>
+                        )}
+                        {loading && (
+                            <div className="w-full max-w-md mb-6 p-4 bg-gray-200 text-gray-800 rounded-lg shadow-md fade-in flex items-center justify-center dark:bg-gray-700 dark:text-gray-200">
+                                <div className="spinner mr-2"></div>
+                                <span>Loading...</span>
+                            </div>
+                        )}
+                        {toast.message && (
+                            <div className={`toast ${toast.type === 'error' ? 'toast-error' : ''} ${toast.message ? 'fade-in' : 'hidden'}`}>
+                                {toast.message}
+                                <i className="fas fa-times toast-close" onClick={dismissToast} aria-label="Close toast"></i>
+                            </div>
+                        )}
+
+                        {!user ? (
+                            <LoginForm
+                                setUser={setUser}
+                                setMessage={setMessage}
+                                setLoading={setLoading}
+                                loading={loading}
+                                playSound={playSound}
+                            />
+                        ) : (
+                            <div className="w-full max-w-5xl space-y-6">
+                                <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                                        <div>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200">Welcome, {user.name}</h2>
+                                            <Clock />
+                                        </div>
+                                        <div className="flex items-center mt-4 sm:mt-0 space-x-4">
+                                            <label htmlFor="sound-toggle" className="mr-2 text-gray-800 text-base dark:text-gray-200">Sound Effects</label>
+                                            <label className="toggle">
+                                                <input id="sound-toggle" type="checkbox" checked={isSoundEnabled}
+                                                    onChange={() => setIsSoundEnabled(!isSoundEnabled)}
+                                                    onClick={() => playSound(clickSound)} aria-label="Toggle sound effects" />
+                                                <span className="slider"></span>
+                                            </label>
+                                            <label htmlFor="dark-toggle" className="mr-2 text-gray-800 text-base dark:text-gray-200">Dark Mode</label>
+                                            <label className="toggle">
+                                                <input id="dark-toggle" type="checkbox" checked={isDarkMode}
+                                                    onChange={() => setIsDarkMode(!isDarkMode)}
+                                                    onClick={() => playSound(clickSound)} aria-label="Toggle dark mode" />
+                                                <span className="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <Dashboard user={user} />
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                                        {/* Left column — accordion */}
+                                        <div className="space-y-3">
+                                            {/* LAYER 1 — Security & Account */}
+                                            <div className="rounded-xl border border-gray-200 overflow-hidden dark:border-gray-600">
+                                                <button type="button" onClick={() => toggleLayer(1)}
+                                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition dark:bg-gray-700/40 dark:hover:bg-gray-700">
+                                                    <span className="flex items-center text-base font-semibold text-gray-800 dark:text-gray-200">
+                                                        <i className="fas fa-shield-alt mr-2 text-emerald-600"></i> Security & Account
+                                                    </span>
+                                                    <i className={`fas fa-chevron-${openLayer === 1 ? 'up' : 'down'} text-gray-500`}></i>
+                                                </button>
+                                                {openLayer === 1 && (
+                                                    <div className="p-4 space-y-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600">
+                                                        <div>
+                                                            <div className="flex items-center justify-between mb-2">
+                                                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Security Status</p>
+                                                                <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full dark:bg-green-900 dark:text-green-200">Active</span>
+                                                            </div>
+                                                            <ul className="space-y-1.5 text-sm">
+                                                                <li className="flex items-center text-green-600 dark:text-green-400"><i className="fas fa-check-circle mr-2 w-4"></i> Email verified</li>
+                                                                <li className={`flex items-center ${user.kycStatus === 'Verified' ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
+                                                                    <i className={`fas ${user.kycStatus === 'Verified' ? 'fa-check-circle' : 'fa-circle'} mr-2 w-4`}></i> Identity verified
+                                                                </li>
+                                                                <li className={`flex items-center ${user.kycData?.bankAccount ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
+                                                                    <i className={`fas ${user.kycData?.bankAccount ? 'fa-check-circle' : 'fa-circle'} mr-2 w-4`}></i> Bank account verified
+                                                                </li>
+                                                                <li className={`flex items-center ${user.kycData?.mobile ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
+                                                                    <i className={`fas ${user.kycData?.mobile ? 'fa-check-circle' : 'fa-circle'} mr-2 w-4`}></i> Mobile verified
+                                                                </li>
+                                                            </ul>
+                                                            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-0.5">
+                                                                {user.lastLogin && <p>Last login: {new Date(user.lastLogin).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</p>}
+                                                                <p>Active sessions: {user.activeSessions || 1}</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="pt-3 border-t border-gray-200 dark:border-gray-600 space-y-2">
+                                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Account Information</p>
+                                                            {!updatedName && user.name ? (
+                                                                <div className="flex items-center justify-between">
+                                                                    <div>
+                                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Full Name</p>
+                                                                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{user.name}</p>
+                                                                    </div>
+                                                                    <button type="button" onClick={() => setUpdatedName(user.name)} className="text-sm text-emerald-600 font-medium hover:underline">Edit Name</button>
+                                                                </div>
+                                                            ) : (
+                                                                <form onSubmit={handleUpdateProfile} className="space-y-2">
+                                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                                                                    <input type="text" placeholder="Enter your full name"
+                                                                        value={updatedName || user.name || ''}
+                                                                        onChange={(e) => setUpdatedName(e.target.value)}
+                                                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm" />
+                                                                    <button type="submit" className="w-full p-2.5 bg-green-600 text-white rounded-lg btn-primary text-sm font-medium">Save Changes</button>
+                                                                </form>
+                                                            )}
+                                                            <div className="flex items-center gap-3 pt-1">
+                                                                <div className="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center flex-shrink-0">
+                                                                    <i className="fas fa-envelope text-emerald-600 text-sm"></i>
+                                                                </div>
+                                                                <div className="min-w-0 flex-1">
+                                                                    <p className="text-xs text-gray-500 dark:text-gray-400">Registered Email</p>
+                                                                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{user.email}</p>
+                                                                </div>
+                                                                <span className="text-xs text-green-600 dark:text-green-400 font-medium flex-shrink-0">Verified</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="pt-3 border-t border-gray-200 dark:border-gray-600 space-y-2">
+                                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Active Sessions</p>
+                                                            <p className="text-sm text-gray-700 dark:text-gray-300">{user.activeSessions || 1} active session</p>
+                                                            <div className="p-2.5 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 text-sm">
+                                                                <div className="flex justify-between items-start">
+                                                                    <div>
+                                                                        <p className="font-medium text-gray-800 dark:text-gray-200">Current browser</p>
+                                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Current device · Last active: Just now</p>
+                                                                    </div>
+                                                                    <span className="text-xs text-green-600 dark:text-green-400">Active</span>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" onClick={() => {
+                                                                playSound(clickSound);
+                                                                setModal({ open: true, type: 'confirmLogoutAll', data: null });
+                                                            }} className="w-full p-2.5 border border-orange-300 text-orange-700 rounded-lg text-sm font-medium hover:bg-orange-50 dark:border-orange-600 dark:text-orange-300 dark:hover:bg-orange-900/20">
+                                                                Logout all other devices
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* LAYER 2 — Identity & Payout */}
+                                            <div className="rounded-xl border border-gray-200 overflow-hidden dark:border-gray-600">
+                                                <button type="button" onClick={() => toggleLayer(2)}
+                                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition dark:bg-gray-700/40 dark:hover:bg-gray-700">
+                                                    <span className="flex items-center text-base font-semibold text-gray-800 dark:text-gray-200">
+                                                        <i className="fas fa-id-badge mr-2 text-emerald-600"></i>
+                                                        Identity & Payout
+                                                        <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${user.kycStatus === 'Verified' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'}`}>
+                                                            {user.kycStatus === 'Verified' ? 'Verified' : 'Not Verified'}
+                                                        </span>
+                                                    </span>
+                                                    <i className={`fas fa-chevron-${openLayer === 2 ? 'up' : 'down'} text-gray-500`}></i>
+                                                </button>
+                                                {openLayer === 2 && (
+                                                    <div className="p-4 space-y-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600">
+                                                        <div className="space-y-3">
+                                                            {user.kycStatus !== 'Verified' ? (
+                                                                <div className="space-y-2">
+                                                                    <p className="text-sm text-gray-600 dark:text-gray-400">Complete identity verification to unlock investing and withdrawals.</p>
+                                                                    <ul className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                                                                        <li><i className="fas fa-check text-emerald-500 mr-1.5"></i>PAN & Aadhaar</li>
+                                                                        <li><i className="fas fa-check text-emerald-500 mr-1.5"></i>Aadhaar + Mobile OTP</li>
+                                                                        <li><i className="fas fa-check text-emerald-500 mr-1.5"></i>Bank account (required for payouts)</li>
+                                                                    </ul>
+                                                                    <button onClick={handleKycVerification} disabled={loading}
+                                                                        className="w-full p-2.5 bg-emerald-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-sm font-medium mt-2">
+                                                                        <i className="fas fa-id-badge mr-2"></i> Start KYC Verification
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="space-y-3">
+                                                                    <p className="text-sm text-green-700 dark:text-green-300 font-medium">Verification completed · Account Active</p>
+                                                                    <div className="flex items-center justify-between gap-2">
+                                                                        {[
+                                                                            { key: 'identity', label: 'Identity', icon: 'fa-id-card', ok: !!(user.kycData?.pan && user.kycData?.aadhaar) },
+                                                                            { key: 'mobile', label: 'Mobile', icon: 'fa-mobile-alt', ok: !!(user.kycData?.mobile && user.kycData?.aadhaarMobileLinked) },
+                                                                            { key: 'bank', label: 'Bank', icon: 'fa-university', ok: !!user.kycData?.bankAccount },
+                                                                        ].map((item) => (
+                                                                            <button key={item.key} type="button"
+                                                                                onClick={() => { playSound(clickSound); setKycDetailOpen(kycDetailOpen === item.key ? null : item.key); }}
+                                                                                className={`flex-1 p-3 rounded-xl border text-center transition ${kycDetailOpen === item.key ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' : 'border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600'}`}>
+                                                                                <div className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center mb-1 ${item.ok ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
+                                                                                    <i className={`fas ${item.ok ? 'fa-check' : item.icon} text-sm`}></i>
+                                                                                </div>
+                                                                                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{item.label}</p>
+                                                                                <p className={`text-[10px] ${item.ok ? 'text-green-600' : 'text-gray-400'}`}>{item.ok ? 'Verified' : 'Pending'}</p>
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                    {kycDetailOpen === 'identity' && user.kycData && (
+                                                                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 text-xs space-y-1">
+                                                                            <p className="font-medium text-gray-800 dark:text-gray-200 mb-1">Identity details</p>
+                                                                            <p className="text-gray-500">PAN: <span className="text-gray-800 dark:text-gray-200">{maskPan(user.kycData.pan)}</span></p>
+                                                                            <p className="text-gray-500">Aadhaar: <span className="text-gray-800 dark:text-gray-200">{maskAadhaar(user.kycData.aadhaar)}</span></p>
+                                                                        </div>
+                                                                    )}
+                                                                    {kycDetailOpen === 'mobile' && user.kycData && (
+                                                                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 text-xs space-y-1">
+                                                                            <p className="font-medium text-gray-800 dark:text-gray-200 mb-1">Mobile linked to Aadhaar</p>
+                                                                            <p className="text-gray-500">Mobile: <span className="text-gray-800 dark:text-gray-200">{maskMobile(user.kycData.mobile)}</span></p>
+                                                                            <p className="text-green-600">Aadhaar–Mobile link verified</p>
+                                                                        </div>
+                                                                    )}
+                                                                    {kycDetailOpen === 'bank' && user.kycData && (
+                                                                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 text-xs space-y-1">
+                                                                            <p className="font-medium text-gray-800 dark:text-gray-200 mb-1">Primary payout bank</p>
+                                                                            {user.kycData.bankAccount ? (
+                                                                                <>
+                                                                                    <p className="text-gray-500">Account: <span className="text-gray-800 dark:text-gray-200">{maskBank(user.kycData.bankAccount)}</span></p>
+                                                                                    {user.kycData.accountName && <p className="text-gray-500">Name: {user.kycData.accountName}</p>}
+                                                                                    {user.kycData.ifsc && <p className="text-gray-500">IFSC: {maskIfsc(user.kycData.ifsc)}</p>}
+                                                                                    <p className="text-green-600">Verified · NEFT / RTGS / IMPS</p>
+                                                                                </>
+                                                                            ) : <p className="text-orange-600">No bank linked</p>}
+                                                                        </div>
+                                                                    )}
+                                                                    <p className="text-[10px] text-gray-400 text-center">Tap a status above to view details</p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="pt-3 border-t border-gray-200 dark:border-gray-600 space-y-2">
+                                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Payout Bank Accounts</p>
+                                                            {user.kycData?.bankAccount ? (
+                                                                <div className="space-y-2">
+                                                                    {(user.kycData.banks && user.kycData.banks.length
+                                                                        ? user.kycData.banks
+                                                                        : [{ id: 'legacy', bankAccount: user.kycData.bankAccount, ifsc: user.kycData.ifsc, accountName: user.kycData.accountName, isPrimary: true }]
+                                                                    ).map((bank) => (
+                                                                        <div key={bank.id} className={`p-3 rounded-lg border space-y-1 ${bank.isPrimary ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700' : 'bg-gray-50 border-gray-200 dark:bg-gray-700 dark:border-gray-600'}`}>
+                                                                            <div className="flex items-center justify-between">
+                                                                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{maskBank(bank.bankAccount)}</p>
+                                                                                {bank.isPrimary ? (
+                                                                                    <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full dark:bg-emerald-900 dark:text-emerald-200">Primary</span>
+                                                                                ) : (
+                                                                                    <button type="button" onClick={() => setPrimaryBank(bank.id)} className="text-[10px] font-medium text-emerald-600 hover:underline">Set as primary</button>
+                                                                                )}
+                                                                            </div>
+                                                                            {bank.accountName && <p className="text-xs text-gray-500 dark:text-gray-400">{bank.accountName}</p>}
+                                                                            {bank.ifsc && <p className="text-xs text-gray-500 dark:text-gray-400">IFSC: {maskIfsc(bank.ifsc)}</p>}
+                                                                        </div>
+                                                                    ))}
+                                                                    <p className="text-xs text-gray-400">Withdrawals go to the primary bank via NEFT / RTGS / IMPS.</p>
+                                                                    {((user.kycData.banks && user.kycData.banks.length) || 1) < 2 && (
+                                                                        <button type="button" onClick={openAddBankModal}
+                                                                            className="w-full p-2.5 border border-dashed border-emerald-400 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-50 dark:border-emerald-600 dark:text-emerald-300 dark:hover:bg-emerald-900/20">
+                                                                            <i className="fas fa-plus mr-2"></i> Add second bank for payout
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="space-y-2">
+                                                                    <p className="text-sm text-orange-600 dark:text-orange-400 flex items-center">
+                                                                        <i className="fas fa-exclamation-circle mr-2"></i> No verified bank account linked
+                                                                    </p>
+                                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                                        Complete KYC and link your bank account. All withdrawals are paid only to your verified bank account.
+                                                                    </p>
+                                                                    {user.kycStatus !== 'Verified' && (
+                                                                        <button type="button" onClick={handleKycVerification}
+                                                                            className="w-full p-2.5 bg-emerald-600 text-white rounded-lg btn-primary text-sm font-medium">
+                                                                            Complete KYC & Link Bank
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* LAYER 3 — Activity & Disclosure */}
+                                            <div className="rounded-xl border border-gray-200 overflow-hidden dark:border-gray-600">
+                                                <button type="button" onClick={() => toggleLayer(3)}
+                                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition dark:bg-gray-700/40 dark:hover:bg-gray-700">
+                                                    <span className="flex items-center text-base font-semibold text-gray-800 dark:text-gray-200">
+                                                        <i className="fas fa-history mr-2 text-emerald-600"></i> Activity & Disclosure
+                                                    </span>
+                                                    <i className={`fas fa-chevron-${openLayer === 3 ? 'up' : 'down'} text-gray-500`}></i>
+                                                </button>
+                                                {openLayer === 3 && (
+                                                    <div className="p-4 space-y-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600">
+                                                        <div className="space-y-2">
+                                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Security Activity</p>
+                                                            <div className="space-y-2 text-xs">
+                                                                {(user.securityLog || []).length === 0 ? (
+                                                                    <p className="text-gray-400">No recent security events.</p>
+                                                                ) : (
+                                                                    (user.securityLog || []).slice(0, 8).map((entry, i) => (
+                                                                        <div key={i} className="flex justify-between items-center p-2 bg-gray-50 rounded-lg dark:bg-gray-700">
+                                                                            <div>
+                                                                                <p className="font-medium text-gray-800 dark:text-gray-200">{(entry.action || '').replace(/_/g, ' ')}</p>
+                                                                                <p className="text-gray-400">{entry.at ? new Date(entry.at).toLocaleString('en-IN') : ''}</p>
+                                                                            </div>
+                                                                            <span className="text-green-600 dark:text-green-400">Successful</span>
+                                                                        </div>
+                                                                    ))
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 dark:bg-amber-900/20 dark:border-amber-700 space-y-1">
+                                                            <p className="text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200">Investment Disclosure</p>
+                                                            <p className="text-xs text-amber-900 dark:text-amber-100 leading-relaxed">
+                                                                Target return: up to 2% per month on invested capital, subject to product terms and investment performance. Returns are not guaranteed. Past performance is not indicative of future results. Withdrawal processing may take up to 3 business days. Applicable taxes are the investor&apos;s responsibility.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Right column — Invest */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center dark:text-gray-200">
+                                                <i className="fas fa-money-check-alt mr-2 text-emerald-600"></i> Invest in AnkuOn2
+                                            </h3>
+                                            {user.kycStatus !== 'Verified' && (
+                                                <div className="mb-4 p-4 bg-amber-50 border border-amber-300 rounded-xl dark:bg-amber-900/20 dark:border-amber-600">
+                                                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 flex items-center">
+                                                        <i className="fas fa-exclamation-triangle mr-2"></i> KYC required before investing
+                                                    </p>
+                                                    <p className="text-xs text-amber-800 dark:text-amber-300 mt-1">
+                                                        Complete identity verification (PAN, Aadhaar, mobile OTP & bank) to unlock investments and withdrawals.
+                                                    </p>
+                                                    <button type="button" onClick={handleKycVerification}
+                                                        className="mt-3 w-full p-2.5 bg-emerald-600 text-white rounded-lg text-sm font-medium btn-primary">
+                                                        <i className="fas fa-id-badge mr-2"></i> Complete KYC Now
+                                                    </button>
+                                                </div>
+                                            )}
+                                            <form onSubmit={handleInvest} className="space-y-4">
+                                                <div>
+                                                    <label htmlFor="investmentAmount" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-1">Enter Investment Amount</label>
+                                                    <input
+                                                        id="investmentAmount" type="text" placeholder="Enter investment amount"
+                                                        value={investmentAmount ? `₹${parseInt(investmentAmount.replace(/[^0-9]/g, '') || '0').toLocaleString('en-IN')}` : ''}
+                                                        onChange={(e) => {
+                                                            const raw = e.target.value.replace(/[^0-9]/g, '');
+                                                            setInvestmentAmount(raw);
+                                                            const amt = parseInt(raw || '0');
+                                                            if (amt > CONFIG.MAX_UPI_AMOUNT) setPaymentMethod('bank');
+                                                            else if (paymentMethod === 'bank') setPaymentMethod('qr');
+                                                        }}
+                                                        className="w-full p-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        required aria-required="true"
+                                                    />
+                                                    <div className="flex flex-wrap gap-2 mt-3">
+                                                        {[10000, 50000, 100000, 500000].map((add) => (
+                                                            <button key={add} type="button"
+                                                                onClick={() => {
+                                                                    playSound(clickSound);
+                                                                    const current = parseInt((investmentAmount || '0').replace(/[^0-9]/g, '') || '0');
+                                                                    let next = current + add;
+                                                                    if (next > CONFIG.MAX_INVEST_AMOUNT) next = CONFIG.MAX_INVEST_AMOUNT;
+                                                                    setInvestmentAmount(String(next));
+                                                                    if (next > CONFIG.MAX_UPI_AMOUNT) setPaymentMethod('bank');
+                                                                    else if (paymentMethod === 'bank') setPaymentMethod('qr');
+                                                                }}
+                                                                className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium btn-primary dark:bg-emerald-900 dark:text-emerald-300">
+                                                                +₹{add >= 100000 ? (add / 100000) + 'L' : (add / 1000) + 'k'}
+                                                            </button>
+                                                        ))}
+                                                        <button type="button" onClick={() => { playSound(clickSound); setInvestmentAmount(''); setPaymentMethod('qr'); }}
+                                                            className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm font-medium btn-primary dark:bg-gray-600 dark:text-gray-200">
+                                                            Clear
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {(() => {
+                                                    const amt = parseInt((investmentAmount || '0').replace(/[^0-9]/g, '') || '0');
+                                                    if (amt < CONFIG.MIN_INVEST_AMOUNT) return null;
+                                                    if (amt > CONFIG.MAX_UPI_AMOUNT) {
+                                                        return (
+                                                            <div className="space-y-3">
+                                                                <div className="p-3 bg-orange-50 border border-orange-300 rounded-lg text-sm text-orange-800 dark:bg-orange-900/30 dark:border-orange-600 dark:text-orange-200">
+                                                                    <i className="fas fa-lock mr-2"></i>
+                                                                    <strong>UPI / QR locked</strong> — amounts above ₹5 Lakh must use bank transfer.
+                                                                </div>
+                                                                <div className={`payment-method-box ${paymentMethod === 'bank' ? 'active' : ''} dark:border-gray-600`}
+                                                                    onClick={() => { playSound(clickSound); setPaymentMethod('bank'); }}>
+                                                                    <div className="flex items-center mb-2">
+                                                                        <i className="fas fa-university mr-2 text-emerald-600 text-xl"></i>
+                                                                        <input type="radio" id="bankMethod" name="paymentMethod" value="bank" checked={paymentMethod === 'bank'} onChange={() => setPaymentMethod('bank')} className="mr-2" />
+                                                                        <label htmlFor="bankMethod" className="text-base font-medium text-gray-700 dark:text-gray-300">Net Banking / NEFT / RTGS / IMPS</label>
+                                                                    </div>
+                                                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                                        High-value settlement via Net Banking, NEFT, RTGS or IMPS. Account details will be shared after confirmation.
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return (
+                                                        <div className="space-y-3">
+                                                            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Choose payment method (UPI limit: ₹5 Lakh)</p>
+                                                            <div className={`payment-method-box ${paymentMethod === 'qr' ? 'active' : ''} dark:border-gray-600`}
+                                                                onClick={() => { playSound(clickSound); setPaymentMethod('qr'); }}>
+                                                                <div className="flex items-center mb-1">
+                                                                    <i className="fas fa-qrcode mr-2 text-emerald-600 text-xl"></i>
+                                                                    <input type="radio" id="qrMethod" name="paymentMethod" value="qr" checked={paymentMethod === 'qr'} onChange={() => setPaymentMethod('qr')} className="mr-2" />
+                                                                    <label htmlFor="qrMethod" className="text-base font-medium text-gray-700 dark:text-gray-300">Pay with QR Code</label>
+                                                                </div>
+                                                                <p className="text-sm text-gray-600 dark:text-gray-400">Scan QR using any UPI app.</p>
+                                                            </div>
+                                                            <div className={`payment-method-box ${paymentMethod === 'collect' ? 'active' : ''} dark:border-gray-600`}
+                                                                onClick={() => { playSound(clickSound); setPaymentMethod('collect'); }}>
+                                                                <div className="flex items-center mb-1">
+                                                                    <i className="fas fa-mobile-alt mr-2 text-emerald-600 text-xl"></i>
+                                                                    <input type="radio" id="collectMethod" name="paymentMethod" value="collect" checked={paymentMethod === 'collect'} onChange={() => setPaymentMethod('collect')} className="mr-2" />
+                                                                    <label htmlFor="collectMethod" className="text-base font-medium text-gray-700 dark:text-gray-300">Pay with UPI Request</label>
+                                                                </div>
+                                                                <p className="text-sm text-gray-600 dark:text-gray-400">Approve request in your UPI app.</p>
+                                                                {paymentMethod === 'collect' && (
+                                                                    <div className="mt-3">
+                                                                        <label htmlFor="userUpiIdForCollect" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Your UPI ID</label>
+                                                                        <input id="userUpiIdForCollect" type="text" placeholder="e.g., yourname@upi"
+                                                                            value={userUpiIdForCollect}
+                                                                            onChange={(e) => setUserUpiIdForCollect(e.target.value)}
+                                                                            className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white ${isUpiValid === true ? 'input-valid' : isUpiValid === false ? 'input-invalid' : 'border-gray-300 dark:border-gray-600'}`} />
+                                                                        <p className="text-sm mt-1">
+                                                                            {isUpiValid === true ? (
+                                                                                <span className="text-green-600 flex items-center dark:text-green-400"><i className="fas fa-check-circle mr-1"></i> Valid UPI ID</span>
+                                                                            ) : isUpiValid === false ? (
+                                                                                <span className="text-red-600 flex items-center dark:text-red-400"><i className="fas fa-exclamation-circle mr-1"></i> Invalid UPI ID</span>
+                                                                            ) : (
+                                                                                <span className="text-gray-500 dark:text-gray-500">Enter your UPI ID</span>
+                                                                            )}
+                                                                        </p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
+
+                                                <button type="submit"
+                                                    className="w-full p-3 bg-emerald-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                                    disabled={
+                                                        loading ||
+                                                        user.kycStatus !== 'Verified' ||
+                                                        !investmentAmount ||
+                                                        parseInt((investmentAmount || '0').replace(/[^0-9]/g, '') || '0') < CONFIG.MIN_INVEST_AMOUNT ||
+                                                        parseInt((investmentAmount || '0').replace(/[^0-9]/g, '') || '0') > CONFIG.MAX_INVEST_AMOUNT ||
+                                                        (paymentMethod === 'collect' && !isUpiValid)
+                                                    }
+                                                    aria-label="Proceed to payment">
+                                                    <i className="fas fa-arrow-right mr-2"></i> Proceed
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <button onClick={handleLogout}
+                                        className="w-full p-3 bg-red-600 text-white rounded-lg btn-primary disabled:opacity-50 flex items-center justify-center text-base"
+                                        disabled={loading} aria-label="Logout">
+                                        <i className="fas fa-sign-out-alt mr-2"></i> Logout
+                                    </button>
+                                </div>
+
+                                <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl fade-in dark:bg-gray-800">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 section-header flex items-center dark:text-gray-200"
+                                        onClick={() => { playSound(clickSound); setShowInvestments(!showInvestments); }}>
+                                        <i className="fas fa-chart-bar mr-2 text-emerald-600"></i> Your Investments {showInvestments ? '▼' : '▶'}
+                                    </h3>
+                                    {showInvestments && (
+                                        <InvestmentList
+                                            user={user}
+                                            handleWithdraw={handleWithdraw}
+                                            handleCancelWithdrawal={handleCancelWithdrawal}
+                                            selectedInvestmentId={selectedInvestmentId}
+                                            setSelectedInvestmentId={setSelectedInvestmentId}
+                                            showAllInvestments={showAllInvestments}
+                                            setShowAllInvestments={setShowAllInvestments}
+                                            loading={loading}
+                                            playSound={playSound}
+                                        />
+                                    )}
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 section-header mt-6 flex items-center dark:text-gray-200"
+                                        onClick={() => { playSound(clickSound); setShowWithdrawals(!showWithdrawals); }}>
+                                        <i className="fas fa-hand-holding-usd mr-2 text-emerald-600"></i> Withdrawal Requests {showWithdrawals ? '▼' : '▶'}
+                                    </h3>
+                                    {showWithdrawals && (
+                                        <WithdrawalList
+                                            user={user}
+                                            showAllWithdrawals={showAllWithdrawals}
+                                            setShowAllWithdrawals={setShowAllWithdrawals}
+                                            playSound={playSound}
+                                        />
+                                    )}
+                                    <Resources activeTab={activeTab} setActiveTab={setActiveTab} playSound={playSound} />
+                                </div>
+                            </div>
+                        )}
+
+                        <Modal
+                            modal={modal}
+                            setModal={setModal}
+                            confirmPayment={confirmPayment}
+                            confirmUpiCollect={confirmUpiCollect}
+                            confirmWithdraw={confirmWithdraw}
+                            confirmCancelWithdrawal={confirmCancelWithdrawal}
+                            confirmUpdateProfile={confirmUpdateProfile}
+                            confirmBankTransfer={confirmBankTransfer}
+                            confirmSensitiveAction={confirmSensitiveAction}
+                            logoutAllDevices={logoutAllDevices}
+                            loading={loading}
+                            playSound={playSound}
+                            kycStep={kycStep}
+                            kycForm={kycForm}
+                            setKycForm={setKycForm}
+                            submitKycDetails={submitKycDetails}
+                            verifyKycMobileOtp={verifyKycMobileOtp}
+                            submitKycBank={submitKycBank}
+                            submitAddBank={submitAddBank}
+                            sensitiveOtp={sensitiveOtp}
+                            setSensitiveOtp={setSensitiveOtp}
+                        />
+
+                        <section className="w-full max-w-lg mt-10 mb-6">
+                            <div className="rounded-3xl border border-slate-200/80 bg-white/80 backdrop-blur soft-glow p-6 sm:p-8 text-center dark:border-white/10 dark:bg-slate-900/60">
+                                <p className="text-sm text-slate-500 dark:text-slate-400">
+                                    For investment-related information or support, contact the founder directly.
+                                </p>
+                                <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/80 p-5 dark:border-white/10 dark:bg-white/5">
+                                    <div className="flex items-center justify-center gap-3">
+                                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+                                            <i className="fas fa-user text-lg"></i>
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-xs text-slate-500 dark:text-slate-500">Founder</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white">Ankit Lodhi</p>
+                                        </div>
+                                    </div>
+                                    <a href="mailto:ankitlodhiii06@gmail.com?subject=AnkuOn2%20Investment%20Inquiry&body=Hello%20Ankit%2C%0A%0AI%20am%20interested%20in%20learning%20more%20about%20AnkuOn2%20investment%20opportunities.%0A%0APlease%20share%20the%20relevant%20details%20when%20convenient.%0A%0AThank%20you."
+                                        className="btn-mail mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-slate-950 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-950">
+                                        <i className="fas fa-envelope"></i> Email Founder
+                                    </a>
+                                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ankitlodhiii06@gmail.com&su=AnkuOn2%20Investment%20Inquiry&body=Hello%20Ankit%2C%0A%0AI%20am%20interested%20in%20learning%20more%20about%20AnkuOn2%20investment%20opportunities.%0A%0APlease%20share%20the%20relevant%20details%20when%20convenient.%0A%0AThank%20you."
+                                        target="_blank" rel="noopener noreferrer"
+                                        className="mt-3 block text-xs text-slate-500 transition hover:text-emerald-500">
+                                        Or open in Gmail →
+                                    </a>
+                                    <p className="mt-3 text-xs text-slate-500 select-all dark:text-slate-400">ankitlodhiii06@gmail.com</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <footer className="mt-4 mb-8 w-full max-w-5xl text-center">
+                            <p className="text-xs text-slate-500 dark:text-slate-600">© 2026 AnkuOn2. All rights reserved.</p>
+                            <p className="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-600">
+                                Invest responsibly. Returns are not guaranteed. Past performance is not indicative of future results.<br className="hidden sm:inline" />
+                                Terms and applicable regulatory requirements apply.
+                            </p>
+                        </footer>
+                    </div>
+                </ErrorBoundary>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 
 </html>
