@@ -1,7 +1,6 @@
 # app/api/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.conf import settings
 from django.utils import timezone
 from django.db import models
@@ -9,6 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from datetime import timedelta
 import random
+import hmac
+import hashlib
+import base64
 import json
 
 from .serializers import UserProfileSerializer, InvestmentSerializer, WithdrawalSerializer
@@ -19,12 +21,6 @@ try:
 except ImportError:
     def create_virtual_account(*args, **kwargs):
         return None
-
-try:
-    from app.services.cashfree_webhook import verify_cashfree_signature
-except ImportError:
-    def verify_cashfree_signature(*args, **kwargs):
-        return True
 
 try:
     from app.tasks import send_otp_email
@@ -43,7 +39,7 @@ def get_profile(request):
         return None
 
 
-# ==================== USER APIs ====================
+# ==================== USER ====================
 
 class SendOTPView(APIView):
     def post(self, request):
@@ -52,9 +48,7 @@ class SendOTPView(APIView):
         if not email or not name:
             return Response({'error': 'Email and name required'}, status=400)
 
-        profile, _ = UserProfile.objects.get_or_create(
-            email=email, defaults={'name': name}
-        )
+        profile, _ = UserProfile.objects.get_or_create(email=email, defaults={'name': name})
         if name and profile.name != name:
             profile.name = name
 
@@ -63,11 +57,10 @@ class SendOTPView(APIView):
         profile.save()
 
         print(f'[DEMO OTP] {email}: {otp}')
-
         try:
             send_otp_email.delay(email, otp)
         except Exception:
-            print(f'[DEMO OTP fallback] {email}: {otp}')
+            print(f'[DEMO OTP] {email}: {otp}')
 
         return Response({'message': 'OTP sent'}, status=200)
 
@@ -85,7 +78,6 @@ class VerifyOTPView(APIView):
             profile.otp = None
             profile.last_login = timezone.now()
             profile.save()
-
             request.session['user_email'] = email
             SecurityLog.objects.create(user=profile, action='LOGIN')
 
@@ -110,16 +102,11 @@ class InvestView(APIView):
         profile = get_profile(request)
         if not profile:
             return Response({'error': 'Unauthorized'}, status=401)
-
         if profile.kyc_status != 'Verified':
             return Response({'error': 'KYC verification required'}, status=403)
 
         amount = request.data.get('amount')
-        payment_method = (
-            request.data.get('payment_method')
-            or request.data.get('paymentMethod')
-            or 'bank'
-        )
+        payment_method = request.data.get('payment_method') or request.data.get('paymentMethod') or 'bank'
         request_va = request.data.get('requestVirtualAccount', True)
 
         try:
@@ -133,7 +120,6 @@ class InvestView(APIView):
             return Response({'error': 'Maximum amount is ₹1 Crore'}, status=400)
 
         order_id = f"AO2-{timezone.now().strftime('%Y%m%d')}-{random.randint(10000, 99999)}"
-
         virtual_account = None
         status_value = 'Pending'
 
@@ -159,15 +145,10 @@ class InvestView(APIView):
             virtual_account=virtual_account,
         )
 
-        response_data = {
-            'orderId': order_id,
-            'order_id': order_id,
-            'status': status_value,
-        }
+        data = {'orderId': order_id, 'order_id': order_id, 'status': status_value}
         if virtual_account:
-            response_data['virtualAccount'] = virtual_account
-
-        return Response(response_data, status=200)
+            data['virtualAccount'] = virtual_account
+        return Response(data, status=200)
 
 
 class CheckTransactionView(APIView):
@@ -196,7 +177,7 @@ class WithdrawView(APIView):
 
         kyc = getattr(profile, 'kyc', None)
         if not kyc or not kyc.bank_account or not kyc.ifsc:
-            return Response({'error': 'Verified bank account required for withdrawals'}, status=400)
+            return Response({'error': 'Verified bank account required'}, status=400)
 
         investment_id = request.data.get('investment_id') or request.data.get('investmentId')
         amount = request.data.get('amount')
@@ -214,11 +195,10 @@ class WithdrawView(APIView):
         except (TypeError, ValueError):
             amount = float(investment.amount + investment.returns)
 
-        max_amount = float(investment.amount + investment.returns)
-        if amount > max_amount:
+        if amount > float(investment.amount + investment.returns):
             return Response({'error': 'Insufficient balance'}, status=400)
 
-        withdrawal = Withdrawal.objects.create(
+        wd = Withdrawal.objects.create(
             user=profile,
             investment=investment,
             amount=amount,
@@ -229,8 +209,8 @@ class WithdrawView(APIView):
             method='NEFT/RTGS/IMPS',
         )
         return Response({
-            'message': 'Withdrawal requested to your verified bank account',
-            'withdrawal': WithdrawalSerializer(withdrawal).data
+            'message': 'Withdrawal requested',
+            'withdrawal': WithdrawalSerializer(wd).data
         }, status=200)
 
 
@@ -239,18 +219,17 @@ class CancelWithdrawalView(APIView):
         profile = get_profile(request)
         if not profile:
             return Response({'error': 'Unauthorized'}, status=401)
-
         withdrawal_id = request.data.get('withdrawal_id') or request.data.get('withdrawalId')
         try:
             wd = Withdrawal.objects.get(id=withdrawal_id, user=profile)
             if (timezone.now() - wd.requested).total_seconds() > 2 * 24 * 60 * 60:
-                return Response({'error': 'Cannot cancel: past cancellation window'}, status=400)
+                return Response({'error': 'Cannot cancel'}, status=400)
             if wd.status != 'Pending':
-                return Response({'error': 'Only pending withdrawals can be cancelled'}, status=400)
+                return Response({'error': 'Only pending can be cancelled'}, status=400)
             wd.delete()
             return Response({'message': 'Withdrawal cancelled'}, status=200)
         except Withdrawal.DoesNotExist:
-            return Response({'error': 'Withdrawal not found'}, status=404)
+            return Response({'error': 'Not found'}, status=404)
 
 
 class UpdateProfileView(APIView):
@@ -258,16 +237,13 @@ class UpdateProfileView(APIView):
         profile = get_profile(request)
         if not profile:
             return Response({'error': 'Unauthorized'}, status=401)
-
         name = request.data.get('name')
         upi_id = request.data.get('upi_id') or request.data.get('upiId', '')
-
         if name:
             profile.name = name.strip()
         if upi_id:
             profile.upi_id = upi_id.strip()
         profile.save()
-
         return Response({
             'message': 'Profile updated',
             'user': UserProfileSerializer(profile).data
@@ -311,7 +287,7 @@ class KycVerificationView(APIView):
             kyc.account_name = account_name
         if bank_account:
             if not (bank_account.isdigit() and 9 <= len(bank_account) <= 18):
-                return Response({'error': 'Invalid bank account number'}, status=400)
+                return Response({'error': 'Invalid bank account'}, status=400)
             kyc.bank_account = bank_account
         if ifsc:
             if not (len(ifsc) == 11 and ifsc[:4].isalpha() and ifsc[4] == '0'):
@@ -330,14 +306,9 @@ class KycVerificationView(APIView):
                 'accountName': kyc.account_name,
                 'isPrimary': True,
             }]
-            SecurityLog.objects.create(
-                user=profile,
-                action='KYC_VERIFIED',
-                detail='Aadhaar + Bank',
-            )
+            SecurityLog.objects.create(user=profile, action='KYC_VERIFIED', detail='Aadhaar + Bank')
 
         kyc.save()
-
         return Response({
             'message': 'KYC updated',
             'user': UserProfileSerializer(profile).data,
@@ -351,86 +322,93 @@ class CashfreeWebhookView(APIView):
     permission_classes = []
 
     def post(self, request):
-        try:
-            raw_body = request.body.decode('utf-8')
-        except Exception:
-            raw_body = ''
+        raw_body = request.body
+        signature = request.headers.get('x-webhook-signature') or request.headers.get('X-Webhook-Signature')
+        timestamp = request.headers.get('x-webhook-timestamp') or request.headers.get('X-Webhook-Timestamp')
 
-        timestamp = (
-            request.headers.get('x-webhook-timestamp')
-            or request.META.get('HTTP_X_WEBHOOK_TIMESTAMP', '')
-        )
-        signature = (
-            request.headers.get('x-webhook-signature')
-            or request.META.get('HTTP_X_WEBHOOK_SIGNATURE', '')
-        )
-
-        if not verify_cashfree_signature(raw_body, timestamp, signature):
-            print('[Cashfree Webhook] Invalid signature')
+        if not self._verify_signature(raw_body, signature, timestamp):
+            print('[Webhook] Invalid signature')
             return Response({'error': 'Invalid signature'}, status=401)
 
         try:
-            data = json.loads(raw_body) if raw_body else (request.data or {})
-        except json.JSONDecodeError:
-            data = request.data or {}
+            data = json.loads(raw_body.decode('utf-8')) if isinstance(raw_body, bytes) else request.data
+        except Exception:
+            data = request.data
 
         event_type = data.get('type') or data.get('event') or ''
-        print(f'[Cashfree Webhook] type={event_type}')
+        print(f'[Webhook] type={event_type}')
 
         order_id = None
         utr = None
-        payment_status = None
+        amount = None
 
-        if event_type in (
-            'PAYMENT_SUCCESS_WEBHOOK',
-            'PAYMENT_FAILED_WEBHOOK',
-            'PAYMENT_USER_DROPPED_WEBHOOK',
-        ):
-            order = (data.get('data') or {}).get('order') or {}
-            payment = (data.get('data') or {}).get('payment') or {}
+        if event_type in ('PAYMENT_SUCCESS_WEBHOOK', 'PAYMENT_SUCCESS'):
+            payload = data.get('data') or {}
+            order = payload.get('order') or {}
+            payment = payload.get('payment') or {}
+            order_id = order.get('order_id') or payment.get('order_id')
+            utr = payment.get('bank_reference') or payment.get('cf_payment_id')
+            amount = order.get('order_amount') or payment.get('payment_amount')
 
-            order_id = order.get('order_id')
-            payment_status = payment.get('payment_status')
-            utr = payment.get('bank_reference')
-
-            method = payment.get('payment_method') or {}
-            vba = method.get('vba_transfer') or {}
-            if vba:
-                order_id = order_id or vba.get('vaccount_id')
-                utr = utr or vba.get('utr')
-
-        elif event_type == 'AMOUNT_COLLECTED' or data.get('event') == 'AMOUNT_COLLECTED':
-            order_id = data.get('vAccountId') or data.get('vaccount_id')
-            utr = data.get('utr')
-            payment_status = 'SUCCESS'
-
-        if order_id and payment_status == 'SUCCESS':
-            updated = Investment.objects.filter(
-                order_id=order_id,
-                status__in=['Pending', 'Pending Bank Transfer'],
-            ).update(
-                status='Confirmed',
-                confirmed_at=timezone.now(),
+        if not order_id:
+            payload = data.get('data') or data
+            payment = payload.get('payment') or {}
+            vba = (payment.get('payment_method') or {}).get('vba_transfer') or {}
+            order = payload.get('order') or {}
+            order_id = (
+                order.get('order_id')
+                or vba.get('vaccount_id')
+                or data.get('vAccountId')
+                or data.get('order_id')
+                or data.get('orderId')
             )
-            print(f'[Cashfree Webhook] order={order_id} confirmed={updated} utr={utr}')
+            utr = utr or vba.get('utr') or payment.get('bank_reference') or data.get('utr')
+            amount = amount or payment.get('payment_amount') or data.get('amount')
 
-            if updated:
-                inv = Investment.objects.filter(order_id=order_id).select_related('user').first()
-                if inv:
-                    SecurityLog.objects.create(
-                        user=inv.user,
-                        action='PAYMENT_CONFIRMED',
-                        detail=f'Order {order_id} UTR={utr or "-"}',
-                    )
+        if not order_id:
+            print('[Webhook] No order_id:', data)
+            return Response({'status': 'ignored'}, status=200)
 
-        elif order_id and payment_status in ('FAILED', 'USER_DROPPED', 'CANCELLED'):
-            Investment.objects.filter(
-                order_id=order_id,
-                status__in=['Pending', 'Pending Bank Transfer'],
-            ).update(status='Failed')
-            print(f'[Cashfree Webhook] order={order_id} marked Failed')
+        updated = self._confirm_investment(order_id, utr, amount)
+        print(f'[Webhook] order={order_id} utr={utr} updated={updated}')
+        return Response({'status': 'ok', 'order_id': order_id, 'updated': updated}, status=200)
 
-        return Response({'status': 'ok'}, status=200)
+    def _verify_signature(self, raw_body, signature, timestamp):
+        secret = getattr(settings, 'CASHFREE_SECRET_KEY', '') or ''
+        if not secret:
+            return getattr(settings, 'DEBUG', False)
+        if not signature or not timestamp:
+            return getattr(settings, 'DEBUG', False)
+        try:
+            body_str = raw_body.decode('utf-8') if isinstance(raw_body, bytes) else (
+                raw_body if isinstance(raw_body, str) else json.dumps(raw_body)
+            )
+            signed_payload = f'{timestamp}{body_str}'
+            computed = base64.b64encode(
+                hmac.new(secret.encode('utf-8'), signed_payload.encode('utf-8'), hashlib.sha256).digest()
+            ).decode('utf-8')
+            return hmac.compare_digest(computed, signature)
+        except Exception as e:
+            print('[Webhook] signature error:', e)
+            return getattr(settings, 'DEBUG', False)
+
+    def _confirm_investment(self, order_id, utr=None, amount=None):
+        qs = Investment.objects.filter(
+            order_id=order_id,
+            status__in=['Pending', 'Pending Bank Transfer']
+        )
+        count = 0
+        for inv in qs:
+            inv.status = 'Confirmed'
+            inv.confirmed_at = timezone.now()
+            inv.save(update_fields=['status', 'confirmed_at'])
+            count += 1
+            SecurityLog.objects.create(
+                user=inv.user,
+                action='PAYMENT_CONFIRMED',
+                detail=f'order={order_id} utr={utr or "-"} amount={amount or inv.amount}'
+            )
+        return count
 
 
 # ==================== ADMIN ====================
@@ -450,14 +428,10 @@ class AdminLoginView(APIView):
     def post(self, request):
         email = request.data.get('email', '').strip().lower()
         password = request.data.get('password', '')
-
         if email in ADMIN_EMAILS and password == getattr(settings, 'ADMIN_PASSWORD', 'AnkuOn2Admin@2026'):
             request.session['admin_email'] = email
             request.session['user_email'] = email
-            return Response({
-                'token': 'admin-session',
-                'admin': {'email': email}
-            }, status=200)
+            return Response({'token': 'admin-session', 'admin': {'email': email}}, status=200)
         return Response({'error': 'Invalid admin credentials'}, status=401)
 
 
@@ -465,14 +439,12 @@ class AdminStatsView(APIView):
     def get(self, request):
         if not is_admin(request):
             return Response({'error': 'Unauthorized'}, status=401)
-
         total_users = UserProfile.objects.count()
         total_invested = Investment.objects.filter(status='Confirmed').aggregate(
             s=models.Sum('amount')
         )['s'] or 0
         pending_bank = Investment.objects.filter(status='Pending Bank Transfer').count()
         pending_wd = Withdrawal.objects.filter(status='Pending').count()
-
         return Response({
             'totalUsers': total_users,
             'totalInvested': float(total_invested),
@@ -485,7 +457,6 @@ class AdminSearchUsersView(APIView):
     def get(self, request):
         if not is_admin(request):
             return Response({'error': 'Unauthorized'}, status=401)
-
         q = request.GET.get('q', '').strip()
         qs = UserProfile.objects.all()
         if q:
@@ -494,12 +465,9 @@ class AdminSearchUsersView(APIView):
                 models.Q(name__icontains=q) |
                 models.Q(mobile__icontains=q)
             )
-
         result = []
         for u in qs[:50]:
-            total = u.investments.filter(status='Confirmed').aggregate(
-                s=models.Sum('amount')
-            )['s'] or 0
+            total = u.investments.filter(status='Confirmed').aggregate(s=models.Sum('amount'))['s'] or 0
             result.append({
                 'id': u.id,
                 'email': u.email,
@@ -567,7 +535,7 @@ class AdminProcessWithdrawalView(APIView):
             wd.save()
             return Response({'message': 'Withdrawal processed'}, status=200)
         except Withdrawal.DoesNotExist:
-            return Response({'error': 'Withdrawal not found'}, status=404)
+            return Response({'error': 'Not found'}, status=404)
 
 
 class AdminRejectWithdrawalView(APIView):
@@ -580,9 +548,9 @@ class AdminRejectWithdrawalView(APIView):
             wd.status = 'Rejected'
             wd.notes = reason
             wd.save()
-            return Response({'message': 'Withdrawal rejected'}, status=200)
+            return Response({'message': 'Rejected'}, status=200)
         except Withdrawal.DoesNotExist:
-            return Response({'error': 'Withdrawal not found'}, status=404)
+            return Response({'error': 'Not found'}, status=404)
 
 
 class AdminPendingBankTransfersView(APIView):
@@ -615,4 +583,4 @@ class AdminConfirmBankTransferView(APIView):
             inv.save()
             return Response({'message': 'Bank transfer confirmed'}, status=200)
         except Investment.DoesNotExist:
-            return Response({'error': 'Investment not found'}, status=404)
+            return Response({'error': 'Not found'}, status=404)
