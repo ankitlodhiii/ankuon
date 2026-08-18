@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnkuOn2 — Admin Panel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: Inter, system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.25s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .spinner {
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #10b981;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 360px;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo } = React;
+        const { createRoot } = ReactDOM;
+
+        // ============================================================
+        // CONFIG — change these for your environment
+        // ============================================================
+        const CONFIG = {
+            // Local:  'http://127.0.0.1:8000/api'
+            // Live:   'https://ankuon.onrender.com/api'
+            API_BASE: 'http://127.0.0.1:8000/api',
+            ADMIN_EMAIL: 'ankitlodhiii06@gmail.com',
+        };
+
+        // ============================================================
+        // API LAYER (Admin) — paths match Django /api/admin/...
+        // ============================================================
+        const api = {
+            async request(path, options = {}) {
+                const token = localStorage.getItem('adminToken');
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    ...options.headers,
+                };
+                const res = await fetch(`${CONFIG.API_BASE}${path}`, {
+                    ...options,
+                    headers,
+                    credentials: 'include',
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const err = new Error(data.message || data.error || `Error ${res.status}`);
+                    err.status = res.status;
+                    throw err;
+                }
+                return data;
+            },
+
+            // Auth
+            login: (email, password) =>
+                api.request('/admin/login/', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password }),
+                }),
+            logout: () => Promise.resolve({}),
+
+            // Dashboard
+            getDashboardStats: () => api.request('/admin/stats/'),
+
+            // Users
+            searchUsers: (q) => api.request(`/admin/users/?q=${encodeURIComponent(q || '')}`),
+            getUser: (userId) => api.request(`/admin/users/${userId}/`),
+            getUserInvestments: (userId) => api.request(`/admin/users/${userId}/investments/`),
+            getUserWithdrawals: (userId) => api.request(`/admin/users/${userId}/withdrawals/`),
+
+            // Withdrawals (process to USER's bank only)
+            getPendingWithdrawals: () => api.request('/admin/withdrawals/'),
+            processWithdrawal: (withdrawalId, payload) =>
+                api.request(`/admin/withdrawals/${withdrawalId}/process/`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+            rejectWithdrawal: (withdrawalId, reason) =>
+                api.request(`/admin/withdrawals/${withdrawalId}/reject/`, {
+                    method: 'POST',
+                    body: JSON.stringify({ reason }),
+                }),
+
+            // Bank transfer investments (high value)
+            getPendingBankTransfers: () => api.request('/admin/investments/'),
+            confirmBankTransfer: (investmentId, payload) =>
+                api.request(`/admin/investments/${investmentId}/confirm/`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                }),
+        };
+
+        // Helpers
+        const maskBank = (acc) => (!acc || acc.length < 4) ? '****' : '****' + acc.slice(-4);
+        const maskIfsc = (ifsc) => (!ifsc || ifsc.length < 6) ? '***********' : ifsc.slice(0, 4) + '*******';
+        const maskPan = (pan) => (!pan || pan.length < 6) ? '••••••••••' : pan.slice(0, 3) + '••••' + pan.slice(-1);
+        const maskAadhaar = (a) => (!a || a.length < 4) ? 'XXXX-XXXX-XXXX' : 'XXXX-XXXX-' + a.slice(-4);
+        const maskMobile = (m) => (!m || m.length < 4) ? '******' : '******' + m.slice(-4);
+        const formatINR = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
+        const formatDate = (d) => d ? new Date(d).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : '—';
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function Toast({ toast, onClose }) {
+            if (!toast) return null;
+            return (
+                <div className={`toast ${toast.type === 'error' ? 'toast-error' : 'toast-success'} fade-in`}>
+                    {toast.message}
+                    <button onClick={onClose} className="ml-3 opacity-80 hover:opacity-100">×</button>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // LOGIN
+        // ============================================================
+        function AdminLogin({ onLogin, showToast }) {
+            const [email, setEmail] = useState('');
+            const [password, setPassword] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                try {
+                    const data = await api.login(email.trim(), password);
+                    if (data.token) {
+                        localStorage.setItem('adminToken', data.token);
+                        localStorage.setItem('adminUser', JSON.stringify(data.admin || { email }));
+                        onLogin(data.admin || { email });
+                        showToast('Logged in successfully');
+                    } else {
+                        showToast('Invalid response from server', 'error');
+                    }
+                } catch (err) {
+                    showToast(err.message || 'Login failed', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+                        <div className="text-center mb-8">
+                            <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-slate-900 text-emerald-400 mb-4">
+                                <i className="fas fa-shield-alt text-2xl"></i>
+                            </div>
+                            <h1 className="text-2xl font-bold text-slate-900">AnkuOn2 Admin</h1>
+                            <p className="text-sm text-slate-500 mt-1">Secure management console</p>
+                        </div>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Admin Email</label>
+                                <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                                    className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                                    placeholder="admin@ankuon2.com" autoFocus />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                                <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
+                                    className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                                    placeholder="••••••••" />
+                            </div>
+                            <button type="submit" disabled={loading}
+                                className="w-full p-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 flex items-center justify-center gap-2">
+                                {loading && <div className="spinner"></div>}
+                                {loading ? 'Signing in…' : 'Sign In'}
+                            </button>
+                        </form>
+                        <p className="mt-6 text-xs text-center text-slate-400">
+                            This panel is for authorized administrators only.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // STATS CARDS
+        // ============================================================
+        function StatsCards({ stats }) {
+            const cards = [
+                { label: 'Total Users', value: stats?.totalUsers ?? '—', icon: 'fa-users', color: 'bg-blue-50 text-blue-600' },
+                { label: 'Total Invested', value: formatINR(stats?.totalInvested), icon: 'fa-rupee-sign', color: 'bg-emerald-50 text-emerald-600' },
+                { label: 'Pending Bank Transfers', value: stats?.pendingBankTransfers ?? '—', icon: 'fa-university', color: 'bg-orange-50 text-orange-600' },
+                { label: 'Pending Withdrawals', value: stats?.pendingWithdrawals ?? '—', icon: 'fa-hand-holding-usd', color: 'bg-amber-50 text-amber-600' },
+            ];
+            return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {cards.map(c => (
+                        <div key={c.label} className="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{c.label}</p>
+                                    <p className="text-2xl font-bold text-slate-900 mt-1">{c.value}</p>
+                                </div>
+                                <div className={`h-11 w-11 rounded-lg flex items-center justify-center ${c.color}`}>
+                                    <i className={`fas ${c.icon}`}></i>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        // ============================================================
+        // USER SEARCH + LIST
+        // ============================================================
+        function UserSearch({ onSelectUser, showToast }) {
+            const [query, setQuery] = useState('');
+            const [users, setUsers] = useState([]);
+            const [loading, setLoading] = useState(false);
+
+            const search = useCallback(async (q) => {
+                setLoading(true);
+                try {
+                    const data = await api.searchUsers(q);
+                    setUsers(Array.isArray(data) ? data : (data.users || []));
+                } catch (err) {
+                    showToast(err.message || 'Search failed', 'error');
+                    setUsers([]);
+                } finally {
+                    setLoading(false);
+                }
+            }, [showToast]);
+
+            useEffect(() => {
+                const t = setTimeout(() => search(query), 300);
+                return () => clearTimeout(t);
+            }, [query, search]);
+
+            return (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i className="fas fa-search text-emerald-600"></i> Search Users
+                    </h2>
+                    <input
+                        type="text"
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                        placeholder="Search by email, name or mobile…"
+                        className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none mb-4"
+                    />
+                    {loading && <div className="flex justify-center py-6"><div className="spinner"></div></div>}
+                    {!loading && users.length === 0 && (
+                        <p className="text-sm text-slate-500 text-center py-6">No users found. Type to search.</p>
+                    )}
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {users.map(u => (
+                            <button key={u.id || u.email}
+                                onClick={() => onSelectUser(u.id || u.email)}
+                                className="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition flex items-center justify-between">
+                                <div>
+                                    <p className="font-medium text-slate-900">{u.name || '—'}</p>
+                                    <p className="text-xs text-slate-500">{u.email}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm font-semibold text-emerald-600">{formatINR(u.totalInvested)}</p>
+                                    <p className={`text-xs ${u.kycStatus === 'Verified' ? 'text-green-600' : 'text-amber-600'}`}>
+                                        {u.kycStatus || 'Not Verified'}
+                                    </p>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // USER PROFILE DETAIL
+        // ============================================================
+        function UserProfile({ userId, onBack, showToast }) {
+            const [user, setUser] = useState(null);
+            const [investments, setInvestments] = useState([]);
+            const [withdrawals, setWithdrawals] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [tab, setTab] = useState('overview');
+
+            useEffect(() => {
+                let cancelled = false;
+                (async () => {
+                    setLoading(true);
+                    try {
+                        const [u, inv, wd] = await Promise.all([
+                            api.getUser(userId),
+                            api.getUserInvestments(userId),
+                            api.getUserWithdrawals(userId),
+                        ]);
+                        if (!cancelled) {
+                            setUser(u);
+                            setInvestments(Array.isArray(inv) ? inv : (inv.investments || []));
+                            setWithdrawals(Array.isArray(wd) ? wd : (wd.withdrawals || []));
+                        }
+                    } catch (err) {
+                        showToast(err.message || 'Failed to load user', 'error');
+                    } finally {
+                        if (!cancelled) setLoading(false);
+                    }
+                })();
+                return () => { cancelled = true; };
+            }, [userId, showToast]);
+
+            if (loading) {
+                return (
+                    <div className="bg-white rounded-xl p-12 flex justify-center">
+                        <div className="spinner" style={{ width: 32, height: 32 }}></div>
+                    </div>
+                );
+            }
+            if (!user) {
+                return (
+                    <div className="bg-white rounded-xl p-8 text-center">
+                        <p className="text-slate-500">User not found.</p>
+                        <button onClick={onBack} className="mt-4 text-emerald-600 font-medium">← Back</button>
+                    </div>
+                );
+            }
+
+            const totalInvested = investments
+                .filter(i => i.status === 'Confirmed' || i.status === 'Pending Bank Transfer')
+                .reduce((s, i) => s + (i.amount || 0), 0);
+
+            return (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                        <div>
+                            <button onClick={onBack} className="text-sm text-emerald-600 hover:underline mb-1">← Back to search</button>
+                            <h2 className="text-xl font-bold text-slate-900">{user.name}</h2>
+                            <p className="text-sm text-slate-500">{user.email}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-2xl font-bold text-emerald-600">{formatINR(totalInvested)}</p>
+                            <p className="text-xs text-slate-500">Total Invested</p>
+                        </div>
+                    </div>
+
+                    <div className="flex border-b border-slate-200">
+                        {['overview', 'investments', 'withdrawals', 'kyc'].map(t => (
+                            <button key={t} onClick={() => setTab(t)}
+                                className={`px-5 py-3 text-sm font-medium capitalize ${tab === t ? 'border-b-2 border-emerald-500 text-emerald-600' : 'text-slate-500 hover:text-slate-700'}`}>
+                                {t}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="p-5">
+                        {tab === 'overview' && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                                <div className="space-y-2">
+                                    <p><span className="text-slate-500">Email:</span> <span className="font-medium">{user.email}</span></p>
+                                    <p><span className="text-slate-500">Mobile:</span> <span className="font-medium">{maskMobile(user.kycData?.mobile || user.mobile)}</span></p>
+                                    <p><span className="text-slate-500">KYC Status:</span> <span className={`font-medium ${user.kycStatus === 'Verified' ? 'text-green-600' : 'text-amber-600'}`}>{user.kycStatus || 'Not Verified'}</span></p>
+                                    <p><span className="text-slate-500">2FA:</span> {user.twoFactorEnabled ? 'Enabled' : 'Disabled'}</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <p><span className="text-slate-500">Joined:</span> {formatDate(user.createdAt)}</p>
+                                    <p><span className="text-slate-500">Last Login:</span> {formatDate(user.lastLogin)}</p>
+                                    <p><span className="text-slate-500">Active Sessions:</span> {user.activeSessions || 1}</p>
+                                    <p><span className="text-slate-500">Investments:</span> {investments.length}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {tab === 'investments' && (
+                            <div className="space-y-3">
+                                {investments.length === 0 ? (
+                                    <p className="text-slate-500 text-sm">No investments.</p>
+                                ) : investments.map(inv => (
+                                    <div key={inv.id} className="p-4 border border-slate-200 rounded-lg">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-semibold text-slate-900">{formatINR(inv.amount)}</p>
+                                                <p className="text-xs text-slate-500">Order: {inv.order_id || inv.orderId || '—'}</p>
+                                                <p className="text-xs text-slate-500">{formatDate(inv.date || inv.createdAt)}</p>
+                                            </div>
+                                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${inv.status === 'Confirmed' ? 'bg-green-100 text-green-700' :
+                                                    inv.status === 'Pending Bank Transfer' ? 'bg-orange-100 text-orange-700' :
+                                                        'bg-slate-100 text-slate-600'
+                                                }`}>{inv.status}</span>
+                                        </div>
+                                        {inv.returns != null && (
+                                            <p className="text-sm text-emerald-600 mt-1">Returns: {formatINR(inv.returns)}</p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {tab === 'withdrawals' && (
+                            <div className="space-y-3">
+                                {withdrawals.length === 0 ? (
+                                    <p className="text-slate-500 text-sm">No withdrawals.</p>
+                                ) : withdrawals.map(wd => (
+                                    <div key={wd.id} className="p-4 border border-slate-200 rounded-lg">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-semibold text-slate-900">{formatINR(wd.amount)}</p>
+                                                <p className="text-xs text-slate-500">Bank: {maskBank(wd.bankAccount)} · {maskIfsc(wd.ifsc)}</p>
+                                                <p className="text-xs text-slate-500">Requested: {formatDate(wd.requested)}</p>
+                                            </div>
+                                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${wd.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                                    wd.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
+                                                        'bg-slate-100 text-slate-600'
+                                                }`}>{wd.status}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {tab === 'kyc' && (
+                            <div className="space-y-3 text-sm">
+                                {user.kycData ? (
+                                    <>
+                                        <p><span className="text-slate-500">PAN:</span> {maskPan(user.kycData.pan)}</p>
+                                        <p><span className="text-slate-500">Aadhaar:</span> {maskAadhaar(user.kycData.aadhaar)}</p>
+                                        <p><span className="text-slate-500">Mobile:</span> {maskMobile(user.kycData.mobile)}</p>
+                                        <p><span className="text-slate-500">Account Name:</span> {user.kycData.accountName || '—'}</p>
+                                        <p><span className="text-slate-500">Bank:</span> {maskBank(user.kycData.bankAccount)} · {maskIfsc(user.kycData.ifsc)}</p>
+                                        {user.kycData.banks && user.kycData.banks.length > 1 && (
+                                            <div className="mt-3 pt-3 border-t">
+                                                <p className="font-medium mb-2">All linked banks:</p>
+                                                {user.kycData.banks.map(b => (
+                                                    <p key={b.id} className="text-slate-600">
+                                                        {maskBank(b.bankAccount)} {b.isPrimary ? '(Primary)' : ''}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <p className="text-slate-500">KYC not completed.</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // PENDING WITHDRAWALS (process to USER bank only)
+        // ============================================================
+        function PendingWithdrawals({ showToast, onRefresh }) {
+            const [list, setList] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [processingId, setProcessingId] = useState(null);
+            const [utr, setUtr] = useState('');
+            const [notes, setNotes] = useState('');
+
+            const load = useCallback(async () => {
+                setLoading(true);
+                try {
+                    const data = await api.getPendingWithdrawals();
+                    setList(Array.isArray(data) ? data : (data.withdrawals || []));
+                } catch (err) {
+                    showToast(err.message || 'Failed to load withdrawals', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            }, [showToast]);
+
+            useEffect(() => { load(); }, [load]);
+
+            const handleProcess = async (id) => {
+                if (!utr.trim()) {
+                    showToast('Enter UTR / reference number', 'error');
+                    return;
+                }
+                setProcessingId(id);
+                try {
+                    await api.processWithdrawal(id, { utr: utr.trim(), notes: notes.trim() });
+                    showToast('Withdrawal processed. Money sent to user bank account.');
+                    setUtr('');
+                    setNotes('');
+                    load();
+                    onRefresh && onRefresh();
+                } catch (err) {
+                    showToast(err.message || 'Process failed', 'error');
+                } finally {
+                    setProcessingId(null);
+                }
+            };
+
+            const handleReject = async (id) => {
+                const reason = prompt('Reason for rejection:');
+                if (!reason) return;
+                try {
+                    await api.rejectWithdrawal(id, reason);
+                    showToast('Withdrawal rejected');
+                    load();
+                    onRefresh && onRefresh();
+                } catch (err) {
+                    showToast(err.message || 'Reject failed', 'error');
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i className="fas fa-hand-holding-usd text-amber-500"></i> Pending Withdrawals
+                    </h2>
+                    <p className="text-xs text-slate-500 mb-4">
+                        Money is always sent to the <strong>user’s verified bank account</strong> only. Never to any other account.
+                    </p>
+                    {loading ? (
+                        <div className="flex justify-center py-8"><div className="spinner"></div></div>
+                    ) : list.length === 0 ? (
+                        <p className="text-sm text-slate-500 text-center py-6">No pending withdrawals.</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {list.map(wd => (
+                                <div key={wd.id} className="p-4 border border-slate-200 rounded-lg">
+                                    <div className="flex flex-wrap justify-between gap-2 mb-3">
+                                        <div>
+                                            <p className="font-semibold text-slate-900">{formatINR(wd.amount)}</p>
+                                            <p className="text-xs text-slate-500">{wd.userEmail || wd.userName}</p>
+                                            <p className="text-xs text-slate-500">
+                                                Bank: {maskBank(wd.bankAccount)} · {maskIfsc(wd.ifsc)} · {wd.accountName || ''}
+                                            </p>
+                                            <p className="text-xs text-slate-500">Requested: {formatDate(wd.requested)}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                                        <input type="text" placeholder="UTR / Bank reference" value={processingId === wd.id ? utr : ''}
+                                            onChange={e => { setProcessingId(wd.id); setUtr(e.target.value); }}
+                                            className="flex-1 p-2 border border-slate-300 rounded-lg text-sm" />
+                                        <input type="text" placeholder="Notes (optional)" value={processingId === wd.id ? notes : ''}
+                                            onChange={e => { setProcessingId(wd.id); setNotes(e.target.value); }}
+                                            className="flex-1 p-2 border border-slate-300 rounded-lg text-sm" />
+                                        <button onClick={() => handleProcess(wd.id)}
+                                            disabled={processingId === wd.id && !utr.trim()}
+                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 disabled:opacity-50">
+                                            Process → User Bank
+                                        </button>
+                                        <button onClick={() => handleReject(wd.id)}
+                                            className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200">
+                                            Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // ============================================================
+        // PENDING BANK TRANSFERS (high-value investments)
+        // ============================================================
+        function PendingBankTransfers({ showToast, onRefresh }) {
+            const [list, setList] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [confirmingId, setConfirmingId] = useState(null);
+            const [utr, setUtr] = useState('');
+            const [receivedAmount, setReceivedAmount] = useState('');
+
+            const load = useCallback(async () => {
+                setLoading(true);
+                try {
+                    const data = await api.getPendingBankTransfers();
+                    setList(Array.isArray(data) ? data : (data.investments || []));
+                } catch (err) {
+                    showToast(err.message || 'Failed to load', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            }, [showToast]);
+
+            useEffect(() => { load(); }, [load]);
+
+            const handleConfirm = async (id) => {
+                if (!utr.trim()) {
+                    showToast('Enter UTR / reference number', 'error');
+                    return;
+                }
+                setConfirmingId(id);
+                try {
+                    await api.confirmBankTransfer(id, {
+                        utr: utr.trim(),
+                        receivedAmount: receivedAmount ? Number(receivedAmount) : undefined,
+                    });
+                    showToast('Bank transfer confirmed. Investment activated.');
+                    setUtr('');
+                    setReceivedAmount('');
+                    load();
+                    onRefresh && onRefresh();
+                } catch (err) {
+                    showToast(err.message || 'Confirm failed', 'error');
+                } finally {
+                    setConfirmingId(null);
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i className="fas fa-university text-orange-500"></i> Pending Bank Transfers (&gt; ₹5L)
+                    </h2>
+                    <p className="text-xs text-slate-500 mb-4">
+                        After you receive the money in your company account, confirm here with UTR. Client will see investment as Confirmed.
+                    </p>
+                    {loading ? (
+                        <div className="flex justify-center py-8"><div className="spinner"></div></div>
+                    ) : list.length === 0 ? (
+                        <p className="text-sm text-slate-500 text-center py-6">No pending bank transfers.</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {list.map(inv => (
+                                <div key={inv.id} className="p-4 border border-slate-200 rounded-lg">
+                                    <div className="mb-3">
+                                        <p className="font-semibold text-slate-900">{formatINR(inv.amount)}</p>
+                                        <p className="text-xs text-slate-500">{inv.userEmail || inv.userName}</p>
+                                        <p className="text-xs text-slate-500">Order ID: {inv.order_id || inv.orderId}</p>
+                                        <p className="text-xs text-slate-500">Requested: {formatDate(inv.date || inv.createdAt)}</p>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-2">
+                                        <input type="text" placeholder="UTR received" value={confirmingId === inv.id ? utr : ''}
+                                            onChange={e => { setConfirmingId(inv.id); setUtr(e.target.value); }}
+                                            className="flex-1 p-2 border border-slate-300 rounded-lg text-sm" />
+                                        <input type="number" placeholder="Amount received (optional)" value={confirmingId === inv.id ? receivedAmount : ''}
+                                            onChange={e => { setConfirmingId(inv.id); setReceivedAmount(e.target.value); }}
+                                            className="w-40 p-2 border border-slate-300 rounded-lg text-sm" />
+                                        <button onClick={() => handleConfirm(inv.id)}
+                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700">
+                                            Confirm Receipt
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // ============================================================
+        // MAIN ADMIN APP
+        // ============================================================
+        function AdminApp() {
+            const [admin, setAdmin] = useState(() => {
+                try {
+                    const s = localStorage.getItem('adminUser');
+                    return s ? JSON.parse(s) : null;
+                } catch { return null; }
+            });
+            const [toast, setToast] = useState(null);
+            const [stats, setStats] = useState(null);
+            const [selectedUserId, setSelectedUserId] = useState(null);
+            const [view, setView] = useState('dashboard'); // dashboard | withdrawals | bank-transfers
+
+            const showToast = useCallback((message, type = 'success') => {
+                setToast({ message, type });
+                setTimeout(() => setToast(null), 5000);
+            }, []);
+
+            const refreshStats = useCallback(async () => {
+                try {
+                    const data = await api.getDashboardStats();
+                    setStats(data);
+                } catch (_) { }
+            }, []);
+
+            useEffect(() => {
+                if (admin) refreshStats();
+            }, [admin, refreshStats]);
+
+            const handleLogout = async () => {
+                try { await api.logout(); } catch (_) { }
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUser');
+                setAdmin(null);
+                setSelectedUserId(null);
+            };
+
+            if (!admin) {
+                return (
+                    <>
+                        <AdminLogin onLogin={setAdmin} showToast={showToast} />
+                        <Toast toast={toast} onClose={() => setToast(null)} />
+                    </>
+                );
+            }
+
+            return (
+                <div className="min-h-screen">
+                    {/* Header */}
+                    <header className="bg-slate-900 text-white px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+                        <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                                <i className="fas fa-shield-alt text-emerald-400"></i>
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-lg leading-tight">AnkuOn2 Admin</h1>
+                                <p className="text-xs text-slate-400">{admin.email || 'Administrator'}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button onClick={refreshStats} className="text-slate-300 hover:text-white text-sm">
+                                <i className="fas fa-sync-alt"></i>
+                            </button>
+                            <button onClick={handleLogout} className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm">
+                                Logout
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Nav */}
+                    <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 flex gap-1 overflow-x-auto">
+                        {[
+                            { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie' },
+                            { id: 'withdrawals', label: 'Withdrawals', icon: 'fa-hand-holding-usd' },
+                            { id: 'bank-transfers', label: 'Bank Transfers', icon: 'fa-university' },
+                        ].map(item => (
+                            <button key={item.id} onClick={() => { setView(item.id); setSelectedUserId(null); }}
+                                className={`px-4 py-3 text-sm font-medium flex items-center gap-2 border-b-2 whitespace-nowrap ${view === item.id ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+                                    }`}>
+                                <i className={`fas ${item.icon}`}></i> {item.label}
+                            </button>
+                        ))}
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto p-4 sm:p-6">
+                        {view === 'dashboard' && (
+                            <>
+                                <StatsCards stats={stats} />
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <UserSearch onSelectUser={setSelectedUserId} showToast={showToast} />
+                                    {selectedUserId ? (
+                                        <UserProfile userId={selectedUserId} onBack={() => setSelectedUserId(null)} showToast={showToast} />
+                                    ) : (
+                                        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-400">
+                                            <i className="fas fa-user text-4xl mb-3"></i>
+                                            <p>Select a user to view full profile</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        {view === 'withdrawals' && (
+                            <PendingWithdrawals showToast={showToast} onRefresh={refreshStats} />
+                        )}
+
+                        {view === 'bank-transfers' && (
+                            <PendingBankTransfers showToast={showToast} onRefresh={refreshStats} />
+                        )}
+                    </main>
+
+                    <Toast toast={toast} onClose={() => setToast(null)} />
+                </div>
+            );
+        }
+
+        createRoot(document.getElementById('root')).render(<AdminApp />);
+    </script>
+</body>
+
+</html>
