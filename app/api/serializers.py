@@ -12,6 +12,25 @@ class KycSerializer(serializers.ModelSerializer):
         ]
 
 
+class InvestmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Investment
+        fields = [
+            'id', 'amount', 'date', 'returns', 'order_id',
+            'status', 'payment_method', 'virtual_account', 'confirmed_at'
+        ]
+
+
+class WithdrawalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Withdrawal
+        fields = [
+            'id', 'investment_id', 'amount', 'requested', 'status',
+            'processing_end', 'bank_account', 'ifsc', 'account_name',
+            'method', 'utr', 'notes'
+        ]
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     kyc = KycSerializer(read_only=True)
     kycData = serializers.SerializerMethodField()
@@ -39,23 +58,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def get_withdrawals(self, obj):
         return WithdrawalSerializer(obj.withdrawals.all().order_by('-requested'), many=True).data
-
-
-class InvestmentSerializer(serializers.ModelSerializer):
-    order_id = serializers.CharField()
-    class Meta:
-        model = Investment
-        fields = [
-            'id', 'amount', 'date', 'returns', 'order_id',
-            'status', 'payment_method', 'virtual_account', 'confirmed_at'
-        ]
-
-
-class WithdrawalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Withdrawal
-        fields = [
-            'id', 'investment_id', 'amount', 'requested', 'status',
-            'processing_end', 'bank_account', 'ifsc', 'account_name',
-            'method', 'utr', 'notes'
-        ]

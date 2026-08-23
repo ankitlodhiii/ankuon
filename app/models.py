@@ -1,8 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-from datetime import timedelta
-import json
 
 
 class UserProfile(models.Model):
@@ -30,7 +27,7 @@ class Kyc(models.Model):
     account_name = models.CharField(max_length=100, blank=True)
     bank_account = models.CharField(max_length=30, blank=True)
     ifsc = models.CharField(max_length=15, blank=True)
-    banks = models.JSONField(default=list, blank=True)  # list of bank dicts
+    banks = models.JSONField(default=list, blank=True)
     aadhaar_mobile_linked = models.BooleanField(default=False)
     verified_at = models.DateTimeField(null=True, blank=True)
 
@@ -51,8 +48,8 @@ class Investment(models.Model):
     returns = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     order_id = models.CharField(max_length=50, unique=True, blank=True)
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Pending')
-    payment_method = models.CharField(max_length=20, blank=True)  # qr | collect | bank
-    virtual_account = models.JSONField(null=True, blank=True)  # VA details
+    payment_method = models.CharField(max_length=20, blank=True)
+    virtual_account = models.JSONField(null=True, blank=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

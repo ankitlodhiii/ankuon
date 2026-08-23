@@ -80,7 +80,7 @@
         const CONFIG = {
             // Local:  'http://127.0.0.1:8000/api'
             // Live:   'https://ankuon.onrender.com/api'
-            API_BASE: 'http://127.0.0.1:8000/api',
+            API_BASE: 'https://ankuon.onrender.com/api',
             ADMIN_EMAIL: 'ankitlodhiii06@gmail.com',
         };
 
@@ -436,8 +436,8 @@
                                                 <p className="text-xs text-slate-500">{formatDate(inv.date || inv.createdAt)}</p>
                                             </div>
                                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${inv.status === 'Confirmed' ? 'bg-green-100 text-green-700' :
-                                                    inv.status === 'Pending Bank Transfer' ? 'bg-orange-100 text-orange-700' :
-                                                        'bg-slate-100 text-slate-600'
+                                                inv.status === 'Pending Bank Transfer' ? 'bg-orange-100 text-orange-700' :
+                                                    'bg-slate-100 text-slate-600'
                                                 }`}>{inv.status}</span>
                                         </div>
                                         {inv.returns != null && (
@@ -461,8 +461,8 @@
                                                 <p className="text-xs text-slate-500">Requested: {formatDate(wd.requested)}</p>
                                             </div>
                                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${wd.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                                                    wd.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
-                                                        'bg-slate-100 text-slate-600'
+                                                wd.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
+                                                    'bg-slate-100 text-slate-600'
                                                 }`}>{wd.status}</span>
                                         </div>
                                     </div>
