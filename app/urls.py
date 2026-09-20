@@ -1,17 +1,33 @@
-from django.views.generic import TemplateView
+from django.contrib import admin
+from django.urls import path, include
 
-class IndexView(TemplateView):
-    template_name = 'app/index.html'  # Updated to use app/index.html
+from app.views import (
+    IndexView,
+    DashboardView,
+    AdminPanelView,
+    LoginView,
+    PersonalView,
+    TraderView,
+    TravellingView,
+)
 
-class DashboardView(TemplateView):
-    template_name = 'app/dashboard.html'  # Updated to use app/dashboard.html
 
+urlpatterns = [
+    path('admin/', admin.site.urls),
 
-    class DashboardView(TemplateView):
-    template_name = 'app/admin_panel.html'  # Updated to use app/dashboard.html
+    path('', IndexView.as_view(), name='index'),
 
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
 
-    #testing
+    path('trader/', TraderView.as_view(), name='trader'),
 
-    class LoginView(TemplateView):
-    template_name = 'app/login.html'
+    path('login/', LoginView.as_view(), name='login'),
+
+    path('admin-panel/', AdminPanelView.as_view(), name='admin_panel'),
+
+    path('personal/', PersonalView.as_view(), name='personal'),
+
+    path('travelling/', TravellingView.as_view(), name='travelling'),
+
+    path('api/', include('app.api.urls')),
+]

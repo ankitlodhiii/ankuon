@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindu Tirthas Checklist</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --success: #276749;
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1a202c;
+            --border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --primary: #63b3ed;
+            --success: #68d391;
+            --bg: #1a202c;
+            --card: #2d3748;
+            --text: #e2e8f0;
+            --border: #4a5568;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            transition: 0.3s;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-size: 26px;
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: var(--card);
+            padding: 14px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        select,
+        input[type="text"],
+        button,
+        textarea {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button.secondary {
+            background: #4a5568;
+        }
+
+        button.danger {
+            background: #c53030;
+        }
+
+        button.small {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .progress {
+            margin-left: auto;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 15px;
+        }
+
+        .table-wrapper {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: auto;
+            max-height: 78vh;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13.5px;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        tr.visited {
+            background: rgba(104, 211, 145, 0.25) !important;
+        }
+
+        input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+            accent-color: #38a169;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 5px 7px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        textarea.note {
+            width: 100%;
+            min-height: 38px;
+            max-height: 80px;
+            resize: vertical;
+            padding: 6px 8px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .note-actions {
+            margin-top: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            min-height: 180px;
+            margin-bottom: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .progress {
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🕉️ Hindu Tirthas – Ultimate Checklist</h1>
+
+        <div class="controls">
+            <input type="text" id="searchBox" placeholder="Search place..." oninput="filterTable()"
+                style="min-width:180px">
+
+            <select id="countryFilter" onchange="updateStateFilter(); filterTable();">
+                <option value="all">All Countries</option>
+                <option value="India">India</option>
+                <option value="Outside India">Outside India</option>
+            </select>
+
+            <select id="stateFilter" onchange="filterTable()">
+                <option value="all">All States</option>
+            </select>
+
+            <button onclick="markAllVisible()">Mark Visible</button>
+            <button class="secondary" onclick="exportCSV()">Export CSV</button>
+            <button class="secondary" onclick="exportJSON()">Backup JSON</button>
+            <button class="secondary" onclick="importJSON()">Import JSON</button>
+            <button class="danger" onclick="clearAll()">Clear All</button>
+            <button onclick="toggleTheme()">🌓 Theme</button>
+
+            <span class="progress" id="progressText">Visited: 0 / 0 (0%)</span>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:42px">✓</th>
+                        <th style="width:110px">Country</th>
+                        <th style="width:150px">State</th>
+                        <th style="width:250px">Place</th>
+                        <th>Description</th>
+                        <th style="width:120px">Date</th>
+                        <th style="width:220px">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Full Note</h3>
+            <textarea id="modalNote"></textarea>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeModal()">Close</button>
+                <button onclick="saveModalNote()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tirthas = [
+            { country: "India", state: "Andhra Pradesh", place: "Mallikarjuna (Srisailam)", desc: "Jyotirlinga + Bhramaramba Shakti Peeth" },
+            { country: "India", state: "Andhra Pradesh", place: "Tirupati / Tirumala", desc: "Lord Venkateswara – richest temple" },
+            { country: "India", state: "Andhra Pradesh", place: "Pithapuram (Puruhutika)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Andhra Pradesh", place: "Draksharamam (Manikyamba)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Andhra Pradesh", place: "Simhachalam", desc: "Varaha Narasimha temple" },
+            { country: "India", state: "Andhra Pradesh", place: "Kanaka Durga (Vijayawada)", desc: "Popular Devi temple" },
+
+            { country: "India", state: "Arunachal Pradesh", place: "Parshuram Kund", desc: "Sacred kund of Parashurama" },
+            { country: "India", state: "Assam", place: "Kamakhya (Guwahati)", desc: "Adi & Maha Shakti Peeth (Yoni)" },
+            { country: "India", state: "Bihar", place: "Gaya (Mangala Gauri)", desc: "Maha Shakti Peeth + Pind Daan" },
+            { country: "India", state: "Chhattisgarh", place: "Danteshwari (Dantewada)", desc: "Major Shakti Peeth (Tooth of Sati)" },
+            { country: "India", state: "Delhi", place: "Akshardham", desc: "Modern Swaminarayan temple" },
+            { country: "India", state: "Goa", place: "Mangeshi Temple", desc: "Most famous temple of Goa" },
+
+            { country: "India", state: "Gujarat", place: "Somnath", desc: "First Jyotirlinga" },
+            { country: "India", state: "Gujarat", place: "Nageshwar", desc: "Jyotirlinga" },
+            { country: "India", state: "Gujarat", place: "Dwarka", desc: "Char Dham (West) + Sapta Puri" },
+            { country: "India", state: "Gujarat", place: "Ambaji", desc: "Popular Shakti Peeth" },
+            { country: "India", state: "Gujarat", place: "Modhera Sun Temple", desc: "Ancient Surya temple" },
+
+            { country: "India", state: "Haryana", place: "Kurukshetra", desc: "Mahabharata battlefield + tirtha" },
+
+            { country: "India", state: "Himachal Pradesh", place: "Jwalamukhi", desc: "Shakti Peeth – eternal flames" },
+            { country: "India", state: "Himachal Pradesh", place: "Chintpurni", desc: "Chhinnamastika Shakti Peeth" },
+            { country: "India", state: "Himachal Pradesh", place: "Naina Devi", desc: "Important Shakti Peeth" },
+            { country: "India", state: "Himachal Pradesh", place: "Hidimba Devi (Manali)", desc: "Famous wooden temple" },
+            { country: "India", state: "Himachal Pradesh", place: "Bhimakali (Sarahan)", desc: "Shakti Peeth" },
+            { country: "India", state: "Himachal Pradesh", place: "Manimahesh", desc: "Major Shiva pilgrimage" },
+            { country: "India", state: "Himachal Pradesh", place: "Bijli Mahadev", desc: "Lightning Shiva temple" },
+
+            { country: "India", state: "Jammu & Kashmir", place: "Vaishno Devi", desc: "Extremely popular Devi shrine" },
+            { country: "India", state: "Jammu & Kashmir", place: "Amarnath", desc: "Ice Lingam of Shiva" },
+            { country: "India", state: "Jharkhand", place: "Baidyanath (Deoghar)", desc: "Jyotirlinga" },
+
+            { country: "India", state: "Karnataka", place: "Chamundeshwari (Mysuru)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Karnataka", place: "Udupi Krishna", desc: "Famous Krishna temple" },
+            { country: "India", state: "Karnataka", place: "Murudeshwar", desc: "Tall Shiva statue" },
+
+            { country: "India", state: "Kerala", place: "Sabarimala", desc: "Lord Ayyappa" },
+            { country: "India", state: "Kerala", place: "Guruvayur", desc: "Popular Krishna temple" },
+            { country: "India", state: "Kerala", place: "Padmanabhaswamy", desc: "Ancient Vishnu temple" },
+
+            { country: "India", state: "Madhya Pradesh", place: "Mahakaleshwar (Ujjain)", desc: "Jyotirlinga" },
+            { country: "India", state: "Madhya Pradesh", place: "Omkareshwar", desc: "Jyotirlinga" },
+            { country: "India", state: "Madhya Pradesh", place: "Maihar (Maa Sharda)", desc: "Important Shakti Peeth" },
+            { country: "India", state: "Madhya Pradesh", place: "Orchha Ram Raja", desc: "Unique Ram temple" },
+
+            { country: "India", state: "Maharashtra", place: "Bhimashankar", desc: "Jyotirlinga" },
+            { country: "India", state: "Maharashtra", place: "Trimbakeshwar", desc: "Jyotirlinga" },
+            { country: "India", state: "Maharashtra", place: "Grishneshwar", desc: "Jyotirlinga" },
+            { country: "India", state: "Maharashtra", place: "Mahalakshmi (Kolhapur)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Maharashtra", place: "Renuka (Mahur)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Maharashtra", place: "Shirdi", desc: "Sai Baba temple" },
+            { country: "India", state: "Maharashtra", place: "Pandharpur", desc: "Vitthal temple" },
+            { country: "India", state: "Maharashtra", place: "Siddhivinayak (Mumbai)", desc: "Famous Ganesha temple" },
+            { country: "India", state: "Maharashtra", place: "Shani Maharaj Temple (Shani Shingnapur)", desc: "Famous open-air Shani Maharaj temple" },
+            { country: "India", state: "Maharashtra", place: "Ashtavinayak Circuit", desc: "Eight sacred Ganesha temples" },
+            { country: "India", state: "Maharashtra", place: "Nashik", desc: "Kumbh Mela site" },
+            { country: "India", state: "Maharashtra", place: "Jejuri (Khandoba)", desc: "Popular Khandoba temple" },
+
+            { country: "India", state: "Manipur", place: "Shri Govindajee Temple", desc: "Important Vaishnava temple" },
+
+            { country: "India", state: "Odisha", place: "Puri Jagannath", desc: "Char Dham (East) + Vimala Shakti Peeth" },
+            { country: "India", state: "Odisha", place: "Tara Tarini", desc: "Adi Shakti Peeth" },
+            { country: "India", state: "Odisha", place: "Biraja (Jajpur)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Odisha", place: "Konark Sun Temple", desc: "UNESCO Surya temple" },
+            { country: "India", state: "Odisha", place: "Lingaraj", desc: "Major Shiva temple" },
+
+            { country: "India", state: "Punjab", place: "Golden Temple (Amritsar)", desc: "World-famous Sikh Gurudwara (open to all)" },
+            { country: "India", state: "Punjab", place: "Jalandhar (Tripuramalini)", desc: "Maha Shakti Peeth" },
+
+            { country: "India", state: "Rajasthan", place: "Pushkar", desc: "Brahma Temple" },
+            { country: "India", state: "Rajasthan", place: "Nathdwara", desc: "Shrinathji temple" },
+            { country: "India", state: "Rajasthan", place: "Mehandipur Balaji", desc: "Hanuman temple for healing" },
+            { country: "India", state: "Rajasthan", place: "Sanwariya Seth Ji", desc: "Popular Krishna form" },
+            { country: "India", state: "Rajasthan", place: "Khatu Shyam Ji", desc: "Barbarika as Shyam" },
+            { country: "India", state: "Rajasthan", place: "Salasar Balaji", desc: "Famous Hanuman temple" },
+            { country: "India", state: "Rajasthan", place: "Karni Mata", desc: "Temple with sacred rats" },
+
+            { country: "India", state: "Sikkim", place: "Kirateshwar Mahadev", desc: "Ancient Shiva temple" },
+
+            { country: "India", state: "Tamil Nadu", place: "Rameswaram", desc: "Jyotirlinga + Char Dham (South)" },
+            { country: "India", state: "Tamil Nadu", place: "Kanchipuram (Kamakshi)", desc: "Sapta Puri + Maha Shakti Peeth" },
+            { country: "India", state: "Tamil Nadu", place: "Srirangam", desc: "Major Ranganathaswamy temple" },
+            { country: "India", state: "Tamil Nadu", place: "Meenakshi (Madurai)", desc: "Famous Devi temple" },
+            { country: "India", state: "Tamil Nadu", place: "Thanjavur Brihadeeswarar", desc: "UNESCO Chola temple" },
+            { country: "India", state: "Tamil Nadu", place: "Chidambaram Nataraja", desc: "Cosmic dance of Shiva" },
+
+            { country: "India", state: "Telangana", place: "Jogulamba (Alampur)", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Telangana", place: "Yadagirigutta", desc: "Popular Narasimha temple" },
+
+            { country: "India", state: "Tripura", place: "Tripura Sundari (Udaipur)", desc: "Important Shakti Peeth" },
+
+            { country: "India", state: "Uttar Pradesh", place: "Kashi Vishwanath", desc: "Jyotirlinga + Sapta Puri" },
+            { country: "India", state: "Uttar Pradesh", place: "Ayodhya", desc: "Birthplace of Lord Rama" },
+            { country: "India", state: "Uttar Pradesh", place: "Mathura", desc: "Birthplace of Lord Krishna" },
+            { country: "India", state: "Uttar Pradesh", place: "Vrindavan", desc: "Krishna circuit" },
+            { country: "India", state: "Uttar Pradesh", place: "Prayagraj", desc: "Kumbh Mela + Triveni Sangam" },
+            { country: "India", state: "Uttar Pradesh", place: "Vishalakshi", desc: "Maha Shakti Peeth" },
+            { country: "India", state: "Uttar Pradesh", place: "Chitrakoot", desc: "Ramayana tirtha" },
+
+            { country: "India", state: "Uttarakhand", place: "Kedarnath", desc: "Jyotirlinga + Panch Kedar" },
+            { country: "India", state: "Uttarakhand", place: "Tungnath", desc: "Panch Kedar – highest Shiva temple" },
+            { country: "India", state: "Uttarakhand", place: "Rudranath", desc: "Panch Kedar (Face)" },
+            { country: "India", state: "Uttarakhand", place: "Madhyamaheshwar", desc: "Panch Kedar (Navel)" },
+            { country: "India", state: "Uttarakhand", place: "Kalpeshwar", desc: "Panch Kedar (Hair)" },
+            { country: "India", state: "Uttarakhand", place: "Badrinath", desc: "Char Dham (North)" },
+            { country: "India", state: "Uttarakhand", place: "Yamunotri", desc: "Chota Char Dham" },
+            { country: "India", state: "Uttarakhand", place: "Gangotri", desc: "Chota Char Dham" },
+            { country: "India", state: "Uttarakhand", place: "Haridwar", desc: "Sapta Puri + Kumbh" },
+            { country: "India", state: "Uttarakhand", place: "Neem Karoli Baba (Kainchi Dham)", desc: "Famous ashram" },
+            { country: "India", state: "Uttarakhand", place: "Chandrashila", desc: "Sacred peak above Tungnath" },
+            { country: "India", state: "Uttarakhand", place: "Rishikesh", desc: "Yoga capital" },
+
+            { country: "India", state: "West Bengal", place: "Kalighat", desc: "Adi Shakti Peeth" },
+            { country: "India", state: "West Bengal", place: "Tarapith", desc: "Famous Tantric site" },
+            { country: "India", state: "West Bengal", place: "Mayapur", desc: "ISKCON headquarters" },
+
+            { country: "Outside India", state: "Nepal", place: "Pashupatinath (Kathmandu)", desc: "Most sacred Shiva temple" },
+            { country: "Outside India", state: "Nepal", place: "Muktinath", desc: "Sacred Vishnu + Shiva site" },
+            { country: "Outside India", state: "Nepal", place: "Janaki Temple (Janakpur)", desc: "Birthplace of Sita" },
+            { country: "Outside India", state: "Nepal", place: "Manakamana", desc: "Wish-fulfilling Devi temple" },
+            { country: "Outside India", state: "Nepal", place: "Guhyeshwari", desc: "Important Shakti Peeth" },
+            { country: "Outside India", state: "Nepal", place: "Budhanilkantha", desc: "Reclining Vishnu" },
+            { country: "Outside India", state: "Nepal", place: "Dakshinkali", desc: "Powerful Kali temple" },
+
+            { country: "Outside India", state: "Sri Lanka", place: "Shankari (Trincomalee)", desc: "Maha Shakti Peeth" },
+            { country: "Outside India", state: "Pakistan", place: "Hinglaj Mata", desc: "Major Shakti Peeth" },
+            { country: "Outside India", state: "Tibet", place: "Kailash-Mansarovar", desc: "Supreme sacred mountain of Shiva" },
+            { country: "Outside India", state: "PoK", place: "Sharada Peeth", desc: "Ancient Saraswati site" }
+        ];
+
+        const STORAGE_KEY = 'hinduTirtha_ultimate_v6';
+        let currentModalId = null;
+
+        function loadData() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+            catch { return {}; }
+        }
+
+        function saveData() {
+            const data = {};
+            document.querySelectorAll('#tableBody tr').forEach(row => {
+                const id = row.dataset.id;
+                const checked = row.querySelector('.check').checked;
+                const date = row.querySelector('.date').value;
+                const notes = row.querySelector('.note').value;
+                if (checked || date || notes) data[id] = { checked, date, notes };
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            updateProgress();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            const saved = loadData();
+
+            tirthas.forEach((t, index) => {
+                const item = saved[index] || {};
+                const tr = document.createElement('tr');
+                tr.dataset.id = index;
+                tr.dataset.country = t.country;
+                tr.dataset.state = t.state;
+                tr.dataset.place = (t.place + ' ' + t.desc).toLowerCase();
+                if (item.checked) tr.classList.add('visited');
+
+                const noteValue = item.notes || '';
+                const showReadBtn = noteValue.length > 40;
+
+                tr.innerHTML = `
+      <td><input type="checkbox" class="check" ${item.checked ? 'checked' : ''} onchange="toggleVisited(this)"></td>
+      <td>${t.country}</td>
+      <td>${t.state}</td>
+      <td><strong>${t.place}</strong></td>
+      <td>${t.desc}</td>
+      <td><input type="date" class="date" value="${item.date || ''}" onchange="saveData()"></td>
+      <td>
+        <textarea class="note" onchange="saveData()" oninput="checkNoteLength(this)">${noteValue}</textarea>
+        <div class="note-actions">
+          ${showReadBtn ? `<button class="small secondary" onclick="openModal(${index})">Read Full</button>` : ''}
+        </div>
+      </td>
+    `;
+                tbody.appendChild(tr);
+            });
+            updateStateFilter();
+            updateProgress();
+        }
+
+        function checkNoteLength(textarea) {
+            const btnContainer = textarea.nextElementSibling;
+            if (textarea.value.length > 40) {
+                if (!btnContainer.querySelector('button')) {
+                    const btn = document.createElement('button');
+                    btn.className = 'small secondary';
+                    btn.textContent = 'Read Full';
+                    btn.onclick = () => openModal(textarea.closest('tr').dataset.id);
+                    btnContainer.appendChild(btn);
+                }
+            } else {
+                btnContainer.innerHTML = '';
+            }
+            saveData();
+        }
+
+        function openModal(id) {
+            currentModalId = id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            const place = row.children[3].innerText;
+            const note = row.querySelector('.note').value;
+
+            document.getElementById('modalTitle').textContent = place;
+            document.getElementById('modalNote').value = note;
+            document.getElementById('noteModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('noteModal').style.display = 'none';
+            currentModalId = null;
+        }
+
+        function saveModalNote() {
+            if (currentModalId === null) return;
+            const row = document.querySelector(`tr[data-id="${currentModalId}"]`);
+            const textarea = row.querySelector('.note');
+            textarea.value = document.getElementById('modalNote').value;
+            checkNoteLength(textarea);
+            saveData();
+            closeModal();
+        }
+
+        function toggleVisited(cb) {
+            cb.closest('tr').classList.toggle('visited', cb.checked);
+            saveData();
+        }
+
+        function updateProgress() {
+            const total = tirthas.length;
+            const visited = document.querySelectorAll('#tableBody .check:checked').length;
+            const percent = total ? Math.round((visited / total) * 100) : 0;
+            document.getElementById('progressText').textContent = `Visited: ${visited} / ${total} (${percent}%)`;
+        }
+
+        function updateStateFilter() {
+            const country = document.getElementById('countryFilter').value;
+            const stateFilter = document.getElementById('stateFilter');
+            const states = new Set();
+            tirthas.forEach(t => {
+                if (country === 'all' || t.country === country) states.add(t.state);
+            });
+            stateFilter.innerHTML = '<option value="all">All States</option>';
+            [...states].sort().forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                stateFilter.appendChild(opt);
+            });
+        }
+
+        function filterTable() {
+            const country = document.getElementById('countryFilter').value;
+            const state = document.getElementById('stateFilter').value;
+            const search = document.getElementById('searchBox').value.toLowerCase().trim();
+
+            document.querySelectorAll('#tableBody tr').forEach(row => {
+                const matchCountry = country === 'all' || row.dataset.country === country;
+                const matchState = state === 'all' || row.dataset.state === state;
+                const matchSearch = !search || row.dataset.place.includes(search);
+                row.style.display = (matchCountry && matchState && matchSearch) ? '' : 'none';
+            });
+        }
+
+        function markAllVisible() {
+            document.querySelectorAll('#tableBody tr').forEach(row => {
+                if (row.style.display !== 'none') {
+                    row.querySelector('.check').checked = true;
+                    row.classList.add('visited');
+                }
+            });
+            saveData();
+        }
+
+        function clearAll() {
+            if (confirm('Clear ALL progress?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                renderTable();
+            }
+        }
+
+        function exportCSV() {
+            const saved = loadData();
+            let csv = 'Country,State,Place,Visited,Date,Notes\n';
+            tirthas.forEach((t, i) => {
+                const item = saved[i] || {};
+                csv += `"${t.country}","${t.state}","${t.place}","${item.checked ? 'Yes' : 'No'}","${item.date || ''}","${(item.notes || '').replace(/"/g, '""')}"\n`;
+            });
+            downloadFile(csv, 'Hindu_Tirthas.csv', 'text/csv');
+        }
+
+        function exportJSON() {
+            const data = { version: 6, date: new Date().toISOString(), progress: loadData() };
+            downloadFile(JSON.stringify(data, null, 2), 'Hindu_Tirthas_Backup.json', 'application/json');
+        }
+
+        function importJSON() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if (data.progress) {
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(data.progress));
+                            renderTable();
+                            alert('Imported successfully!');
+                        }
+                    } catch {
+                        alert('Invalid file');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function downloadFile(content, name, type) {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([content], { type }));
+            a.download = name;
+            a.click();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+        document.getElementById('noteModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        renderTable();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trader’s Diary – Admin Only</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --bg-card: #121826;
+            --bg-hover: #1a2234;
+            --bg-input: #0f1520;
+            --border: #1e2a3a;
+            --border-light: #2a3747;
+            --text: #e8eef7;
+            --text-muted: #8b9bb4;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 14px;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(ellipse at top, #111827 0%, #0b0f19 70%);
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-box h1 {
+            font-size: 26px;
+            font-weight: 750;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .login-box p {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 13px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 13px;
+            margin-bottom: 14px;
+            display: none;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.18s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-hover);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        /* ===== APP LAYOUT ===== */
+        .app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .app.active {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 18px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo-app {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 6px 28px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+
+        .logo-app .icon {
+            font-size: 28px;
+        }
+
+        .logo-app h1 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .nav-app {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            text-align: left;
+            padding: 13px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .nav-btn.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .qs-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .qs-label {
+            color: var(--text-muted);
+        }
+
+        .qs-value {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            margin-top: 18px;
+            width: 100%;
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 11px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 36px 44px 60px;
+            max-width: 1800px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .view-header {
+            margin-bottom: 24px;
+        }
+
+        .view-header h2 {
+            font-size: 28px;
+            font-weight: 750;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .view-header p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-card .value.positive {
+            color: var(--success);
+        }
+
+        .stat-card .value.negative {
+            color: var(--danger);
+        }
+
+        /* ===== STOCK SHEET ===== */
+        .sheet-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+
+        .week-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .week-label {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 230px;
+            text-align: center;
+            background: var(--bg);
+            padding: 9px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .sheet-add {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .sheet-add input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .sheet-add input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .sheet-status {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+            min-width: 90px;
+        }
+
+        .day-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .day-btn {
+            padding: 9px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .day-btn:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .day-btn.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .day-btn.today {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
+        }
+
+        .sheet-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            min-width: 1680px;
+        }
+
+        .excel-table th {
+            background: #161e2e;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 13px 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            font-size: 12.5px;
+        }
+
+        .excel-table th.today-col {
+            background: rgba(59, 130, 246, 0.18);
+            color: var(--primary);
+        }
+
+        .excel-table th:first-child,
+        .excel-table td:first-child {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            background: var(--bg-card);
+            z-index: 15;
+            min-width: 140px;
+            border-right: 2px solid var(--border-light);
+            padding-left: 16px;
+        }
+
+        .excel-table th:first-child {
+            z-index: 30;
+            background: #161e2e;
+        }
+
+        .excel-table td {
+            padding: 5px 6px;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .excel-table td.today-col {
+            background: rgba(59, 130, 246, 0.04);
+        }
+
+        .excel-table tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .excel-table input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text);
+            text-align: center;
+            padding: 9px 5px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-family: inherit;
+        }
+
+        .excel-table input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-input);
+        }
+
+        .excel-table input.pred {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .excel-table input.actual {
+            font-weight: 650;
+        }
+
+        .excel-table input.actual.positive {
+            color: var(--success);
+        }
+
+        .excel-table input.actual.negative {
+            color: var(--danger);
+        }
+
+        .day-header {
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .day-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .stock-name {
+            font-weight: 650;
+            font-size: 14px;
+        }
+
+        .selected-date {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .remove-row {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .remove-row:hover {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .note-cell {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 220px;
+        }
+
+        .note-preview {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+            padding: 6px 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .note-preview.has-text {
+            color: var(--text);
+        }
+
+        .view-note-btn {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--primary);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .view-note-btn:hover {
+            background: rgba(59, 130, 246, 0.22);
+        }
+
+        /* Note Modal */
+        .note-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .note-modal.open {
+            display: flex;
+        }
+
+        .note-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .note-modal-content h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .note-modal-content .stock-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .note-modal-content textarea {
+            width: 100%;
+            min-height: 220px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .note-modal-content textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .note-modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .workflow-box {
+            margin-top: 20px;
+            padding: 18px 22px;
+            background: rgba(59, 130, 246, 0.07);
+            border: 1px solid rgba(59, 130, 246, 0.18);
+            border-radius: 12px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        .workflow-box strong {
+            color: var(--text);
+        }
+
+        .workflow-box ol {
+            margin: 10px 0 0 18px;
+        }
+
+        .workflow-box li {
+            margin-bottom: 6px;
+        }
+
+        /* Tables & Forms */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .trades-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .trades-table th {
+            text-align: left;
+            padding: 12px 14px;
+            color: var(--text-muted);
+            font-weight: 550;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trades-table td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trades-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .badge-long {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .badge-short {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-win {
+            color: var(--success);
+            font-weight: 650;
+        }
+
+        .badge-loss {
+            color: var(--danger);
+            font-weight: 650;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group-form {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group-form.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group-form label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group-form input,
+        .form-group-form select,
+        .form-group-form textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group-form input:focus,
+        .form-group-form select:focus,
+        .form-group-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13.5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filters select,
+        .filters input {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 9px 14px;
+            border-radius: 9px;
+            font-size: 13.5px;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 72px;
+                padding: 18px 10px;
+            }
+
+            .logo-app h1,
+            .tagline,
+            .nav-btn,
+            .sidebar-footer .qs-item,
+            .logout-btn {
+                display: none;
+            }
+
+            .logo-app {
+                justify-content: center;
+                border: none;
+                margin: 0;
+                padding-bottom: 18px;
+            }
+
+            .main {
+                margin-left: 72px;
+                padding: 20px 16px;
+            }
+
+            .form-grid,
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-box">
+            <h1>📒 Trader’s Diary</h1>
+            <p>Admin Access Only</p>
+            <div class="login-error" id="login-error">Invalid credentials</div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="admin@tradersdiary.com"
+                    value="admin@tradersdiary.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Enter password" value="admin123">
+            </div>
+            <button class="btn btn-primary" onclick="doLogin()">Login as Admin</button>
+            <p style="margin-top:20px;font-size:12px;color:var(--text-muted);text-align:center">
+                Email: admin@tradersdiary.com<br>Password: admin123
+            </p>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div class="app" id="app">
+        <aside class="sidebar">
+            <div class="logo-app">
+                <div class="icon">📒</div>
+                <div>
+                    <h1>Trader’s Diary</h1>
+                    <p class="tagline">Admin • Full Access</p>
+                </div>
+            </div>
+            <nav class="nav-app">
+                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn" data-view="sheet">📊 Stock Sheet</button>
+                <button class="nav-btn" data-view="trades">All Trades</button>
+                <button class="nav-btn" data-view="add">+ Add Trade</button>
+                <button class="nav-btn" data-view="stats">Statistics</button>
+                <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="qs-item"><span class="qs-label">Total Trades</span><span class="qs-value"
+                        id="qs-total">0</span></div>
+                <div class="qs-item"><span class="qs-label">Win Rate</span><span class="qs-value"
+                        id="qs-winrate">0%</span></div>
+                <div class="qs-item"><span class="qs-label">Net P&L</span><span class="qs-value" id="qs-pnl">₹0</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <!-- DASHBOARD -->
+            <section id="view-dashboard" class="view active">
+                <header class="view-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of your trading performance</p>
+                </header>
+                <div class="stats-grid" id="dashboard-stats"></div>
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+                        <h3 style="font-size:16px;font-weight:600">Recent Trades</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="showView('trades')">View All →</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="trades-table" id="recent-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Instrument</th>
+                                    <th>Dir</th>
+                                    <th>P&L</th>
+                                    <th>R</th>
+                                    <th>Setup</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STOCK SHEET -->
+            <section id="view-sheet" class="view">
+                <header class="view-header">
+                    <h2>📊 Daily Stock Planner</h2>
+                    <p>Latest stocks on top • Selected date • Full notes support</p>
+                </header>
+
+                <div class="sheet-toolbar">
+                    <div class="week-nav">
+                        <button class="btn btn-secondary btn-sm" onclick="changeWeek(-1)">← Prev</button>
+                        <div class="week-label" id="week-label">Loading...</div>
+                        <button class="btn btn-secondary btn-sm" onclick="changeWeek(1)">Next →</button>
+                        <button class="btn btn-secondary btn-sm" onclick="goToCurrentWeek()">This Week</button>
+                    </div>
+                    <div class="sheet-add">
+                        <input type="text" id="new-stock" placeholder="Stock name (RELIANCE, NIFTY, BANKNIFTY...)"
+                            onkeydown="if(event.key==='Enter') addStockRow()">
+                        <button class="btn btn-primary" onclick="addStockRow()">+ Add Stock</button>
+                    </div>
+                    <button class="btn btn-secondary" onclick="saveSheet(true)">💾 Save</button>
+                    <span class="sheet-status" id="sheet-status"></span>
+                </div>
+
+                <div class="day-selector">
+                    <button class="day-btn" data-day="mon" onclick="focusDay('mon')">Monday</button>
+                    <button class="day-btn" data-day="tue" onclick="focusDay('tue')">Tuesday</button>
+                    <button class="day-btn" data-day="wed" onclick="focusDay('wed')">Wednesday</button>
+                    <button class="day-btn" data-day="thu" onclick="focusDay('thu')">Thursday</button>
+                    <button class="day-btn" data-day="fri" onclick="focusDay('fri')">Friday</button>
+                </div>
+
+                <div class="sheet-wrap">
+                    <table class="excel-table">
+                        <thead>
+                            <tr>
+                                <th>Stock</th>
+                                <th>Selected On</th>
+                                <th>Price</th>
+                                <th>SL</th>
+                                <th>TG</th>
+                                <th class="day-col" data-day="mon">
+                                    <div class="day-header">Monday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
+                                </th>
+                                <th class="day-col" data-day="tue">
+                                    <div class="day-header">Tuesday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
+                                </th>
+                                <th class="day-col" data-day="wed">
+                                    <div class="day-header">Wednesday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
+                                </th>
+                                <th class="day-col" data-day="thu">
+                                    <div class="day-header">Thursday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
+                                </th>
+                                <th class="day-col" data-day="fri">
+                                    <div class="day-header">Friday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
+                                </th>
+                                <th style="min-width:200px">Notes / Analysis</th>
+                                <th style="width:50px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="sheet-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="workflow-box">
+                    <strong>How to use:</strong>
+                    <ol>
+                        <li>Before market open → Research → Add stock (appears on top) → Fill Price, SL, TG + Pred %
+                        </li>
+                        <li>End of day → Fill Actual %</li>
+                        <li>Next day → Add new stocks (they appear on top)</li>
+                        <li>Long notes → Click <strong>View</strong> to read/edit full note</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- ALL TRADES -->
+            <section id="view-trades" class="view">
+                <header class="view-header">
+                    <h2>All Trades</h2>
+                    <div class="filters">
+                        <select id="filter-market">
+                            <option value="all">All Markets</option>
+                            <option value="Indian Stocks">Indian Stocks</option>
+                            <option value="Crypto">Crypto</option>
+                            <option value="Forex">Forex</option>
+                            <option value="Commodities">Commodities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="filter-result">
+                            <option value="all">All Results</option>
+                            <option value="win">Wins</option>
+                            <option value="loss">Losses</option>
+                        </select>
+                        <input type="text" id="search-trades" placeholder="Search instrument / setup..."
+                            style="min-width:220px">
+                    </div>
+                </header>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table class="trades-table" id="all-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Market</th>
+                                    <th>Instrument</th>
+                                    <th>Dir</th>
+                                    <th>Entry</th>
+                                    <th>Exit</th>
+                                    <th>P&L</th>
+                                    <th>R</th>
+                                    <th>Setup</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="empty-state" id="trades-empty" style="display:none">No trades yet</p>
+                </div>
+            </section>
+
+            <!-- ADD TRADE -->
+            <section id="view-add" class="view">
+                <header class="view-header">
+                    <h2 id="form-title">Add New Trade</h2>
+                    <p>Log every detail for better review</p>
+                </header>
+                <form id="trade-form" class="card" style="max-width:860px">
+                    <input type="hidden" id="trade-id">
+                    <div class="form-grid">
+                        <div class="form-group-form">
+                            <label>Date & Time *</label>
+                            <input type="datetime-local" id="date" required>
+                        </div>
+                        <div class="form-group-form">
+                            <label>Market *</label>
+                            <select id="market" required>
+                                <option value="Indian Stocks">Indian Stocks (NSE/BSE)</option>
+                                <option value="Crypto">Crypto</option>
+                                <option value="Forex">Forex</option>
+                                <option value="Commodities">Commodities</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group-form">
+                            <label>Instrument *</label>
+                            <input type="text" id="instrument" placeholder="Nifty, BankNifty, RELIANCE..." required>
+                        </div>
+                        <div class="form-group-form">
+                            <label>Direction *</label>
+                            <select id="direction" required>
+                                <option value="Long">Long</option>
+                                <option value="Short">Short</option>
+                            </select>
+                        </div>
+                        <div class="form-group-form"><label>Entry Price *</label><input type="number" id="entry"
+                                step="any" required></div>
+                        <div class="form-group-form"><label>Exit Price *</label><input type="number" id="exit"
+                                step="any" required></div>
+                        <div class="form-group-form"><label>Stop Loss</label><input type="number" id="sl" step="any">
+                        </div>
+                        <div class="form-group-form"><label>Target</label><input type="number" id="target" step="any">
+                        </div>
+                        <div class="form-group-form"><label>Position Size (Qty)</label><input type="number" id="qty"
+                                step="any"></div>
+                        <div class="form-group-form"><label>Risk Amount (₹)</label><input type="number" id="risk"
+                                step="any"></div>
+                        <div class="form-group-form"><label>P&L (₹) *</label><input type="number" id="pnl" step="any"
+                                required></div>
+                        <div class="form-group-form"><label>R-Multiple</label><input type="number" id="rMultiple"
+                                step="0.01" placeholder="Auto if Risk filled"></div>
+                        <div class="form-group-form full"><label>Setup / Strategy</label><input type="text" id="setup"
+                                placeholder="ORB, Order Block, RSI Divergence..."></div>
+                        <div class="form-group-form full"><label>Emotions / Mental State</label><textarea id="emotions"
+                                rows="2" placeholder="Calm, FOMO, Revenge..."></textarea></div>
+                        <div class="form-group-form full"><label>Notes / Lessons</label><textarea id="notes" rows="3"
+                                placeholder="What went well? What to improve?"></textarea></div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-btn">Save Trade</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- STATISTICS -->
+            <section id="view-stats" class="view">
+                <header class="view-header">
+                    <h2>Statistics</h2>
+                    <p>Deep dive into your performance</p>
+                </header>
+                <div class="stats-grid" id="detailed-stats"></div>
+                <div class="two-col">
+                    <div class="card">
+                        <h3 style="margin-bottom:14px;font-size:16px">Performance by Market</h3>
+                        <div id="market-breakdown"></div>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom:14px;font-size:16px">Performance by Setup</h3>
+                        <div id="setup-breakdown"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section id="view-settings" class="view">
+                <header class="view-header">
+                    <h2>Settings & Data</h2>
+                </header>
+                <div class="card">
+                    <h3 style="margin-bottom:8px">Data Management</h3>
+                    <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:18px">
+                        All data is stored locally in your browser. Export regularly for backup.
+                    </p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap">
+                        <button class="btn btn-primary" onclick="exportData()">Export All Trades (JSON)</button>
+                        <button class="btn btn-secondary"
+                            onclick="document.getElementById('import-file').click()">Import Trades</button>
+                        <input type="file" id="import-file" accept=".json" hidden>
+                        <button class="btn btn-danger" onclick="clearAllData()">Clear All Trades</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom:8px">About</h3>
+                    <p>Trader’s Diary – Admin Only Version</p>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:6px">
+                        Full features enabled for Admin. Subscriptions can be added later.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- NOTE MODAL -->
+    <div class="note-modal" id="note-modal">
+        <div class="note-modal-content">
+            <h3>Full Note / Analysis</h3>
+            <div class="stock-label" id="note-stock-label">Stock: —</div>
+            <textarea id="note-full-text" placeholder="Write your full analysis, news summary, reasons..."></textarea>
+            <div class="note-modal-actions">
+                <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNoteFromModal()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== AUTH ====================
+        const ADMIN_EMAIL = 'admin@tradersdiary.com';
+        const ADMIN_PASS = 'admin123';
+        const SESSION_KEY = 'td_admin_session';
+
+        function doLogin() {
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+
+            if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                localStorage.setItem(SESSION_KEY, '1');
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app').classList.add('active');
+                initApp();
+            } else {
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        // Auto login check
+        if (localStorage.getItem(SESSION_KEY) === '1') {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app').classList.add('active');
+            window.addEventListener('DOMContentLoaded', initApp);
+        }
+
+        document.getElementById('login-password')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') doLogin();
+        });
+
+        // ==================== STOCK SHEET ====================
+        const SHEET_KEY = 'traders_diary_sheet_v5';
+        let currentWeekStart = getMonday(new Date());
+        let sheetData = {};
+        let focusedDay = null;
+        let currentNoteIdx = null;
+
+        function getMonday(d) {
+            d = new Date(d);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+        function formatWeekKey(date) {
+            return date.toISOString().slice(0, 10);
+        }
+        function formatWeekLabel(monday) {
+            const end = new Date(monday);
+            end.setDate(end.getDate() + 4);
+            const opts = { day: 'numeric', month: 'short' };
+            return `${monday.toLocaleDateString('en-IN', opts)} – ${end.toLocaleDateString('en-IN', opts)} ${monday.getFullYear()}`;
+        }
+        function formatSelectedDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
+        }
+        function getTodayDayKey() {
+            const day = new Date().getDay();
+            const map = { 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri' };
+            return map[day] || null;
+        }
+
+        function loadSheet() {
+            try {
+                sheetData = JSON.parse(localStorage.getItem(SHEET_KEY) || '{}');
+            } catch (e) {
+                sheetData = {};
+            }
+            const todayKey = getTodayDayKey();
+            if (todayKey) focusedDay = todayKey;
+            renderSheet();
+            updateDayButtons();
+        }
+
+        function collectFromDOM() {
+            const key = formatWeekKey(currentWeekStart);
+            const rows = [];
+            document.querySelectorAll('#sheet-body tr').forEach(tr => {
+                const nameEl = tr.querySelector('.stock-name');
+                if (!nameEl) return;
+                const stock = nameEl.textContent.trim();
+                if (!stock) return;
+                const inputs = tr.querySelectorAll('input');
+                rows.push({
+                    stock,
+                    selectedOn: tr.dataset.selectedOn || new Date().toISOString(),
+                    price: inputs[0]?.value || '',
+                    sl: inputs[1]?.value || '',
+                    tg: inputs[2]?.value || '',
+                    monPred: inputs[3]?.value || '',
+                    monAct: inputs[4]?.value || '',
+                    tuePred: inputs[5]?.value || '',
+                    tueAct: inputs[6]?.value || '',
+                    wedPred: inputs[7]?.value || '',
+                    wedAct: inputs[8]?.value || '',
+                    thuPred: inputs[9]?.value || '',
+                    thuAct: inputs[10]?.value || '',
+                    friPred: inputs[11]?.value || '',
+                    friAct: inputs[12]?.value || '',
+                    notes: tr.dataset.notes || ''
+                });
+            });
+            sheetData[key] = rows;
+        }
+
+        function saveSheet(showMsg = false) {
+            collectFromDOM();
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            if (showMsg) {
+                const el = document.getElementById('sheet-status');
+                el.textContent = 'Saved ✓';
+                setTimeout(() => el.textContent = '', 2000);
+            }
+        }
+
+        function renderSheet() {
+            document.getElementById('week-label').textContent = formatWeekLabel(currentWeekStart);
+            const key = formatWeekKey(currentWeekStart);
+            const rows = sheetData[key] || [];
+            const tbody = document.getElementById('sheet-body');
+            tbody.innerHTML = '';
+
+            const todayKey = getTodayDayKey();
+            document.querySelectorAll('.day-col').forEach(th => {
+                th.classList.toggle('today-col', th.dataset.day === todayKey);
+            });
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `
+          <tr>
+            <td colspan="12" class="empty-state">
+              No stocks yet this week.<br>
+              Type a stock name and click <strong>+ Add Stock</strong> (latest appears on top)
+            </td>
+          </tr>`;
+                return;
+            }
+
+            rows.forEach((r, idx) => {
+                const notePreview = r.notes ? (r.notes.length > 35 ? r.notes.substring(0, 35) + '...' : r.notes) : 'No notes';
+                const hasNote = r.notes && r.notes.trim().length > 0;
+
+                const tr = document.createElement('tr');
+                tr.dataset.selectedOn = r.selectedOn || new Date().toISOString();
+                tr.dataset.notes = r.notes || '';
+
+                tr.innerHTML = `
+          <td><span class="stock-name">${escapeHtml(r.stock)}</span></td>
+          <td><span class="selected-date">${formatSelectedDate(r.selectedOn)}</span></td>
+          <td><input class="price" type="text" value="${escapeHtml(r.price)}" placeholder="Price"></td>
+          <td><input class="sl" type="text" value="${escapeHtml(r.sl)}" placeholder="SL"></td>
+          <td><input class="tg" type="text" value="${escapeHtml(r.tg)}" placeholder="TG"></td>
+          <td class="${todayKey === 'mon' ? 'today-col' : ''}">
+            <input class="pred" type="text" value="${escapeHtml(r.monPred)}" placeholder="+3">
+            <input class="actual" type="text" value="${escapeHtml(r.monAct)}" placeholder="Act">
+          </td>
+          <td class="${todayKey === 'tue' ? 'today-col' : ''}">
+            <input class="pred" type="text" value="${escapeHtml(r.tuePred)}" placeholder="+2">
+            <input class="actual" type="text" value="${escapeHtml(r.tueAct)}" placeholder="Act">
+          </td>
+          <td class="${todayKey === 'wed' ? 'today-col' : ''}">
+            <input class="pred" type="text" value="${escapeHtml(r.wedPred)}" placeholder="0">
+            <input class="actual" type="text" value="${escapeHtml(r.wedAct)}" placeholder="Act">
+          </td>
+          <td class="${todayKey === 'thu' ? 'today-col' : ''}">
+            <input class="pred" type="text" value="${escapeHtml(r.thuPred)}" placeholder="-1">
+            <input class="actual" type="text" value="${escapeHtml(r.thuAct)}" placeholder="Act">
+          </td>
+          <td class="${todayKey === 'fri' ? 'today-col' : ''}">
+            <input class="pred" type="text" value="${escapeHtml(r.friPred)}" placeholder="+2.5">
+            <input class="actual" type="text" value="${escapeHtml(r.friAct)}" placeholder="Act">
+          </td>
+          <td>
+            <div class="note-cell">
+              <div class="note-preview ${hasNote ? 'has-text' : ''}" onclick="openNoteModal(${idx})">${escapeHtml(notePreview)}</div>
+              <button class="view-note-btn" onclick="openNoteModal(${idx})">View</button>
+            </div>
+          </td>
+          <td><button class="remove-row" onclick="removeStockRow(${idx})" title="Remove">🗑️</button></td>
+        `;
+                tbody.appendChild(tr);
+                tr.querySelectorAll('input.actual').forEach(inp => colorActual(inp));
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function colorActual(input) {
+            const val = parseFloat(input.value);
+            input.classList.remove('positive', 'negative');
+            if (!isNaN(val)) {
+                if (val > 0) input.classList.add('positive');
+                else if (val < 0) input.classList.add('negative');
+            }
+        }
+
+        function updateDayButtons() {
+            const todayKey = getTodayDayKey();
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.day === focusedDay);
+                btn.classList.toggle('today', btn.dataset.day === todayKey);
+            });
+        }
+
+        function focusDay(day) {
+            focusedDay = day;
+            updateDayButtons();
+        }
+
+        function addStockRow() {
+            const input = document.getElementById('new-stock');
+            const name = input.value.trim().toUpperCase();
+            if (!name) {
+                alert('Please type a stock name');
+                input.focus();
+                return;
+            }
+
+            const key = formatWeekKey(currentWeekStart);
+            if (!sheetData[key]) sheetData[key] = [];
+
+            if (sheetData[key].some(r => r.stock === name)) {
+                alert(`"${name}" is already added this week`);
+                input.focus();
+                return;
+            }
+
+            // Newest on top
+            sheetData[key].unshift({
+                stock: name,
+                selectedOn: new Date().toISOString(),
+                price: '', sl: '', tg: '',
+                monPred: '', monAct: '',
+                tuePred: '', tueAct: '',
+                wedPred: '', wedAct: '',
+                thuPred: '', thuAct: '',
+                friPred: '', friAct: '',
+                notes: ''
+            });
+
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            input.value = '';
+            renderSheet();
+
+            const status = document.getElementById('sheet-status');
+            status.textContent = `"${name}" added on top ✓`;
+            setTimeout(() => status.textContent = '', 2500);
+
+            setTimeout(() => {
+                const firstRow = document.querySelector('#sheet-body tr:first-child');
+                if (!firstRow) return;
+                const dayMap = { mon: 3, tue: 5, wed: 7, thu: 9, fri: 11 };
+                const focusIdx = dayMap[focusedDay] ?? 3;
+                const inputs = firstRow.querySelectorAll('input');
+                if (inputs[focusIdx]) inputs[focusIdx].focus();
+                else inputs[0]?.focus();
+            }, 60);
+        }
+
+        function removeStockRow(idx) {
+            if (!confirm('Remove this stock?')) return;
+            const key = formatWeekKey(currentWeekStart);
+            sheetData[key].splice(idx, 1);
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            renderSheet();
+        }
+
+        function openNoteModal(idx) {
+            currentNoteIdx = idx;
+            const key = formatWeekKey(currentWeekStart);
+            const row = sheetData[key][idx];
+            if (!row) return;
+            document.getElementById('note-stock-label').textContent =
+                `Stock: ${row.stock}  •  Selected: ${formatSelectedDate(row.selectedOn)}`;
+            document.getElementById('note-full-text').value = row.notes || '';
+            document.getElementById('note-modal').classList.add('open');
+            setTimeout(() => document.getElementById('note-full-text').focus(), 100);
+        }
+
+        function closeNoteModal() {
+            document.getElementById('note-modal').classList.remove('open');
+            currentNoteIdx = null;
+        }
+
+        function saveNoteFromModal() {
+            if (currentNoteIdx === null) return;
+            const key = formatWeekKey(currentWeekStart);
+            sheetData[key][currentNoteIdx].notes = document.getElementById('note-full-text').value;
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            closeNoteModal();
+            renderSheet();
+        }
+
+        document.getElementById('note-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeNoteModal();
+        });
+
+        function changeWeek(dir) {
+            saveSheet();
+            currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7));
+            renderSheet();
+            updateDayButtons();
+        }
+        function goToCurrentWeek() {
+            saveSheet();
+            currentWeekStart = getMonday(new Date());
+            const todayKey = getTodayDayKey();
+            if (todayKey) focusedDay = todayKey;
+            renderSheet();
+            updateDayButtons();
+        }
+
+        let saveTimer;
+        document.addEventListener('input', (e) => {
+            if (e.target.closest('#sheet-body')) {
+                clearTimeout(saveTimer);
+                saveTimer = setTimeout(() => saveSheet(false), 600);
+                if (e.target.classList.contains('actual')) colorActual(e.target);
+            }
+        });
+
+        // ==================== TRADES ====================
+        const STORAGE_KEY = 'traders_diary_v1';
+        let trades = [];
+        let editingId = null;
+
+        function loadTrades() {
+            try {
+                trades = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch (e) {
+                trades = [];
+            }
+        }
+        function saveTrades() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+            updateUI();
+        }
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        }
+        function formatDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('en-IN', {
+                day: '2-digit', month: 'short', year: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+        function formatMoney(n) {
+            if (n == null || isNaN(n)) return '—';
+            const abs = Math.abs(n);
+            const f = abs >= 1000 ? abs.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : abs.toFixed(2);
+            return (n >= 0 ? '+' : '−') + '₹' + f;
+        }
+        function calcR(pnl, risk) {
+            if (!risk || risk === 0) return null;
+            return +(pnl / risk).toFixed(2);
+        }
+
+        function showView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + name)?.classList.add('active');
+            document.querySelector(`.nav-btn[data-view="${name}"]`)?.classList.add('active');
+            if (name === 'sheet') {
+                renderSheet();
+                updateDayButtons();
+            }
+            if (name === 'add' && !editingId) resetForm(true);
+        }
+
+        function resetForm(keep = false) {
+            editingId = null;
+            document.getElementById('trade-form').reset();
+            document.getElementById('form-title').textContent = 'Add New Trade';
+            document.getElementById('submit-btn').textContent = 'Save Trade';
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('date').value = now.toISOString().slice(0, 16);
+            if (!keep) showView('trades');
+        }
+
+        document.getElementById('trade-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const pnl = parseFloat(document.getElementById('pnl').value);
+            const risk = parseFloat(document.getElementById('risk').value) || null;
+            let r = parseFloat(document.getElementById('rMultiple').value);
+            if (isNaN(r) && risk) r = calcR(pnl, risk);
+
+            const trade = {
+                id: editingId || generateId(),
+                date: document.getElementById('date').value,
+                market: document.getElementById('market').value,
+                instrument: document.getElementById('instrument').value.trim(),
+                direction: document.getElementById('direction').value,
+                entry: parseFloat(document.getElementById('entry').value),
+                exit: parseFloat(document.getElementById('exit').value),
+                sl: parseFloat(document.getElementById('sl').value) || null,
+                target: parseFloat(document.getElementById('target').value) || null,
+                qty: parseFloat(document.getElementById('qty').value) || null,
+                risk, pnl,
+                rMultiple: isNaN(r) ? null : r,
+                setup: document.getElementById('setup').value.trim(),
+                emotions: document.getElementById('emotions').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            if (editingId) {
+                const i = trades.findIndex(t => t.id === editingId);
+                if (i > -1) trades[i] = trade;
+            } else {
+                trades.unshift(trade);
+            }
+            saveTrades();
+            resetForm();
+            showView('trades');
+        });
+
+        function updateUI() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const net = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            document.getElementById('qs-total').textContent = total;
+            document.getElementById('qs-winrate').textContent = total ? ((wins / total) * 100).toFixed(1) + '%' : '0%';
+            const pnlEl = document.getElementById('qs-pnl');
+            pnlEl.textContent = formatMoney(net);
+            pnlEl.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            const losses = total - wins;
+            const avgWin = wins ? trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0) / wins : 0;
+            const avgLoss = losses ? Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0) / losses) : 0;
+            const pf = avgLoss ? ((avgWin * wins) / (avgLoss * losses)).toFixed(2) : (wins ? '∞' : '0');
+            const withR = trades.filter(t => t.rMultiple != null);
+            const avgR = withR.length ? (withR.reduce((s, t) => s + t.rMultiple, 0) / withR.length).toFixed(2) : '—';
+
+            document.getElementById('dashboard-stats').innerHTML = [
+                { l: 'Total Trades', v: total },
+                { l: 'Win Rate', v: (total ? ((wins / total) * 100).toFixed(1) : 0) + '%' },
+                { l: 'Net P&L', v: formatMoney(net), c: net >= 0 ? 'positive' : 'negative' },
+                { l: 'Avg Win', v: formatMoney(avgWin), c: 'positive' },
+                { l: 'Avg Loss', v: formatMoney(-avgLoss), c: 'negative' },
+                { l: 'Profit Factor', v: pf },
+                { l: 'Avg R-Multiple', v: avgR },
+                { l: 'Wins / Losses', v: `${wins} / ${losses}` }
+            ].map(s => `
+        <div class="stat-card">
+          <div class="label">${s.l}</div>
+          <div class="value ${s.c || ''}">${s.v}</div>
+        </div>
+      `).join('');
+
+            const tbody = document.querySelector('#recent-trades-table tbody');
+            tbody.innerHTML = trades.slice(0, 8).map(t => `
+        <tr>
+          <td>${formatDate(t.date)}</td>
+          <td>${t.instrument}</td>
+          <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+          <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+          <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+          <td>${t.setup || '—'}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="6" class="empty-state">No trades yet</td></tr>';
+
+            renderAllTrades();
+            renderDetailedStats();
+        }
+
+        function renderAllTrades() {
+            const mF = document.getElementById('filter-market')?.value || 'all';
+            const rF = document.getElementById('filter-result')?.value || 'all';
+            const q = (document.getElementById('search-trades')?.value || '').toLowerCase();
+            let list = [...trades];
+            if (mF !== 'all') list = list.filter(t => t.market === mF);
+            if (rF === 'win') list = list.filter(t => t.pnl > 0);
+            if (rF === 'loss') list = list.filter(t => t.pnl < 0);
+            if (q) list = list.filter(t =>
+                (t.instrument || '').toLowerCase().includes(q) ||
+                (t.setup || '').toLowerCase().includes(q)
+            );
+
+            const tbody = document.querySelector('#all-trades-table tbody');
+            const empty = document.getElementById('trades-empty');
+            if (!list.length) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            tbody.innerHTML = list.map(t => `
+        <tr>
+          <td>${formatDate(t.date)}</td>
+          <td>${t.market}</td>
+          <td><strong>${t.instrument}</strong></td>
+          <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+          <td>${t.entry}</td>
+          <td>${t.exit}</td>
+          <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+          <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+          <td>${t.setup || '—'}</td>
+          <td>
+            <button class="btn-icon" onclick="editTrade('${t.id}')">✏️</button>
+            <button class="btn-icon" onclick="deleteTrade('${t.id}')">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+        }
+
+        function renderDetailedStats() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const net = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            const best = trades.length ? Math.max(...trades.map(t => t.pnl)) : 0;
+            const worst = trades.length ? Math.min(...trades.map(t => t.pnl)) : 0;
+
+            document.getElementById('detailed-stats').innerHTML = [
+                { l: 'Total Trades', v: total },
+                { l: 'Win Rate', v: (total ? ((wins / total) * 100).toFixed(1) : 0) + '%' },
+                { l: 'Net P&L', v: formatMoney(net), c: net >= 0 ? 'positive' : 'negative' },
+                { l: 'Best Trade', v: formatMoney(best), c: 'positive' },
+                { l: 'Worst Trade', v: formatMoney(worst), c: 'negative' },
+                { l: 'Wins', v: wins },
+                { l: 'Losses', v: total - wins }
+            ].map(s => `
+        <div class="stat-card">
+          <div class="label">${s.l}</div>
+          <div class="value ${s.c || ''}">${s.v}</div>
+        </div>
+      `).join('');
+
+            const byM = {}, byS = {};
+            trades.forEach(t => {
+                if (!byM[t.market]) byM[t.market] = { c: 0, p: 0 };
+                byM[t.market].c++;
+                byM[t.market].p += t.pnl || 0;
+                const k = t.setup || 'No Setup';
+                if (!byS[k]) byS[k] = { c: 0, p: 0 };
+                byS[k].c++;
+                byS[k].p += t.pnl || 0;
+            });
+
+            document.getElementById('market-breakdown').innerHTML = Object.entries(byM)
+                .sort((a, b) => b[1].p - a[1].p)
+                .map(([m, d]) => `
+          <div class="breakdown-item">
+            <span>${m} (${d.c})</span>
+            <span class="${d.p >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.p)}</span>
+          </div>
+        `).join('') || '<p style="color:var(--text-muted)">No data</p>';
+
+            document.getElementById('setup-breakdown').innerHTML = Object.entries(byS)
+                .sort((a, b) => b[1].p - a[1].p)
+                .map(([s, d]) => `
+          <div class="breakdown-item">
+            <span>${s} (${d.c})</span>
+            <span class="${d.p >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.p)}</span>
+          </div>
+        `).join('') || '<p style="color:var(--text-muted)">No data</p>';
+        }
+
+        function editTrade(id) {
+            const t = trades.find(x => x.id === id);
+            if (!t) return;
+            editingId = id;
+            document.getElementById('date').value = t.date ? t.date.slice(0, 16) : '';
+            document.getElementById('market').value = t.market || 'Indian Stocks';
+            document.getElementById('instrument').value = t.instrument || '';
+            document.getElementById('direction').value = t.direction || 'Long';
+            document.getElementById('entry').value = t.entry ?? '';
+            document.getElementById('exit').value = t.exit ?? '';
+            document.getElementById('sl').value = t.sl ?? '';
+            document.getElementById('target').value = t.target ?? '';
+            document.getElementById('qty').value = t.qty ?? '';
+            document.getElementById('risk').value = t.risk ?? '';
+            document.getElementById('pnl').value = t.pnl ?? '';
+            document.getElementById('rMultiple').value = t.rMultiple ?? '';
+            document.getElementById('setup').value = t.setup || '';
+            document.getElementById('emotions').value = t.emotions || '';
+            document.getElementById('notes').value = t.notes || '';
+            document.getElementById('form-title').textContent = 'Edit Trade';
+            document.getElementById('submit-btn').textContent = 'Update Trade';
+            showView('add');
+        }
+
+        function deleteTrade(id) {
+            if (!confirm('Delete this trade?')) return;
+            trades = trades.filter(t => t.id !== id);
+            saveTrades();
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(trades, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `traders-diary-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+        }
+
+        document.getElementById('import-file').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                try {
+                    const imp = JSON.parse(ev.target.result);
+                    if (!Array.isArray(imp)) throw 0;
+                    if (confirm(`Import ${imp.length} trades?`)) {
+                        imp.forEach(t => {
+                            if (!t.id) t.id = generateId();
+                            trades.unshift(t);
+                        });
+                        saveTrades();
+                        alert('Imported successfully!');
+                    }
+                } catch (e) {
+                    alert('Invalid file');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        function clearAllData() {
+            if (!confirm('Delete ALL trades?') || !confirm('Really sure?')) return;
+            trades = [];
+            saveTrades();
+            alert('Cleared');
+        }
+
+        // Events
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => showView(btn.dataset.view));
+        });
+        document.getElementById('filter-market')?.addEventListener('change', renderAllTrades);
+        document.getElementById('filter-result')?.addEventListener('change', renderAllTrades);
+        document.getElementById('search-trades')?.addEventListener('input', renderAllTrades);
+        document.getElementById('pnl')?.addEventListener('input', () => {
+            const p = parseFloat(document.getElementById('pnl').value);
+            const r = parseFloat(document.getElementById('risk').value);
+            if (!isNaN(p) && !isNaN(r) && r) {
+                document.getElementById('rMultiple').value = calcR(p, r);
+            }
+        });
+
+        function initApp() {
+            loadTrades();
+            loadSheet();
+            updateUI();
+            showView('dashboard');
+        }
+    </script>
+</body>
+
+</html>

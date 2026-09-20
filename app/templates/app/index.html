@@ -1,263 +1,310 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ankit Lodhi - Expert Python, Django, and Data Science Solutions">
+  <meta name="description"
+    content="ANKUON — Scalable tech solutions and transparent investment platforms. Python, Django, Data Science & AnkuOn2 by Ankit Lodhi.">
   <meta name="keywords"
-    content="Ankit Lodhi, Python, Django, Data Science, Web Development, Machine Learning, Investment">
+    content="ANKUON, Ankit Lodhi, Python, Django, Data Science, AnkuOn2, web development, investment platform">
+  <meta name="theme-color" content="#0a0f1f">
   <meta name="author" content="Ankit Lodhi">
-  <meta property="og:title" content="Ankit Lodhi - Python & Data Science Portfolio">
-  <meta property="og:description"
-    content="Explore Ankit Lodhi's expertise in Python, Django, and Data Science, and discover investment opportunities.">
-  <meta property="og:image" content="{% static 'assets/ankit.webp' %}">
-  <meta property="og:url" content="https://ankitlodhi.com">
-  <title>Ankit Lodhi - Python, Django, Data Science</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ankuon.com/">
+
+  <meta property="og:title" content="ANKUON — Company, Ventures & Solutions">
+  <meta property="og:description" content="Building scalable tech and transparent investment platforms.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ankuon.com/">
+  <meta property="og:image" content="{% static 'assets/ankuon.png' %}">
+  <meta property="og:site_name" content="ANKUON">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ANKUON — Company, Ventures & Solutions">
+  <meta name="twitter:description" content="Building scalable tech and transparent investment platforms.">
+  <meta name="twitter:image" content="{% static 'assets/ankuon.png' %}">
+
+  <title>ANKUON — Scalable Tech & Transparent Investment Platforms</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+
+  <!-- Production: replace CDN with a compiled Tailwind build -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#059669',
+              600: '#047857',
+              700: '#065f46',
+            },
+            accent: {
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            },
+            surface: {
+              dark: '#0a0f1f',
+              card: 'rgba(255,255,255,0.05)',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow': '0 8px 30px rgba(5, 150, 105, 0.25)',
+            'card': '0 4px 24px rgba(0,0,0,0.18)',
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js" defer></script>
+
+  <script type="application/ld+json">
+ {
+ "@context": "https://schema.org",
+ "@type": "Organization",
+ "name": "ANKUON",
+ "url": "https://ankuon.com",
+ "logo": "{% static 'assets/ankuon.png' %}",
+ "founder": {
+ "@type": "Person",
+ "name": "Ankit Lodhi",
+ "jobTitle": "Founder",
+ "sameAs": [
+ "https://www.linkedin.com/in/ankitlodhiii",
+ "https://www.instagram.com/ankitlodhiii",
+ "https://www.youtube.com/@ankitlodhiii"
+ ]
+ },
+ "description": "Building scalable tech solutions and transparent investment platforms."
+ }
+ </script>
+
   <style>
     :root {
       --primary: #059669;
-      --secondary: #eab308;
+      --primary-hover: #047857;
+      --accent: #eab308;
       --bg-dark: #0a0f1f;
-      --bg-light: #f3f4f6;
-      --text-dark: #111827;
+      --bg-dark-mid: #064e3b;
       --text-light: #e5e7eb;
+      --text-muted: #9ca3af;
+      --radius: 14px;
+      --header-h: 64px;
     }
 
-    body[data-theme="light"] {
-      background: linear-gradient(to bottom, var(--bg-light), #d1d5db);
-      color: var(--text-dark);
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-h) + 12px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body[data-theme="dark"] {
-      background: linear-gradient(to bottom, var(--bg-dark), #064e3b);
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #0c1a14 45%, var(--bg-dark-mid) 100%);
       color: var(--text-light);
+      min-height: 100vh;
+    }
+
+    body[data-theme="light"] {
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #111827;
+    }
+
+    body[data-theme="light"] .glass {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    body[data-theme="light"] .text-white {
+      color: #111827 !important;
+    }
+
+    body[data-theme="light"] .text-gray-300,
+    body[data-theme="light"] .text-gray-400 {
+      color: #4b5563 !important;
+    }
+
+    body[data-theme="light"] header {
+      background: rgba(255, 255, 255, 0.92) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    body[data-theme="light"] header h1 {
+      color: #111827 !important;
+    }
+
+    body[data-theme="light"] #nav-menu a {
+      color: #374151 !important;
+    }
+
+    body[data-theme="light"] #nav-menu a:hover,
+    body[data-theme="light"] #nav-menu a.active {
+      color: var(--primary) !important;
+    }
+
+    body[data-theme="light"] #mobile-nav {
+      background: rgba(255, 255, 255, 0.98) !important;
+    }
+
+    body[data-theme="light"] #mobile-nav a {
+      color: #111827 !important;
+    }
+
+    body[data-theme="light"] .bg-section {
+      background: rgba(241, 245, 249, 0.75) !important;
+    }
+
+    body[data-theme="light"] footer {
+      background: #f1f5f9 !important;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    body[data-theme="light"] .modal-panel {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      color: #111827;
+    }
+
+    body[data-theme="light"] .social-link {
+      color: #374151;
     }
 
     .gradient-text {
-      background: linear-gradient(to right, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
-    .hover-glow {
-      transition: filter 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-      will-change: filter, box-shadow;
-    }
-
-    .hover-glow:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-      transform: translateY(-3px);
-    }
-
-    .glassmorphism {
+    .glass {
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
-    .social-link {
+    .glass:hover {
+      border-color: rgba(5, 150, 105, 0.35);
+    }
+
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+      filter: brightness(1.04);
+    }
+
+    .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      color: var(--text-light);
-      font-size: 18px;
-      font-weight: 500;
-      text-decoration: none;
-      margin: 0 20px;
-      visibility: visible;
-      opacity: 1;
-      z-index: 20;
-      transition: color 0.3s ease, transform 0.3s ease;
-    }
-
-    .social-link:hover {
-      color: var(--secondary);
-      transform: translateY(-2px);
-    }
-
-    .social-link svg {
-      width: 24px;
-      height: 24px;
-      fill: currentColor;
-      transition: transform 0.3s ease;
-    }
-
-    .social-link:hover svg {
-      transform: scale(1.15);
-    }
-
-    .dashboard-button {
-      position: relative;
-      display: block;
-      width: 280px;
-      margin: 32px auto;
-      padding: 16px 24px;
-      background: linear-gradient(to right, var(--primary), #047857);
-      color: white;
-      border-radius: 12px;
-      font-size: 20px;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
-      visibility: visible;
-      opacity: 1;
-      z-index: 10;
-      overflow: hidden;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .dashboard-button:hover {
-      background: linear-gradient(to right, var(--secondary), #ca8a04);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 22px rgba(234, 179, 8, 0.35);
-    }
-
-    .dashboard-button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.4s ease, height 0.4s ease;
-    }
-
-    .dashboard-button:active::after {
-      width: 300px;
-      height: 300px;
-    }
-
-    footer .social-container {
-      display: flex;
       justify-content: center;
-      gap: 32px;
-      margin-top: 24px;
-      margin-bottom: 24px;
-      visibility: visible;
-      opacity: 1;
-      z-index: 20;
+      gap: 0.5rem;
+      padding: 0.8rem 1.6rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff;
+      font-weight: 600;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
 
-    footer {
-      min-height: 200px;
-      z-index: 20;
-      visibility: visible;
-      opacity: 1;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--accent), #ca8a04);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(234, 179, 8, 0.35);
     }
 
-    /* Clean professional form */
-    .form-group {
-      position: relative;
-      margin-bottom: 16px;
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.8rem 1.6rem;
+      border: 1.5px solid rgba(5, 150, 105, 0.6);
+      color: #34d399;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: #9ca3af;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-    }
-
-    body[data-theme="light"] .form-group label {
-      color: #4b5563;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(17, 24, 39, 0.55);
-      border: 1px solid rgba(5, 150, 105, 0.45);
-      border-radius: 10px;
-      color: #f3f4f6;
-      font-size: 15px;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .form-group input::placeholder,
-    .form-group textarea::placeholder {
-      color: #6b7280;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--secondary);
-      box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.18);
-    }
-
-    .form-group input:invalid:not(:focus):not(:placeholder-shown),
-    .form-group textarea:invalid:not(:focus):not(:placeholder-shown) {
-      border-color: #ef4444;
-    }
-
-    .form-group .error-message {
-      display: none;
-      margin-top: 6px;
-      color: #ef4444;
-      font-size: 12px;
-    }
-
-    .form-group input:invalid:not(:focus):not(:placeholder-shown)~.error-message,
-    .form-group textarea:invalid:not(:focus):not(:placeholder-shown)~.error-message {
-      display: block;
+    .btn-outline:hover {
+      background: rgba(5, 150, 105, 0.12);
+      border-color: #34d399;
     }
 
     .portfolio-card {
       position: relative;
       overflow: hidden;
-      border-radius: 14px;
-      transition: opacity 0.5s ease, transform 0.35s ease, box-shadow 0.35s ease;
-      background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(234, 179, 8, 0.08));
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(5, 150, 105, 0.08), rgba(234, 179, 8, 0.05));
       border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      cursor: pointer;
     }
 
     .portfolio-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
     }
 
     .portfolio-card img {
       transition: transform 0.5s ease;
+      aspect-ratio: 3/2;
       object-fit: cover;
-      background-color: var(--bg-dark);
-      aspect-ratio: 3 / 2;
     }
 
     .portfolio-card:hover img {
-      transform: translateY(-8px) scale(1.03);
+      transform: scale(1.04);
     }
 
     .portfolio-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.82);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
       opacity: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      padding: 1rem;
       transition: opacity 0.3s ease;
-      padding: 16px;
     }
 
     .portfolio-card:hover .portfolio-overlay {
@@ -266,158 +313,103 @@
 
     .portfolio-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      grid-auto-flow: dense;
-      gap: 24px;
-      transition: opacity 0.3s ease;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
 
-    .portfolio-card:nth-child(3n) {
-      grid-row: span 2;
-    }
-
-    .animate-section {
+    .animate-in {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
     }
 
-    .animate-section.visible {
+    .animate-in.visible {
       opacity: 1;
       transform: translateY(0);
-    }
-
-    .animate-section>* {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    }
-
-    .animate-section.visible>* {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .animate-section.visible>*:nth-child(1) {
-      transition-delay: 0.1s;
-    }
-
-    .animate-section.visible>*:nth-child(2) {
-      transition-delay: 0.2s;
-    }
-
-    .animate-section.visible>*:nth-child(3) {
-      transition-delay: 0.3s;
-    }
-
-    .animate-section.visible>*:nth-child(4) {
-      transition-delay: 0.4s;
-    }
-
-    .portfolio-card.visible {
-      opacity: 1 !important;
     }
 
     nav a.active {
-      color: var(--secondary);
+      color: var(--accent) !important;
       position: relative;
     }
 
     nav a.active::after {
       content: '';
       position: absolute;
-      bottom: -2px;
+      bottom: -3px;
       left: 0;
       width: 100%;
       height: 2px;
-      background: var(--secondary);
+      background: var(--accent);
+      border-radius: 2px;
     }
 
     .scroll-progress {
       position: fixed;
       top: 0;
       left: 0;
+      height: 3px;
       width: 0;
-      height: 4px;
-      background: var(--secondary);
-      z-index: 60;
-      transition: width 0.15s linear;
-    }
-
-    .parallax {
-      background: none;
-      position: relative;
-      will-change: transform;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      z-index: 70;
+      transition: width 0.1s linear;
     }
 
     .section-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.5s ease-out;
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .section-content.expanded {
-      max-height: 2500px;
+      max-height: 4000px;
     }
 
     .section-toggle {
       cursor: pointer;
+      user-select: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      transition: color 0.3s ease;
-      user-select: none;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .section-toggle:hover {
-      color: var(--secondary);
+      color: var(--accent);
     }
 
-    .section-toggle .chevron-wrap {
+    .chevron-wrap {
       display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(5, 150, 105, 0.18);
+      border: 1px solid rgba(5, 150, 105, 0.45);
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(5, 150, 105, 0.2);
-      border: 1px solid rgba(5, 150, 105, 0.5);
-      transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-      flex-shrink: 0;
-    }
-
-    .section-toggle:hover .chevron-wrap {
-      background: rgba(234, 179, 8, 0.25);
-      border-color: var(--secondary);
-    }
-
-    .section-toggle svg {
-      width: 20px;
-      height: 20px;
-      transition: transform 0.3s ease;
-      flex-shrink: 0;
+      transition: all 0.3s ease;
     }
 
     .section-toggle.expanded .chevron-wrap {
-      background: rgba(234, 179, 8, 0.2);
-      border-color: var(--secondary);
+      background: rgba(234, 179, 8, 0.18);
+      border-color: var(--accent);
+    }
+
+    .section-toggle svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s ease;
     }
 
     .section-toggle.expanded svg {
       transform: rotate(180deg);
     }
 
-    .section-toggle .toggle-hint {
-      font-size: 13px;
-      font-weight: 500;
+    .toggle-hint {
+      font-size: 0.8rem;
       color: #9ca3af;
-      margin-left: 4px;
-      transition: color 0.3s ease;
-    }
-
-    .section-toggle:hover .toggle-hint {
-      color: var(--secondary);
+      font-weight: 400;
     }
 
     .section-toggle.expanded .toggle-hint {
@@ -426,13 +418,13 @@
 
     .spinner {
       display: none;
-      margin: 40px auto;
-      width: 40px;
-      height: 40px;
-      border: 4px solid var(--primary);
-      border-top: 4px solid var(--secondary);
+      margin: 2.5rem auto;
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--primary);
+      border-top-color: var(--accent);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
 
     .spinner.active {
@@ -440,11 +432,7 @@
     }
 
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
+      to {
         transform: rotate(360deg);
       }
     }
@@ -452,16 +440,14 @@
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
       z-index: 100;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
+      padding: 1rem;
     }
 
     .modal.active {
@@ -469,16 +455,17 @@
       opacity: 1;
     }
 
-    .modal-inner {
+    .modal-panel {
       position: relative;
       background: #111827;
       border-radius: 16px;
-      padding: 32px;
+      padding: 1.75rem;
       max-width: 720px;
-      width: 92%;
+      width: 100%;
       max-height: 90vh;
       overflow-y: auto;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
     }
 
     .carousel {
@@ -486,12 +473,11 @@
       width: 100%;
       overflow: hidden;
       border-radius: 12px;
-      background: #0a0f1f;
     }
 
     .carousel img {
       width: 100%;
-      height: 360px;
+      height: 300px;
       object-fit: cover;
       display: none;
     }
@@ -500,89 +486,80 @@
       display: block;
     }
 
-    .carousel-prev,
-    .carousel-next {
+    .carousel-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.3s ease;
-      border: none;
-      font-size: 20px;
-      line-height: 1;
+      transition: background 0.2s;
     }
 
-    .carousel-prev:hover,
-    .carousel-next:hover {
-      background: var(--secondary);
+    .carousel-btn:hover {
+      background: var(--accent);
     }
 
     .carousel-prev {
-      left: 12px;
+      left: 10px;
     }
 
     .carousel-next {
-      right: 12px;
+      right: 10px;
     }
 
     .tech-stack {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
 
     .tech-stack span {
       background: var(--primary);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 14px;
+      color: #fff;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
 
-    .scroll-to-top {
+    .scroll-top {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 1.25rem;
+      right: 1.25rem;
       z-index: 50;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease;
       opacity: 0;
       pointer-events: none;
+      transition: all 0.25s ease;
     }
 
-    .scroll-to-top.visible {
+    .scroll-top.visible {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .scroll-to-top:hover {
-      background: var(--secondary);
-      transform: translateY(-4px);
-    }
-
-    .scroll-to-top svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--text-light);
+    .scroll-top:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
     }
 
     .nav-overlay {
@@ -597,922 +574,1051 @@
       display: block;
     }
 
-    /* Contact info cards */
-    .contact-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.25s, transform 0.25s;
     }
 
-    .contact-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-      border-color: rgba(5, 150, 105, 0.4);
+    .social-link:hover {
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .social-link svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: #9ca3af;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 100;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    .founder-link {
+      font-medium: inherit;
+      color: #34d399;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .founder-link:hover {
+      color: #eab308;
+      border-bottom-color: #eab308;
     }
 
     @media (max-width: 640px) {
-
-      /* Typography – readable, not oversized */
-      h1 {
-        font-size: 1.35rem !important;
-      }
-
-      .text-5xl {
-        font-size: 1.85rem !important;
-        line-height: 1.25 !important;
-      }
-
-      .text-3xl {
-        font-size: 1.4rem !important;
-      }
-
-      .text-xl {
-        font-size: 1.05rem !important;
-      }
-
-      .text-lg {
-        font-size: 0.95rem !important;
-      }
-
-      /* Section padding – less empty space */
-      .py-32 {
-        padding-top: 3.5rem !important;
-        padding-bottom: 3.5rem !important;
-      }
-
-      .pt-24 {
-        padding-top: 5.5rem !important;
-      }
-
-      .mt-12 {
-        margin-top: 1.75rem !important;
-      }
-
-      .mt-14 {
-        margin-top: 2rem !important;
-      }
-
-      .gap-12 {
-        gap: 1.75rem !important;
-      }
-
-      .gap-8 {
-        gap: 1.25rem !important;
-      }
-
-      /* Header */
-      header .rounded-full {
-        width: 42px !important;
-        height: 42px !important;
-      }
-
-      header h1 {
-        font-size: 1.2rem !important;
-      }
-
-      header p {
-        font-size: 0.7rem !important;
-      }
-
-      /* Hero image */
-      #home img.rounded-full {
-        width: 200px !important;
-        height: 200px !important;
-        max-width: 70vw;
-      }
-
-      /* About image */
-      #about img.rounded-full {
-        width: 180px !important;
-        height: 180px !important;
-        max-width: 55vw;
-      }
-
-      /* Cards – tighter padding */
-      .glassmorphism.rounded-xl,
-      .glassmorphism.rounded-2xl {
-        padding: 1.1rem !important;
-      }
-
-      .contact-card .w-12 {
-        width: 2.5rem !important;
-        height: 2.5rem !important;
-      }
-
-      .contact-card .w-6 {
-        width: 1.15rem !important;
-        height: 1.15rem !important;
-      }
-
-      /* Skills grid */
-      #skills .grid {
-        gap: 0.85rem !important;
-      }
-
-      #skills .p-8 {
-        padding: 1.15rem !important;
-      }
-
-      #skills svg.w-12 {
-        width: 2rem !important;
-        height: 2rem !important;
-        margin-bottom: 0.5rem !important;
-      }
-
-      /* Buttons */
-      .dashboard-button {
-        width: 100%;
-        max-width: 260px;
-        font-size: 1rem;
-        padding: 0.9rem 1.25rem;
-      }
-
-      a.bg-emerald-500,
-      a.border {
-        padding-top: 0.7rem !important;
-        padding-bottom: 0.7rem !important;
-        font-size: 0.95rem !important;
-      }
-
-      /* Social footer */
-      .social-link {
-        font-size: 13px;
-        margin: 0 6px;
-      }
-
-      .social-link svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      footer .social-container {
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      /* Portfolio */
       .portfolio-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
-      }
-
-      .portfolio-card:nth-child(3n) {
-        grid-row: span 1;
-      }
-
-      .portfolio-card.p-6 {
-        padding: 0.9rem !important;
       }
 
       .carousel img {
         height: 200px;
       }
 
-      /* Modal */
-      .modal-inner {
+      .modal-panel {
         padding: 1.25rem;
-        width: 94%;
-      }
-
-      /* Scroll top */
-      .scroll-to-top {
-        width: 40px;
-        height: 40px;
-        bottom: 14px;
-        right: 14px;
-      }
-
-      /* Section toggle */
-      .section-toggle {
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 1.5rem !important;
-      }
-
-      .section-toggle .chevron-wrap {
-        width: 30px;
-        height: 30px;
-      }
-
-      .section-toggle svg {
-        width: 16px;
-        height: 16px;
-      }
-
-      .toggle-hint {
-        font-size: 11px !important;
-      }
-
-      .parallax {
-        background-attachment: scroll;
-      }
-
-      .section-content.expanded {
-        max-height: 4000px;
-      }
-
-      /* Invest cards */
-      #invest .p-8 {
-        padding: 1.15rem !important;
-      }
-
-      /* Email Me button full width on phone */
-      #contact a.inline-flex {
-        width: 100%;
-        max-width: 280px;
-        justify-content: center;
-      }
-    }
-
-    /* Slightly larger phones / small tablets */
-    @media (min-width: 641px) and (max-width: 768px) {
-      .text-5xl {
-        font-size: 2.25rem !important;
-      }
-
-      #home img.rounded-full {
-        width: 240px !important;
-        height: 240px !important;
       }
     }
   </style>
 </head>
 
-<body data-theme="dark" class="font-['Inter']">
-  <div class="scroll-progress"></div>
-  <div class="nav-overlay" id="nav-overlay" onclick="toggleNav()"></div>
+<body data-theme="dark" class="font-sans antialiased">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="nav-overlay" id="nav-overlay" onclick="toggleNav()" aria-hidden="true"></div>
 
-  <header class="fixed top-0 z-50 bg-gray-900/95 backdrop-blur-md py-4 shadow-lg w-full">
-    <div class="container mx-auto px-4 max-w-6xl flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <img src="{% static 'assets/ankit-header.webp' %}" alt="Ankit Lodhi" width="56" height="56"
-          class="rounded-full border-2 border-emerald-500 shadow-lg hover-glow" loading="lazy"
-          onerror="this.src='https://via.placeholder.com/56x56?text=AL'">
-        <div>
-          <h1 class="text-3xl font-bold text-white">Ankit Lodhi</h1>
-          <p class="text-emerald-500 text-sm font-medium">Python | Django | Data Science</p>
-        </div>
+  <!-- Header -->
+  <header class="fixed top-0 z-50 w-full bg-gray-900/90 backdrop-blur-md border-b border-white/5">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-3 sm:gap-4">
+        <a href="#company" class="flex items-center gap-3 group">
+          <img src="{% static 'assets/ankit-header.webp' %}" alt="ANKUON" width="36" height="36"
+            class="rounded-full border-2 border-emerald-500 group-hover:border-yellow-400 transition" loading="eager"
+            onerror="this.src='https://placehold.co/36x36/059669/fff?text=AO'">
+          <div>
+            <h1 class="text-lg font-bold text-white leading-tight tracking-tight">ANKUON</h1>
+            <p class="text-[11px] font-medium text-emerald-400">Company · Ventures · Solutions</p>
+          </div>
+        </a>
+        <a href="/personal/"
+          class="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-1.5 text-xs font-semibold text-yellow-400 transition hover:bg-yellow-500 hover:text-black">
+          Admin
+        </a>
       </div>
-      <div class="flex items-center gap-4">
-        <button class="text-white text-lg md:hidden" aria-label="Toggle Navigation" onclick="toggleNav()">
-          <svg class="w-6 h-6 nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="mobile-menu-btn" class="text-white md:hidden p-2 rounded-lg hover:bg-white/10"
+          aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav" onclick="toggleNav()">
+          <svg class="w-6 h-6 nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
           </svg>
         </button>
-        <button class="bg-emerald-500 text-white p-2 rounded-full hover:bg-yellow-500 transition hover-glow"
-          aria-label="Toggle Theme" onclick="toggleTheme()">
-          <svg class="w-6 h-6 theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+        <button class="rounded-full bg-emerald-500 p-2 text-white transition hover:bg-yellow-500"
+          aria-label="Toggle theme" onclick="toggleTheme()">
+          <svg class="w-5 h-5 theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
           </svg>
         </button>
+
+        <nav id="nav-menu" class="hidden md:flex md:items-center md:gap-5 lg:gap-6" aria-label="Main">
+          <a href="#company" class="text-sm font-medium text-white transition hover:text-yellow-400">Company</a>
+          <a href="#ventures" class="text-sm font-medium text-white transition hover:text-yellow-400">Ventures</a>
+          <a href="#solutions" class="text-sm font-medium text-white transition hover:text-yellow-400">Solutions</a>
+          <a href="#work" class="text-sm font-medium text-white transition hover:text-yellow-400">Work</a>
+          <a href="#contact" class="text-sm font-medium text-white transition hover:text-yellow-400">Contact</a>
+
+          <div class="relative" id="account-dropdown">
+            <button id="account-btn"
+              class="flex items-center gap-1 text-sm font-medium text-white transition hover:text-yellow-400"
+              aria-expanded="false" aria-haspopup="true" aria-controls="account-menu">
+              Account
+              <svg class="w-4 h-4 transition-transform" id="account-chevron" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div id="account-menu" role="menu"
+              class="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-white/10 bg-gray-900 shadow-xl opacity-0 invisible transition-all duration-200">
+              <a href="/dashboard" role="menuitem"
+                class="block px-4 py-3 text-sm text-white transition hover:bg-emerald-600/20 hover:text-emerald-400">AnkuOn2</a>
+              <a href="/personal/" role="menuitem"
+                class="block border-t border-white/10 px-4 py-3 text-sm text-yellow-400 transition hover:bg-yellow-500/15 hover:text-yellow-300">Admin</a>
+            </div>
+          </div>
+        </nav>
       </div>
-      <nav id="nav-menu" class="hidden md:flex md:gap-8">
-        <a href="#home" class="text-white hover:text-yellow-500 transition font-medium text-base">Home</a>
-        <a href="#about" class="text-white hover:text-yellow-500 transition font-medium text-base">About</a>
-        <a href="#skills" class="text-white hover:text-yellow-500 transition font-medium text-base">Skills</a>
-        <a href="#portfolio" class="text-white hover:text-yellow-500 transition font-medium text-base">Portfolio</a>
-        <a href="#invest" class="text-white hover:text-yellow-500 transition font-medium text-base">Invest</a>
-        <a href="#contact" class="text-white hover:text-yellow-500 transition font-medium text-base">Contact</a>
-        <a href="/dashboard" class="text-white hover:text-yellow-500 transition font-medium text-base">Dashboard</a>
-        <a href="/login" class="text-white hover:text-yellow-500 transition font-medium text-base">BEYOND CODE</a>
-      </nav>
     </div>
   </header>
 
-  <nav id="mobile-nav"
-    class="fixed top-0 left-0 h-full w-64 bg-gray-900/95 backdrop-blur-md flex flex-col p-6 transform -translate-x-full transition-transform duration-300 md:hidden z-50">
-    <button class="self-end text-white mb-6" aria-label="Close menu" onclick="toggleNav()">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <!-- Mobile Nav -->
+  <nav id="mobile-nav" role="navigation" aria-label="Mobile"
+    class="fixed top-0 left-0 z-50 flex h-full w-72 -translate-x-full flex-col bg-gray-900/97 p-6 backdrop-blur-md transition-transform duration-300 md:hidden">
+    <button class="mb-6 self-end rounded-lg p-2 text-white hover:bg-white/10" aria-label="Close menu"
+      onclick="toggleNav()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-    <a href="#home" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">Home</a>
-    <a href="#about" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">About</a>
-    <a href="#skills" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">Skills</a>
-    <a href="#portfolio" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">Portfolio</a>
-    <a href="#invest" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">Invest</a>
-    <a href="#contact" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base"
-      onclick="toggleNav()">Contact</a>
-    <a href="/dashboard" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base">Dashboard</a>
-    <a href="/login" class="text-white py-3 hover:text-yellow-500 transition font-medium text-base">Login</a>
+    <a href="/personal/" class="py-3 font-semibold text-yellow-400 hover:text-yellow-300" onclick="toggleNav()">→
+      Admin</a>
+    <div class="my-3 border-t border-white/10"></div>
+    <a href="#company" class="py-3 text-white hover:text-yellow-400" onclick="toggleNav()">Company</a>
+    <a href="#ventures" class="py-3 text-white hover:text-yellow-400" onclick="toggleNav()">Ventures</a>
+    <a href="#solutions" class="py-3 text-white hover:text-yellow-400" onclick="toggleNav()">Solutions</a>
+    <a href="#work" class="py-3 text-white hover:text-yellow-400" onclick="toggleNav()">Work</a>
+    <a href="#contact" class="py-3 text-white hover:text-yellow-400" onclick="toggleNav()">Contact</a>
+    <div class="mt-4 border-t border-white/10 pt-4">
+      <p class="mb-2 text-xs uppercase tracking-wider text-gray-500">Account</p>
+      <a href="/dashboard" class="block py-2 pl-1 text-white hover:text-yellow-400" onclick="toggleNav()">→ AnkuOn2
+        Dashboard</a>
+    </div>
   </nav>
 
-  <section id="home" class="min-h-screen flex items-center text-center parallax animate-section pt-24">
-    <div class="container mx-auto px-4 max-w-6xl relative">
-      <div class="flex flex-col md:flex-row items-center gap-12">
-        <div class="md:w-1/2 text-left">
-          <h2 class="text-5xl md:text-7xl font-extrabold gradient-text leading-tight">
-            Innovative Python & Data Science Solutions
-          </h2>
-          <p class="text-lg md:text-xl text-gray-300 mt-6 max-w-lg">
-            B.Tech CSE | Crafting Scalable Web Applications and Data-Driven Insights with Python, Django,
-            and Machine Learning
-          </p>
-          <div class="mt-8 flex gap-4 flex-col sm:flex-row">
-            <a href="#contact"
-              class="bg-emerald-500 text-white py-3 px-8 rounded-lg hover:bg-yellow-500 transition font-semibold hover-glow text-lg text-center">Get
-              in Touch</a>
-            <a href="#portfolio"
-              class="border border-emerald-500 text-emerald-500 py-3 px-8 rounded-lg hover:bg-emerald-500 hover:text-white transition font-semibold hover-glow text-lg text-center">Explore
-              Portfolio</a>
-          </div>
-        </div>
-        <div class="md:w-1/2">
-          <img src="{% static 'assets/ankit.webp' %}" alt="Ankit Lodhi" width="320" height="320"
-            class="rounded-full border-4 border-emerald-500 shadow-2xl mx-auto hover-glow" loading="lazy"
-            onerror="this.src='https://via.placeholder.com/320x320?text=Ankit+Lodhi'">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" class="py-32 bg-gray-800/50 animate-section">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-5xl font-bold text-center gradient-text section-toggle" data-toggle="about-content"
-        aria-expanded="false" aria-controls="about-content">
-        About Me
-        <span class="chevron-wrap">
-          <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-          </svg>
-        </span>
-        <span class="toggle-hint">Click to expand</span>
-      </h2>
-      <div id="about-content" class="section-content">
-        <div class="flex flex-col md:flex-row items-center gap-12 mt-12">
-          <div class="md:w-1/2">
-            <img src="{% static 'assets/ankit2.webp' %}" alt="Ankit Lodhi" width="320" height="320"
-              class="rounded-full border-4 border-emerald-500 shadow-2xl mx-auto hover-glow" loading="lazy"
-              onerror="this.src='https://via.placeholder.com/320x320?text=Ankit'">
-          </div>
-          <div class="md:w-1/2">
-            <p class="text-gray-300 text-lg leading-relaxed">
-              I’m Ankit Lodhi, a B.Tech CSE professional with 3 years of experience in Python, Django, and Data Science.
-              I build scalable web applications and use machine learning to solve real business problems.
-            </p>
-            <p class="text-gray-300 mt-4 text-lg leading-relaxed">
-              I’ve completed 10+ projects and now lead a tech venture that offers secure investment opportunities.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="skills" class="py-32 animate-section">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-5xl font-bold text-center gradient-text section-toggle" data-toggle="skills-content"
-        aria-expanded="false" aria-controls="skills-content">
-        My Expertise
-        <span class="chevron-wrap">
-          <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-          </svg>
-        </span>
-        <span class="toggle-hint">Click to expand</span>
-      </h2>
-      <div id="skills-content" class="section-content">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-12">
-          <div class="glassmorphism rounded-xl p-8 text-center hover-glow shadow-2xl">
-            <svg class="w-12 h-12 text-emerald-500 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10 20l4-16m4 4l4 4-4 4m-12 0l-4-4 4-4" />
-            </svg>
-            <h3 class="text-xl font-semibold text-white">Python</h3>
-            <p class="text-gray-400 text-sm mt-2">Advanced scripting and automation</p>
-          </div>
-          <div class="glassmorphism rounded-xl p-8 text-center hover-glow shadow-2xl">
-            <svg class="w-12 h-12 text-emerald-500 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14" />
-            </svg>
-            <h3 class="text-xl font-semibold text-white">Django</h3>
-            <p class="text-gray-400 text-sm mt-2">Scalable web development</p>
-          </div>
-          <div class="glassmorphism rounded-xl p-8 text-center hover-glow shadow-2xl">
-            <svg class="w-12 h-12 text-emerald-500 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            <h3 class="text-xl font-semibold text-white">Data Science</h3>
-            <p class="text-gray-400 text-sm mt-2">Predictive analytics & ML</p>
-          </div>
-          <div class="glassmorphism rounded-xl p-8 text-center hover-glow shadow-2xl">
-            <svg class="w-12 h-12 text-emerald-500 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
-            </svg>
-            <h3 class="text-xl font-semibold text-white">PostgreSQL</h3>
-            <p class="text-gray-400 text-sm mt-2">Robust database management</p>
-          </div>
-          <div class="glassmorphism rounded-xl p-8 text-center hover-glow shadow-2xl">
-            <svg class="w-12 h-12 text-emerald-500 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            <h3 class="text-xl font-semibold text-white">Finance</h3>
-            <p class="text-gray-400 text-sm mt-2">Financial data analysis and investment strategy</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="portfolio" class="py-32 bg-gray-800/50 animate-section">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-5xl font-bold text-center gradient-text section-toggle" data-toggle="portfolio-content"
-        aria-expanded="false" aria-controls="portfolio-content">
-        Portfolio
-        <span class="chevron-wrap">
-          <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-          </svg>
-        </span>
-        <span class="toggle-hint">Click to expand</span>
-      </h2>
-      <div id="portfolio-content" class="section-content">
-        <div class="flex flex-wrap justify-center gap-4 mt-8">
-          <label class="flex items-center gap-2 text-emerald-500 cursor-pointer select-none">
-            <input type="checkbox" value="python"
-              class="filter-checkbox w-5 h-5 text-emerald-500 border-emerald-500 focus:ring-emerald-500 rounded"
-              aria-label="Filter by Python">
-            Python
-          </label>
-          <label class="flex items-center gap-2 text-emerald-500 cursor-pointer select-none">
-            <input type="checkbox" value="ml"
-              class="filter-checkbox w-5 h-5 text-emerald-500 border-emerald-500 focus:ring-emerald-500 rounded"
-              aria-label="Filter by Machine Learning">
-            Machine Learning
-          </label>
-          <label class="flex items-center gap-2 text-emerald-500 cursor-pointer select-none">
-            <input type="checkbox" value="web"
-              class="filter-checkbox w-5 h-5 text-emerald-500 border-emerald-500 focus:ring-emerald-500 rounded"
-              aria-label="Filter by Web Development">
-            Web Development
-          </label>
-          <button
-            class="px-6 py-2 rounded-lg border border-emerald-500 text-emerald-500 font-semibold hover:bg-emerald-500 hover:text-white transition hover-glow"
-            onclick="clearFilters()" aria-label="Clear Filters">Clear Filters</button>
-        </div>
-
-        <div class="spinner" id="portfolio-spinner"></div>
-        <div id="portfolio-grid" class="portfolio-grid mt-12"></div>
-
-        <div class="text-center mt-12">
-          <button id="load-more"
-            class="bg-emerald-500 text-white py-3 px-8 rounded-lg hover:bg-yellow-500 transition font-semibold hover-glow text-lg">
-            Load More
-          </button>
-        </div>
-
-        <div id="portfolio-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="portfolio-modal-title">
-          <div class="modal-inner" onclick="event.stopPropagation()">
-            <button class="absolute top-4 right-4 text-white text-2xl hover:text-yellow-500 leading-none"
-              onclick="closePortfolioModal()" aria-label="Close Modal">
-              &times;
-            </button>
-            <div id="modal-content"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="invest" class="py-32 animate-section">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <div class="text-center">
+  <main id="main">
+    <!-- COMPANY / Hero -->
+    <section id="company" class="flex min-h-[88vh] items-center pb-16 pt-24 animate-in">
+      <div class="mx-auto max-w-4xl px-4 text-center">
         <span
-          class="inline-block px-4 py-1.5 mb-4 rounded-full text-sm font-medium bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 tracking-wide">
-          Investment Opportunity
+          class="mb-6 inline-block rounded-full border border-emerald-500/40 bg-emerald-500/15 px-4 py-1.5 text-sm font-medium text-emerald-400">
+          Company · Ventures · Solutions
         </span>
-        <h2 class="text-3xl md:text-4xl font-bold gradient-text leading-snug">
-          AnkuOn2
+
+        <div class="mb-8 flex justify-center">
+          <img src="{% static 'assets/ankuon.png' %}" alt="ANKUON"
+            class="h-14 w-auto max-w-full object-contain sm:h-16 md:h-20 lg:h-24" loading="eager"
+            onerror="this.src='https://placehold.co/320x90/059669/fff?text=ANKUON'">
+        </div>
+
+        <h2
+          class="mx-auto max-w-2xl text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl md:text-4xl lg:text-[2.75rem]">
+          Scalable tech solutions &amp; transparent investment platforms
         </h2>
-        <p class="mt-3 text-xl md:text-2xl font-semibold text-white/90">
-          Target up to <span class="text-yellow-400">2% monthly</span>
+
+        <p class="mx-auto mt-5 max-w-xl text-base text-gray-400 md:text-lg">
+          Founded by
+          <button type="button" class="founder-link" onclick="openFounderModal()" aria-haspopup="dialog"
+            aria-controls="founder-modal">
+            Ankit Lodhi
+          </button>
+          · Python · Django · Data Science
         </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-        <div class="glassmorphism rounded-xl p-8 hover-glow shadow-2xl">
-          <h3 class="text-xl font-semibold text-white mb-4">Investment Opportunity</h3>
-          <p class="text-gray-300">Contribute any amount starting from ₹10,000 and earn a <strong>2% monthly
-              return</strong>. Withdraw your full capital at the end of any month with a 3-day notice.</p>
-        </div>
-        <div class="glassmorphism rounded-xl p-8 hover-glow shadow-2xl">
-          <h3 class="text-xl font-semibold text-white mb-4">Why Invest?</h3>
-          <ul class="text-gray-300 list-disc list-inside space-y-2">
-            <li>Backed by a scalable SaaS platform and consulting services.</li>
-            <li>Transparent monthly statements via a secure dashboard.</li>
-            <li>Flexible withdrawals to suit your needs.</li>
-            <li>Backed by 3+ years of experience in finance and financial markets.</li>
-          </ul>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+          <a href="#ventures" class="btn-primary w-full max-w-[260px] sm:w-auto">Explore Ventures</a>
+          <a href="#work" class="btn-outline w-full max-w-[260px] sm:w-auto">See Our Work</a>
         </div>
       </div>
-      <div class="mt-12 text-center">
-        <a href="/dashboard" class="dashboard-button">Go to Dashboard</a>
+    </section>
+
+    <!-- VENTURES -->
+    <section id="ventures" class="bg-section bg-gray-800/40 py-16 md:py-20 animate-in">
+      <div class="mx-auto max-w-6xl px-4 text-center">
+        <h2 class="text-3xl font-bold gradient-text md:text-4xl lg:text-5xl">Ventures</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-base text-gray-300 md:text-lg">
+          Active directions under the ANKUON umbrella — technology and investment.
+        </p>
+
+        <div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-6">
+          <article class="glass hover-lift rounded-2xl p-6 text-left md:p-7">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/20">
+                <svg class="h-6 w-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <span
+                class="rounded-full border border-emerald-500/40 bg-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-400">
+                Investment
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-white md:text-2xl">AnkuOn2</h3>
+            <p class="mt-2 text-sm text-gray-400">Target up to 2% monthly · Flexible withdrawals</p>
+            <div class="mt-5 flex flex-wrap gap-3">
+              <button type="button" id="ankuon2-open-btn" onclick="openAnkuOn2Modal()"
+                class="rounded-lg border border-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500 hover:text-white">
+                Learn More
+              </button>
+              <a href="/dashboard"
+                class="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-yellow-500">
+                Go to AnkuOn2 →
+              </a>
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="contact" class="py-32 bg-gray-800/50 animate-section">
-    <div class="container mx-auto px-4 max-w-4xl">
-      <h2 class="text-5xl font-bold text-center gradient-text">Let’s Work Together</h2>
-      <p class="text-center text-gray-300 mt-6 text-lg max-w-2xl mx-auto">
-        Have a project or investment inquiry? Reach out to discuss how we can collaborate.
-      </p>
+    <!-- SOLUTIONS -->
+    <section id="solutions" class="py-16 md:py-24 animate-in">
+      <div class="mx-auto max-w-6xl px-4">
+        <h2 class="section-toggle text-center text-3xl font-bold gradient-text md:text-4xl lg:text-5xl"
+          data-toggle="solutions-content" aria-expanded="false" role="button" tabindex="0">
+          Solutions
+          <span class="chevron-wrap" aria-hidden="true">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+          <span class="toggle-hint">Click to expand</span>
+        </h2>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-12">
-        <!-- Email - primary -->
-        <a href="mailto:ankitlodhiii06@gmail.com"
-          class="glassmorphism rounded-xl p-6 contact-card block no-underline group">
-          <div class="flex items-start gap-4">
-            <div
-              class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/30 transition">
-              <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+        <div id="solutions-content" class="section-content" role="region" aria-labelledby="solutions">
+          <div class="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="glass hover-lift rounded-xl p-6 text-center">
+              <div class="mx-auto mb-3 h-11 w-11 text-emerald-500" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 20l4-16m4 4l4 4-4 4m-12 0l-4-4 4-4" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">Python</h3>
+              <p class="mt-1 text-sm text-gray-400">Advanced scripting &amp; automation</p>
             </div>
-            <div>
-              <h3 class="text-white font-semibold text-lg">Email</h3>
-              <p class="text-gray-400 text-sm mt-1">Write to me directly</p>
-              <p class="text-emerald-400 text-sm mt-2 font-medium">ankitlodhiii06@gmail.com</p>
+            <div class="glass hover-lift rounded-xl p-6 text-center">
+              <div class="mx-auto mb-3 h-11 w-11 text-emerald-500" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">Django</h3>
+              <p class="mt-1 text-sm text-gray-400">Scalable web development</p>
+            </div>
+            <div class="glass hover-lift rounded-xl p-6 text-center">
+              <div class="mx-auto mb-3 h-11 w-11 text-emerald-500" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">Data Science</h3>
+              <p class="mt-1 text-sm text-gray-400">Predictive analytics &amp; ML</p>
+            </div>
+            <div class="glass hover-lift rounded-xl p-6 text-center">
+              <div class="mx-auto mb-3 h-11 w-11 text-emerald-500" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">PostgreSQL</h3>
+              <p class="mt-1 text-sm text-gray-400">Robust database management</p>
+            </div>
+            <div class="glass hover-lift rounded-xl p-6 text-center sm:col-span-2 lg:col-span-1">
+              <div class="mx-auto mb-3 h-11 w-11 text-emerald-500" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">Finance</h3>
+              <p class="mt-1 text-sm text-gray-400">Financial analysis &amp; strategy</p>
             </div>
           </div>
-        </a>
+        </div>
+      </div>
+    </section>
 
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/in/ankitlodhiii" target="_blank" rel="noopener noreferrer"
-          class="glassmorphism rounded-xl p-6 contact-card block no-underline group">
-          <div class="flex items-start gap-4">
-            <div
-              class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/30 transition">
-              <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold text-lg">LinkedIn</h3>
-              <p class="text-gray-400 text-sm mt-1">Connect professionally</p>
-              <p class="text-emerald-400 text-sm mt-2 font-medium">linkedin.com/in/ankitlodhiii</p>
+    <!-- WORK -->
+    <section id="work" class="bg-section bg-gray-800/40 py-16 md:py-24 animate-in">
+      <div class="mx-auto max-w-6xl px-4">
+        <h2 class="section-toggle text-center text-3xl font-bold gradient-text md:text-4xl lg:text-5xl"
+          data-toggle="work-content" aria-expanded="false" role="button" tabindex="0">
+          Work
+          <span class="chevron-wrap" aria-hidden="true">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+          <span class="toggle-hint">Click to expand</span>
+        </h2>
+
+        <div id="work-content" class="section-content" role="region">
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-emerald-400">
+              <input type="checkbox" value="python"
+                class="filter-checkbox h-4 w-4 rounded border-emerald-500/50 bg-transparent text-emerald-500 focus:ring-emerald-500">
+              Python
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-emerald-400">
+              <input type="checkbox" value="ml"
+                class="filter-checkbox h-4 w-4 rounded border-emerald-500/50 bg-transparent text-emerald-500 focus:ring-emerald-500">
+              Machine Learning
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-emerald-400">
+              <input type="checkbox" value="web"
+                class="filter-checkbox h-4 w-4 rounded border-emerald-500/50 bg-transparent text-emerald-500 focus:ring-emerald-500">
+              Web Development
+            </label>
+            <button type="button" onclick="clearFilters()"
+              class="rounded-lg border border-emerald-500 px-4 py-1.5 text-sm font-medium text-emerald-400 transition hover:bg-emerald-500 hover:text-white">
+              Clear
+            </button>
+          </div>
+
+          <div class="spinner" id="portfolio-spinner" aria-hidden="true"></div>
+          <div id="portfolio-grid" class="portfolio-grid mt-8" role="list"></div>
+
+          <div class="mt-8 text-center">
+            <button type="button" id="load-more"
+              class="rounded-lg bg-emerald-500 px-7 py-2.5 text-sm font-semibold text-white transition hover:bg-yellow-500">
+              Load More
+            </button>
+          </div>
+
+          <div id="portfolio-modal" class="modal" role="dialog" aria-modal="true"
+            aria-labelledby="portfolio-modal-title" aria-hidden="true">
+            <div class="modal-panel" onclick="event.stopPropagation()">
+              <button type="button" class="absolute right-4 top-4 text-2xl text-white transition hover:text-yellow-400"
+                onclick="closePortfolioModal()" aria-label="Close">&times;</button>
+              <div id="modal-content"></div>
             </div>
           </div>
-        </a>
+        </div>
+      </div>
+    </section>
 
-        <!-- Response Time -->
-        <div class="glassmorphism rounded-xl p-6 contact-card">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+    <!-- CONTACT -->
+    <section id="contact" class="bg-section bg-gray-800/40 py-16 md:py-24 animate-in">
+      <div class="mx-auto max-w-4xl px-4">
+        <h2 class="text-center text-3xl font-bold gradient-text md:text-4xl lg:text-5xl">Contact</h2>
+        <p class="mt-4 text-center text-base text-gray-300 md:text-lg">
+          Project, partnership, or investment inquiry? Reach out.
+        </p>
+
+        <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <a href="mailto:ankitlodhiii06@gmail.com" class="glass hover-lift block rounded-xl p-5 no-underline">
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
+                aria-hidden="true">
+                <svg class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Email</h3>
+                <p class="mt-1 text-sm text-gray-400">Write directly</p>
+                <p class="mt-1 text-sm font-medium text-emerald-400">ankitlodhiii06@gmail.com</p>
+              </div>
             </div>
-            <div>
-              <h3 class="text-white font-semibold text-lg">Response Time</h3>
-              <p class="text-gray-400 text-sm mt-1">You can expect a reply within 24 hours.</p>
+          </a>
+
+          <a href="https://www.linkedin.com/in/ankitlodhiii" target="_blank" rel="noopener noreferrer"
+            class="glass hover-lift block rounded-xl p-5 no-underline">
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
+                aria-hidden="true">
+                <svg class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">LinkedIn</h3>
+                <p class="mt-1 text-sm text-gray-400">Connect professionally</p>
+                <p class="mt-1 text-sm font-medium text-emerald-400">linkedin.com/in/ankitlodhiii</p>
+              </div>
+            </div>
+          </a>
+
+          <div class="glass rounded-xl p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
+                aria-hidden="true">
+                <svg class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Response Time</h3>
+                <p class="mt-1 text-sm text-gray-400">Usually within 24 hours</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass rounded-xl p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
+                aria-hidden="true">
+                <svg class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Confidential</h3>
+                <p class="mt-1 text-sm text-gray-400">Your message stays private</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Confidential -->
-        <div class="glassmorphism rounded-xl p-6 contact-card">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold text-lg">Confidential & Professional</h3>
-              <p class="text-gray-400 text-sm mt-1">Your message is treated with complete confidentiality.</p>
-            </div>
-          </div>
+        <div class="mt-8 text-center">
+          <a href="mailto:ankitlodhiii06@gmail.com?subject=ANKUON%20Inquiry" class="btn-primary">
+            Email Me
+          </a>
         </div>
       </div>
+    </section>
+  </main>
 
-      <div class="text-center mt-10">
-        <a href="mailto:ankitlodhiii06@gmail.com?subject=Project%20or%20Investment%20Inquiry"
-          class="inline-flex items-center gap-2 bg-emerald-500 text-white py-3.5 px-10 rounded-lg hover:bg-yellow-500 transition font-semibold hover-glow text-base">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          Email Me
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- Footer -->
+  <footer class="border-t border-white/5 bg-gray-900/95 py-10 text-center">
+    <div class="mx-auto max-w-6xl px-4">
+      <p class="mb-6 text-lg font-semibold gradient-text md:text-xl">Connect with Founder!</p>
 
-  <footer class="bg-gray-900/95 py-12 text-center">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <p class="text-2xl font-semibold gradient-text mb-6">Connect with me!</p>
-      <div class="social-container">
-        <a href="https://www.instagram.com/ankitlodhiii" class="social-link" target="_blank" rel="noopener noreferrer"
-          aria-label="Instagram">
-          <svg viewBox="0 0 24 24">
+      <div class="flex flex-wrap items-center justify-center gap-5 md:gap-8">
+        <a href="https://www.instagram.com/ankitlodhiii" class="social-link" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.326 3.608 1.301.975.975 1.24 2.242 1.301 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.326 2.633-1.301 3.608-.975.975-2.242 1.24-3.608 1.301-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.326-3.608-1.301-.975-.975-1.24-2.242-1.301-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.326-2.633 1.301-3.608.975-.975 2.242-1.24 3.608-1.301 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.658.075-3.224.477-4.467 1.72C1.338 2.854.936 4.42.861 6.078.803 7.358.789 7.766.789 11.025s.014 3.667.072 4.947c.075 1.658.477 3.224 1.72 4.467 1.243 1.243 2.809 1.645 4.467 1.72 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.658-.075 3.224-.477 4.467-1.72 1.243-1.243 1.645-2.809 1.72-4.467.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.075-1.658-.477-3.224-1.72-4.467-1.243-1.243-2.809-1.645-4.467-1.72-1.28-.058-1.688-.072-4.947-.072zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z" />
           </svg>
-          ankitlodhiii
+          Instagram
         </a>
-        <a href="https://www.youtube.com/@ankitlodhiii" class="social-link" target="_blank" rel="noopener noreferrer"
-          aria-label="YouTube">
-          <svg viewBox="0 0 24 24">
+        <a href="https://www.youtube.com/@ankitlodhiii" class="social-link" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M23.498 6.186a2.977 2.977 0 00-2.095-2.095C19.888 3.5 12 3.5 12 3.5s-7.888 0-9.403.591a2.977 2.977 0 00-2.095 2.095C0 7.702 0 12 0 12s0 4.298.502 5.814a2.977 2.977 0 002.095 2.095C4.112 20.5 12 20.5 12 20.5s7.888 0 9.403-.591a2.977 2.977 0 002.095-2.095C24 16.298 24 12 24 12s0-4.298-.502-5.814zM9.6 15.6V8.4l6.4 3.6-6.4 3.6z" />
           </svg>
-          ankitlodhiii
+          YouTube
         </a>
-        <a href="https://www.linkedin.com/in/ankitlodhiii" class="social-link" target="_blank" rel="noopener noreferrer"
-          aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24">
+        <a href="https://www.linkedin.com/in/ankitlodhiii" class="social-link" target="_blank"
+          rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M20.447 20.452h-3.554v-5.569c0-1.327-.024-3.037-1.85-3.037-1.852 0-2.136 1.447-2.136 2.94v5.666H9.354V9.006h3.414v1.56h.048c.476-.9 1.636-1.85 3.365-1.85 3.6 0 4.26 2.37 4.26 5.455v6.281zM5.337 7.433c-1.144 0-2.063-.93-2.063-2.077 0-1.147.92-2.077 2.063-2.077 1.147 0 2.077.93 2.077 2.077 0 1.147-.93 2.077-2.077 2.077zM7.119 20.452H3.555V9.006h3.564v11.446zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
           </svg>
-          ankitlodhiii
+          LinkedIn
         </a>
       </div>
-      <p class="text-gray-400 mt-6">© 2025 Ankit Lodhi. All rights reserved.</p>
+
+      <p class="mt-7 text-sm text-gray-400">
+        <a href="/dashboard" class="text-emerald-400 transition hover:text-yellow-400">AnkuOn2 Dashboard</a>
+      </p>
+
+      <p class="mt-3 text-sm text-gray-500">© 2025 ANKUON. All rights reserved.</p>
     </div>
   </footer>
 
-  <button class="scroll-to-top hover-glow" id="scroll-to-top" onclick="scrollToTop()" aria-label="Scroll to Top">
-    <svg viewBox="0 0 24 24">
-      <path fill="currentColor" d="M12 5l-7 7h5v7h4v-7h5l-7-7z" />
+  <!-- Founder Modal -->
+  <div id="founder-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="founder-modal-title"
+    aria-hidden="true">
+    <div class="modal-panel max-w-lg" onclick="event.stopPropagation()">
+      <button type="button"
+        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition hover:bg-white/10 hover:text-white"
+        onclick="closeFounderModal()" aria-label="Close">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header band -->
+      <div
+        class="-mx-7 -mt-7 mb-6 rounded-t-2xl bg-gradient-to-br from-emerald-600/30 via-emerald-900/40 to-transparent px-7 pb-6 pt-8 text-center sm:text-left">
+        <div class="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+          <div class="relative flex-shrink-0">
+            <img src="{% static 'assets/ankit2.webp' %}" alt="Ankit Lodhi, Founder of ANKUON"
+              class="h-28 w-28 rounded-full border-[3px] border-emerald-500 object-cover shadow-lg shadow-emerald-500/20 sm:h-32 sm:w-32"
+              loading="lazy" onerror="this.src='https://placehold.co/220x220/059669/fff?text=Ankit'">
+            <span
+              class="absolute bottom-1 right-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-gray-900 bg-emerald-400"
+              title="Available" aria-hidden="true"></span>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400"></p>
+            <h2 id="founder-modal-title" class="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">
+              Ankit Lodhi
+            </h2>
+            <p class="mt-1.5 text-sm text-gray-400">
+              B.Tech CSE · Python · Django · Data Science
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="space-y-3 text-left">
+        <p class="text-sm leading-relaxed text-gray-300 md:text-[0.95rem]">
+          B.Tech CSE professional with <strong class="font-semibold text-white">3+ years</strong> of experience in
+          Python, Django, and Data Science. I build scalable web applications and apply machine learning to solve
+          real business problems.
+        </p>
+        <p class="text-sm leading-relaxed text-gray-300 md:text-[0.95rem]">
+          I’ve delivered <strong class="font-semibold text-white">10+ projects</strong> and now lead
+          <strong class="font-semibold text-white">ANKUON</strong> — offering tech solutions and the AnkuOn2
+          investment platform.
+        </p>
+      </div>
+
+      <!-- Skills chips -->
+      <div class="mt-5 flex flex-wrap gap-2">
+        <span
+          class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">Python</span>
+        <span
+          class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">Django</span>
+        <span
+          class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">Data
+          Science</span>
+        <span
+          class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">ML</span>
+        <span
+          class="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-medium text-yellow-400">Finance</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-6 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row">
+        <a href="https://www.linkedin.com/in/ankitlodhiii" target="_blank" rel="noopener noreferrer"
+          class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-emerald-500/50 hover:bg-emerald-500/15 hover:text-emerald-300">
+          <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.327-.024-3.037-1.85-3.037-1.852 0-2.136 1.447-2.136 2.94v5.666H9.354V9.006h3.414v1.56h.048c.476-.9 1.636-1.85 3.365-1.85 3.6 0 4.26 2.37 4.26 5.455v6.281zM5.337 7.433c-1.144 0-2.063-.93-2.063-2.077 0-1.147.92-2.077 2.063-2.077 1.147 0 2.077.93 2.077 2.077 0 1.147-.93 2.077-2.077 2.077zM7.119 20.452H3.555V9.006h3.564v11.446z" />
+          </svg>
+          LinkedIn
+        </a>
+        <a href="mailto:ankitlodhiii06@gmail.com?subject=ANKUON%20—%20Inquiry"
+          class="btn-primary flex-1 !py-2.5 text-sm">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Email
+        </a>
+      </div>
+    </div>
+  </div>
+  <style>
+    #founder-modal .modal-panel {
+      max-width: 32rem;
+      /* ~512px — more focused than 720px */
+      padding: 1.75rem;
+    }
+
+    @media (max-width: 640px) {
+      #founder-modal .modal-panel {
+        padding: 1.25rem;
+      }
+
+      #founder-modal .modal-panel>div:first-of-type {
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        margin-top: -1.25rem;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+    }
+  </style>
+
+  <!-- AnkuOn2 Modal -->
+  <div id="ankuon2-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="ankuon2-modal-title"
+    aria-hidden="true">
+    <div class="modal-panel" onclick="event.stopPropagation()">
+      <button type="button" class="absolute right-4 top-4 text-2xl text-white transition hover:text-yellow-400"
+        onclick="closeAnkuOn2Modal()" aria-label="Close">&times;</button>
+
+      <div class="mb-6 text-center">
+        <span
+          class="mb-3 inline-block rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-400">
+          Venture · Investment
+        </span>
+        <h2 id="ankuon2-modal-title" class="text-2xl font-bold gradient-text md:text-3xl">AnkuOn2</h2>
+        <p class="mt-2 text-lg font-semibold text-white/90">
+          Target up to <span class="text-yellow-400">2% monthly</span>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div class="glass rounded-xl p-5">
+          <h3 class="mb-2 text-base font-semibold text-white">Investment Opportunity</h3>
+          <p class="text-sm leading-relaxed text-gray-300">
+            Contribute any amount starting from ₹10,000 with a target of <strong>2% monthly return</strong>.
+            Withdraw your full capital at the end of any month with a 3-day notice.
+          </p>
+        </div>
+        <div class="glass rounded-xl p-5">
+          <h3 class="mb-2 text-base font-semibold text-white">Why Invest?</h3>
+          <ul class="list-inside list-disc space-y-1.5 text-sm text-gray-300">
+            <li>Backed by scalable SaaS and consulting</li>
+            <li>Transparent monthly statements via dashboard</li>
+            <li>Flexible withdrawals</li>
+            <li>3+ years experience in finance &amp; finance markets</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>Important:</strong> Returns are targets, not guarantees and review full terms on the dashboard.
+      </div>
+
+      <div class="mt-6 text-center">
+        <a href="/dashboard" class="btn-primary">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="scroll-top" id="scroll-to-top" onclick="scrollToTop()" aria-label="Scroll to top">
+    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5l-7 7h5v7h4v-7h5l-7-7z" />
     </svg>
   </button>
 
   <script>
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => { clearTimeout(timeout); func(...args); };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+    function debounce(fn, wait = 180) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), wait);
       };
     }
 
     function setThemeIcon(isDark) {
-      const themeIcon = document.querySelector('.theme-icon');
-      if (!themeIcon) return;
-      themeIcon.innerHTML = isDark
-        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />'
-        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+      const icon = document.querySelector('.theme-icon');
+      if (!icon) return;
+      icon.innerHTML = isDark
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
     }
 
     function toggleTheme() {
       const body = document.body;
-      const isDark = body.dataset.theme === 'dark';
-      const newTheme = isDark ? 'light' : 'dark';
-      body.dataset.theme = newTheme;
-      localStorage.setItem('theme', newTheme);
-      setThemeIcon(newTheme === 'dark');
+      const next = body.dataset.theme === 'dark' ? 'light' : 'dark';
+      body.dataset.theme = next;
+      localStorage.setItem('theme', next);
+      setThemeIcon(next === 'dark');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#0a0f1f' : '#f8fafc');
     }
 
     function toggleNav() {
-      const mobileNav = document.getElementById('mobile-nav');
+      const nav = document.getElementById('mobile-nav');
       const overlay = document.getElementById('nav-overlay');
-      const navIcon = document.querySelector('.nav-icon');
-      const isOpen = mobileNav.classList.contains('translate-x-0');
-      mobileNav.classList.toggle('translate-x-0', !isOpen);
-      mobileNav.classList.toggle('-translate-x-full', isOpen);
-      overlay.classList.toggle('active', !isOpen);
-      if (navIcon) {
-        navIcon.innerHTML = isOpen
-          ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />'
-          : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+      const btn = document.getElementById('mobile-menu-btn');
+      const icon = document.querySelector('.nav-icon');
+      if (!nav || !btn) return;
+      const isOpen = nav.classList.contains('translate-x-0');
+
+      nav.classList.toggle('translate-x-0', !isOpen);
+      nav.classList.toggle('-translate-x-full', isOpen);
+      overlay?.classList.toggle('active', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      btn.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+
+      if (icon) {
+        icon.innerHTML = isOpen
+          ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>'
+          : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
+      }
+
+      if (!isOpen) {
+        const first = nav.querySelector('a, button');
+        if (first) first.focus();
+      } else {
+        btn.focus();
       }
     }
 
     function updateScrollProgress() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      document.querySelector('.scroll-progress').style.width = scrollPercent + '%';
-      const btn = document.getElementById('scroll-to-top');
-      if (btn) {
-        if (scrollTop > 400) btn.classList.add('visible');
-        else btn.classList.remove('visible');
-      }
+      const top = window.scrollY;
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      const bar = document.querySelector('.scroll-progress');
+      if (bar) bar.style.width = (height > 0 ? (top / height) * 100 : 0) + '%';
+      document.getElementById('scroll-to-top')?.classList.toggle('visible', top > 400);
     }
 
     function setActiveNavLink() {
       const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('#nav-menu a, #mobile-nav a');
-      let currentSection = '';
-      sections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3) {
-          currentSection = section.id;
-        }
+      const links = document.querySelectorAll('#nav-menu a[href^="#"]');
+      let current = '';
+      sections.forEach(s => {
+        const r = s.getBoundingClientRect();
+        if (r.top <= window.innerHeight / 3 && r.bottom >= window.innerHeight / 3) current = s.id;
       });
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
+      links.forEach(l => {
+        const href = l.getAttribute('href');
+        if (href) l.classList.toggle('active', href === '#' + current);
       });
     }
 
     function animateSections() {
-      const sections = document.querySelectorAll('.animate-section');
       const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add('visible');
         });
-      }, { threshold: 0.15 });
-      sections.forEach(section => observer.observe(section));
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.animate-in').forEach(s => observer.observe(s));
     }
 
     function setupCollapsibleSections() {
       document.querySelectorAll('.section-toggle').forEach(toggle => {
-        toggle.addEventListener('click', () => {
-          const contentId = toggle.getAttribute('data-toggle');
-          const content = document.getElementById(contentId);
+        const run = () => {
+          const id = toggle.getAttribute('data-toggle');
+          const content = document.getElementById(id);
           if (!content) return;
-          const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-          const willExpand = !isExpanded;
-          toggle.setAttribute('aria-expanded', String(willExpand));
-          content.classList.toggle('expanded', willExpand);
-          toggle.classList.toggle('expanded', willExpand);
-          const hint = toggle.querySelector('.toggle-hint');
-          if (hint) {
-            hint.textContent = willExpand ? 'Click to collapse' : 'Click to expand';
-            if (!willExpand) hint.style.display = '';
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          content.classList.toggle('expanded', !expanded);
+          toggle.classList.toggle('expanded', !expanded);
+        };
+        toggle.addEventListener('click', run);
+        toggle.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            run();
           }
         });
       });
     }
 
+    let lastFocusedElement = null;
+
+    function getFocusable(container) {
+      return Array.from(
+        container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])')
+      ).filter(el => el.offsetParent !== null);
+    }
+
+    function trapFocus(e, modal) {
+      const focusable = getFocusable(modal);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    function openModal(modalId, trigger) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      lastFocusedElement = trigger || document.activeElement;
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      const focusable = getFocusable(modal);
+      if (focusable.length) setTimeout(() => focusable[0].focus(), 40);
+      modal._trap = (e) => trapFocus(e, modal);
+      document.addEventListener('keydown', modal._trap);
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      if (modal._trap) {
+        document.removeEventListener('keydown', modal._trap);
+        delete modal._trap;
+      }
+      if (lastFocusedElement?.focus) lastFocusedElement.focus();
+      lastFocusedElement = null;
+    }
+
+    function openFounderModal() {
+      openModal('founder-modal', document.activeElement);
+    }
+    function closeFounderModal() { closeModal('founder-modal'); }
+
+    function openAnkuOn2Modal() {
+      openModal('ankuon2-modal', document.getElementById('ankuon2-open-btn'));
+    }
+    function closeAnkuOn2Modal() { closeModal('ankuon2-modal'); }
+
+    function openPortfolioModal(id) {
+      const p = allProjects.find(x => x.id === id);
+      if (!p) return;
+      const modalContent = document.getElementById('modal-content');
+      if (!modalContent) return;
+      modalContent.innerHTML = `
+ <h2 id="portfolio-modal-title" class="mb-4 pr-8 text-xl font-bold text-white md:text-2xl">${p.title}</h2>
+ <div class="carousel">
+ ${p.images.map((img, i) => `<img src="${img}" class="${i === 0 ? 'active' : ''}" alt="${p.title} screenshot ${i + 1}" loading="lazy">`).join('')}
+ <button type="button" class="carousel-btn carousel-prev" onclick="changeSlide(-1)" aria-label="Previous">‹</button>
+ <button type="button" class="carousel-btn carousel-next" onclick="changeSlide(1)" aria-label="Next">›</button>
+ </div>
+ <p class="mt-4 text-sm text-gray-300 md:text-base">${p.description}</p>
+ <div class="tech-stack">${p.tech.map(t => `<span>${t}</span>`).join('')}</div>`;
+      openModal('portfolio-modal', document.activeElement);
+    }
+    function closePortfolioModal() { closeModal('portfolio-modal'); }
+
+    function changeSlide(dir) {
+      const imgs = document.querySelectorAll('#portfolio-modal .carousel img');
+      if (!imgs.length) return;
+      let idx = Array.from(imgs).findIndex(i => i.classList.contains('active'));
+      imgs[idx].classList.remove('active');
+      idx = (idx + dir + imgs.length) % imgs.length;
+      imgs[idx].classList.add('active');
+    }
+
+    document.getElementById('founder-modal')?.addEventListener('click', e => {
+      if (e.target.id === 'founder-modal') closeFounderModal();
+    });
+    document.getElementById('ankuon2-modal')?.addEventListener('click', e => {
+      if (e.target.id === 'ankuon2-modal') closeAnkuOn2Modal();
+    });
+    document.getElementById('portfolio-modal')?.addEventListener('click', e => {
+      if (e.target.id === 'portfolio-modal') closePortfolioModal();
+    });
+
     const allProjects = [
-      { id: 'project1', title: 'Django E-Commerce', short: 'Scalable platform for daily users with optimized performance.', overlay: 'Scalable platform for daily users.', categories: 'python,web', description: 'A scalable e-commerce platform handling 10,000+ daily users with real-time inventory and payment integration.', images: ['https://via.placeholder.com/600x400/059669/ffffff?text=E-Commerce+1', 'https://via.placeholder.com/600x400/047857/ffffff?text=E-Commerce+2', 'https://via.placeholder.com/600x400/065f46/ffffff?text=E-Commerce+3'], tech: ['Django', 'PostgreSQL', 'JavaScript', 'Tailwind CSS'] },
-      { id: 'project2', title: 'Predictive Sales Model', short: 'Machine learning model enhancing inventory efficiency by 30%.', overlay: 'Enhances inventory efficiency by 30%.', categories: 'python,ml', description: 'A machine learning model for inventory optimization, improving efficiency by 30% using time-series forecasting.', images: ['https://via.placeholder.com/600x400/eab308/000000?text=Sales+Model+1', 'https://via.placeholder.com/600x400/ca8a04/000000?text=Sales+Model+2'], tech: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'] },
-      { id: 'project3', title: 'Django CMS', short: 'Custom CMS for seamless content management and updates.', overlay: 'Seamless content management.', categories: 'python,web', description: 'A custom content management system with modular design for seamless updates and user management.', images: ['https://via.placeholder.com/600x400/3b82f6/ffffff?text=CMS+1', 'https://via.placeholder.com/600x400/2563eb/ffffff?text=CMS+2'], tech: ['Django', 'PostgreSQL', 'HTML', 'CSS'] },
-      { id: 'project4', title: 'Customer Churn Predictor', short: 'ML pipeline that predicts customer churn with 92% accuracy.', overlay: '92% accuracy churn prediction.', categories: 'python,ml', description: 'End-to-end machine learning pipeline that predicts customer churn with 92% accuracy, helping reduce attrition through targeted interventions.', images: ['https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Churn+1', 'https://via.placeholder.com/600x400/7c3aed/ffffff?text=Churn+2'], tech: ['Python', 'XGBoost', 'Pandas', 'FastAPI'] },
-      { id: 'project5', title: 'Real-time Analytics Dashboard', short: 'Live metrics dashboard built with Django Channels & Chart.js.', overlay: 'Real-time business metrics.', categories: 'python,web', description: 'A real-time analytics dashboard powered by Django Channels and WebSockets, visualizing key business metrics with Chart.js.', images: ['https://via.placeholder.com/600x400/06b6d4/ffffff?text=Dashboard+1', 'https://via.placeholder.com/600x400/0891b2/ffffff?text=Dashboard+2'], tech: ['Django', 'Channels', 'Redis', 'Chart.js'] },
-      { id: 'project6', title: 'NLP Sentiment Analyzer', short: 'Production sentiment analysis API for social media streams.', overlay: 'Real-time sentiment analysis.', categories: 'python,ml', description: 'Production-ready NLP sentiment analysis service that processes social media streams and returns polarity scores via a REST API.', images: ['https://via.placeholder.com/600x400/f43f5e/ffffff?text=NLP+1', 'https://via.placeholder.com/600x400/e11d48/ffffff?text=NLP+2'], tech: ['Python', 'Transformers', 'FastAPI', 'Docker'] }
+      { id: 'p1', title: 'Django E-Commerce', short: 'Scalable platform for daily users with optimized performance.', overlay: 'Scalable platform for daily users.', categories: 'python,web', description: 'A scalable e-commerce platform handling 10,000+ daily users with real-time inventory and payment integration.', images: ['https://placehold.co/600x400/059669/ffffff?text=E-Commerce+1', 'https://placehold.co/600x400/047857/ffffff?text=E-Commerce+2'], tech: ['Django', 'PostgreSQL', 'JavaScript', 'Tailwind'] },
+      { id: 'p2', title: 'Predictive Sales Model', short: 'Machine learning model enhancing inventory efficiency by 30%.', overlay: 'Enhances inventory efficiency by 30%.', categories: 'python,ml', description: 'A machine learning model for inventory optimization, improving efficiency by 30% using time-series forecasting.', images: ['https://placehold.co/600x400/eab308/000000?text=Sales+Model'], tech: ['Python', 'Scikit-learn', 'Pandas'] },
+      { id: 'p3', title: 'Django CMS', short: 'Custom CMS for seamless content management and updates.', overlay: 'Seamless content management.', categories: 'python,web', description: 'A custom content management system with modular design for seamless updates and user management.', images: ['https://placehold.co/600x400/3b82f6/ffffff?text=CMS'], tech: ['Django', 'PostgreSQL', 'HTML', 'CSS'] },
+      { id: 'p4', title: 'Customer Churn Predictor', short: 'ML pipeline that predicts customer churn with 92% accuracy.', overlay: '92% accuracy churn prediction.', categories: 'python,ml', description: 'End-to-end ML pipeline predicting customer churn with 92% accuracy.', images: ['https://placehold.co/600x400/8b5cf6/ffffff?text=Churn'], tech: ['Python', 'XGBoost', 'FastAPI'] },
+      { id: 'p5', title: 'Real-time Analytics Dashboard', short: 'Live metrics dashboard built with Django Channels & Chart.js.', overlay: 'Real-time business metrics.', categories: 'python,web', description: 'Real-time analytics dashboard powered by Django Channels and WebSockets.', images: ['https://placehold.co/600x400/06b6d4/ffffff?text=Dashboard'], tech: ['Django', 'Channels', 'Redis', 'Chart.js'] },
+      { id: 'p6', title: 'NLP Sentiment Analyzer', short: 'Production sentiment analysis API for social media streams.', overlay: 'Real-time sentiment analysis.', categories: 'python,ml', description: 'Production-ready NLP sentiment analysis service for social media streams.', images: ['https://placehold.co/600x400/f43f5e/ffffff?text=NLP'], tech: ['Python', 'Transformers', 'FastAPI', 'Docker'] }
     ];
 
     let visibleCount = 3;
     let currentFilters = [];
 
-    function createCardHTML(project) {
-      return `<div class="portfolio-card glassmorphism p-6 shadow-2xl cursor-pointer visible" data-tilt data-tilt-speed="400" data-tilt-max="10" data-categories="${project.categories}" data-id="${project.id}" onclick="openPortfolioModal('${project.id}')">
-          <img src="https://via.placeholder.com/300x200/1f2937/10b981?text=${encodeURIComponent(project.title)}" alt="${project.title}" width="300" height="200" class="w-full h-48 object-cover rounded-lg mb-4" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200'">
-          <div class="portfolio-overlay"><h3 class="text-xl font-semibold text-white">${project.title}</h3><p class="text-gray-300 mt-2 text-center">${project.overlay}</p></div>
-          <h3 class="text-xl font-semibold text-white">${project.title}</h3>
-          <p class="text-gray-300 mt-2">${project.short}</p>
-        </div>`;
+    function createCardHTML(p) {
+      return `<div class="portfolio-card glass p-4 md:p-5" data-categories="${p.categories}" role="listitem" tabindex="0"
+ onclick="openPortfolioModal('${p.id}')"
+ onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPortfolioModal('${p.id}')}">
+ <img src="https://placehold.co/300x200/1f2937/10b981?text=${encodeURIComponent(p.title)}" alt="${p.title}" class="mb-3 h-40 w-full rounded-lg object-cover" loading="lazy">
+ <div class="portfolio-overlay">
+ <h3 class="text-lg font-semibold text-white">${p.title}</h3>
+ <p class="mt-2 text-center text-sm text-gray-300">${p.overlay}</p>
+ </div>
+ <h3 class="text-base font-semibold text-white md:text-lg">${p.title}</h3>
+ <p class="mt-1.5 text-sm text-gray-300">${p.short}</p>
+ </div>`;
     }
 
     function renderPortfolio() {
       const grid = document.getElementById('portfolio-grid');
       const spinner = document.getElementById('portfolio-spinner');
-      const loadMoreBtn = document.getElementById('load-more');
-      spinner.classList.add('active');
+      const btn = document.getElementById('load-more');
+      if (!grid) return;
+
+      spinner?.classList.add('active');
       grid.style.opacity = '0';
+
       setTimeout(() => {
-        const filtered = currentFilters.length === 0 ? allProjects : allProjects.filter(p => currentFilters.some(f => p.categories.split(',').includes(f)));
-        const toShow = filtered.slice(0, visibleCount);
-        grid.innerHTML = toShow.map(createCardHTML).join('');
-        if (window.VanillaTilt) VanillaTilt.init(grid.querySelectorAll('[data-tilt]'), { max: 10, speed: 400, glare: false });
-        loadMoreBtn.style.display = toShow.length >= filtered.length ? 'none' : 'inline-block';
-        spinner.classList.remove('active');
+        const filtered = currentFilters.length === 0
+          ? allProjects
+          : allProjects.filter(p => currentFilters.some(f => p.categories.includes(f)));
+        const show = filtered.slice(0, visibleCount);
+        grid.innerHTML = show.map(createCardHTML).join('');
+
+        if (window.VanillaTilt && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          VanillaTilt.init(grid.querySelectorAll('.portfolio-card'), { max: 6, speed: 400, glare: false });
+        }
+
+        if (btn) btn.style.display = show.length >= filtered.length ? 'none' : 'inline-block';
+        spinner?.classList.remove('active');
         grid.style.opacity = '1';
-      }, 280);
+      }, 200);
     }
 
     function setupPortfolioFilter() {
-      const checkboxes = document.querySelectorAll('.filter-checkbox');
-      const filterCards = debounce(() => {
-        currentFilters = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-        visibleCount = 3;
-        renderPortfolio();
-      }, 200);
-      checkboxes.forEach(cb => cb.addEventListener('change', filterCards));
+      document.querySelectorAll('.filter-checkbox').forEach(cb => {
+        cb.addEventListener('change', debounce(() => {
+          currentFilters = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(c => c.value);
+          visibleCount = 3;
+          renderPortfolio();
+        }));
+      });
     }
 
     function clearFilters() {
-      document.querySelectorAll('.filter-checkbox').forEach(cb => { cb.checked = false; });
+      document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false);
       currentFilters = [];
       visibleCount = 3;
       renderPortfolio();
     }
 
     function setupLoadMore() {
-      document.getElementById('load-more').addEventListener('click', () => {
+      document.getElementById('load-more')?.addEventListener('click', () => {
         visibleCount += 3;
         renderPortfolio();
       });
     }
 
-    function openPortfolioModal(projectId) {
-      const modal = document.getElementById('portfolio-modal');
-      const modalContent = document.getElementById('modal-content');
-      const project = allProjects.find(p => p.id === projectId);
-      if (!project) return;
-      modalContent.innerHTML = `
-        <h2 id="portfolio-modal-title" class="text-2xl font-bold text-white mb-4 pr-8">${project.title}</h2>
-        <div class="carousel">
-          ${project.images.map((img, i) => `<img src="${img}" alt="${project.title} screenshot ${i + 1}" class="${i === 0 ? 'active' : ''}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400'">`).join('')}
-          <button class="carousel-prev" onclick="changeSlide(-1)" aria-label="Previous Slide">‹</button>
-          <button class="carousel-next" onclick="changeSlide(1)" aria-label="Next Slide">›</button>
-        </div>
-        <p class="text-gray-300 mt-4 leading-relaxed">${project.description}</p>
-        <div class="tech-stack">${project.tech.map(t => `<span>${t}</span>`).join('')}</div>`;
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    function setupAccountDropdown() {
+      const btn = document.getElementById('account-btn');
+      const menu = document.getElementById('account-menu');
+      const chevron = document.getElementById('account-chevron');
+      if (!btn || !menu) return;
 
-    function closePortfolioModal() {
-      document.getElementById('portfolio-modal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
+      const open = () => {
+        menu.classList.remove('opacity-0', 'invisible');
+        menu.classList.add('opacity-100', 'visible');
+        btn.setAttribute('aria-expanded', 'true');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+      };
+      const close = () => {
+        menu.classList.add('opacity-0', 'invisible');
+        menu.classList.remove('opacity-100', 'visible');
+        btn.setAttribute('aria-expanded', 'false');
+        if (chevron) chevron.style.transform = '';
+      };
 
-    function changeSlide(direction) {
-      const carousel = document.querySelector('#portfolio-modal .carousel');
-      if (!carousel) return;
-      const images = carousel.querySelectorAll('img');
-      let currentIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
-      images[currentIndex].classList.remove('active');
-      currentIndex = (currentIndex + direction + images.length) % images.length;
-      images[currentIndex].classList.add('active');
-    }
-
-    document.getElementById('portfolio-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'portfolio-modal') closePortfolioModal();
-    });
-
-    function setupFormValidation() {
-      const form = document.getElementById('contact-form');
-      const inputs = form.querySelectorAll('input, textarea');
-      const validateInput = debounce((input) => {
-        input.setAttribute('aria-invalid', (!input.checkValidity() && input.value) ? 'true' : 'false');
-      }, 250);
-      inputs.forEach(input => {
-        input.addEventListener('blur', () => validateInput(input));
-        input.addEventListener('input', () => validateInput(input));
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        btn.getAttribute('aria-expanded') === 'true' ? close() : open();
       });
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (form.checkValidity()) {
-          const formData = {
-            name: form.name.value.trim(),
-            email: form.email.value.trim(),
-            subject: form.subject.value.trim(),
-            message: form.message.value.trim()
-          };
-          fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) })
-            .then(res => res.json())
-            .then(data => {
-              if (data.error) alert(data.error);
-              else { alert('Message sent successfully!'); form.reset(); inputs.forEach(i => i.setAttribute('aria-invalid', 'false')); }
-            })
-            .catch(() => { alert('Message sent successfully!'); form.reset(); inputs.forEach(i => i.setAttribute('aria-invalid', 'false')); });
-        } else {
-          inputs.forEach(input => validateInput(input));
-          const firstInvalid = form.querySelector(':invalid');
-          if (firstInvalid) firstInvalid.focus();
+
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { close(); btn.focus(); }
+        if (e.key === 'ArrowDown' && btn.getAttribute('aria-expanded') !== 'true') {
+          e.preventDefault();
+          open();
+          menu.querySelector('[role="menuitem"]')?.focus();
         }
       });
+
+      menu.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { close(); btn.focus(); }
+      });
+
+      document.addEventListener('click', e => {
+        if (!document.getElementById('account-dropdown')?.contains(e.target)) close();
+      });
+
+      const dropdown = document.getElementById('account-dropdown');
+      if (dropdown && window.matchMedia('(hover: hover)').matches) {
+        dropdown.addEventListener('mouseenter', open);
+        dropdown.addEventListener('mouseleave', close);
+      }
     }
 
-    function setupModalAccessibility() {
-      document.addEventListener('keydown', (e) => {
-        const modal = document.getElementById('portfolio-modal');
-        if (!modal.classList.contains('active')) return;
-        if (e.key === 'Escape') closePortfolioModal();
-        else if (e.key === 'ArrowLeft') changeSlide(-1);
-        else if (e.key === 'ArrowRight') changeSlide(1);
-      });
-    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeFounderModal();
+        closeAnkuOn2Modal();
+        closePortfolioModal();
+        const nav = document.getElementById('mobile-nav');
+        if (nav?.classList.contains('translate-x -0')) toggleNav();
+      }
+      if (document.getElementById('portfolio-modal')?.classList.contains('active')) {
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+      }
+    });
 
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      document.body.dataset.theme = savedTheme;
-      setThemeIcon(savedTheme === 'dark');
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.body.dataset.theme = theme;
+      setThemeIcon(theme === 'dark');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0a0f1f' : '#f8fafc');
+
       window.addEventListener('scroll', updateScrollProgress, { passive: true });
       window.addEventListener('scroll', setActiveNavLink, { passive: true });
+
       animateSections();
       setupCollapsibleSections();
       setupPortfolioFilter();
       setupLoadMore();
-      if (document.getElementById('contact-form')) setupFormValidation();
-      setupModalAccessibility();
+      setupAccountDropdown();
       renderPortfolio();
-      if (window.VanillaTilt) VanillaTilt.init(document.querySelectorAll('[data-tilt]'), { max: 10, speed: 400, glare: false });
+
       window.addEventListener('resize', () => {
         if (window.innerWidth >= 768) {
-          document.getElementById('mobile-nav').classList.remove('translate-x-0');
-          document.getElementById('mobile-nav').classList.add('-translate-x-full');
-          document.getElementById('nav-overlay').classList.remove('active');
+          const nav = document.getElementById('mobile-nav');
+          const overlay = document.getElementById('nav-overlay');
+          const btn = document.getElementById('mobile-menu-btn');
+          nav?.classList.add('-translate-x-full');
+          nav?.classList.remove('translate-x-0');
+          overlay?.classList.remove('active');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'false');
+            btn.setAttribute('aria-label', 'Open menu');
+          }
         }
       });
     });
