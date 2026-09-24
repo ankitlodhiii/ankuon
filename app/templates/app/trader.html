@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trader’s Diary – ANKUON</title>
+    <title>Trader’s Diary – ankuon</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,13 +22,13 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --radius: 14px;
-            --shadow: 0 8px 30px rgba(0, 0, 0, .35);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
         }
 
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box
+            box-sizing: border-box;
         }
 
         body {
@@ -37,11 +37,11 @@
             color: var(--text);
             line-height: 1.5;
             min-height: 100vh;
-            font-size: 14px
+            font-size: 14px;
         }
 
         .hidden {
-            display: none !important
+            display: none !important;
         }
 
         /* LOGIN */
@@ -51,7 +51,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: radial-gradient(ellipse at top, #111827 0%, #0b0f19 70%)
+            background: radial-gradient(ellipse at top, #111827 0%, #0b0f19 70%);
         }
 
         .login-box {
@@ -61,25 +61,25 @@
             padding: 40px;
             width: 100%;
             max-width: 420px;
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         .login-box h1 {
             font-size: 26px;
             font-weight: 750;
             margin-bottom: 8px;
-            text-align: center
+            text-align: center;
         }
 
         .login-box p {
             text-align: center;
             color: var(--text-muted);
             margin-bottom: 28px;
-            font-size: 14px
+            font-size: 14px;
         }
 
         .form-group {
-            margin-bottom: 16px
+            margin-bottom: 16px;
         }
 
         .form-group label {
@@ -87,7 +87,7 @@
             font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 6px;
-            font-weight: 500
+            font-weight: 500;
         }
 
         .form-group input {
@@ -97,12 +97,12 @@
             color: var(--text);
             padding: 13px 14px;
             border-radius: 10px;
-            font-size: 14px
+            font-size: 14px;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .login-error {
@@ -110,7 +110,48 @@
             font-size: 13px;
             margin-bottom: 14px;
             display: none;
-            text-align: center
+            text-align: center;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 18px 0;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .btn-bio {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .btn-bio:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-bio:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .bio-status {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
         }
 
         .btn {
@@ -124,38 +165,38 @@
             font-weight: 600;
             cursor: pointer;
             border: none;
-            transition: all .18s
+            transition: all 0.18s;
         }
 
         .btn-primary {
             background: var(--primary);
-            color: #fff;
-            width: 100%
+            color: white;
+            width: 100%;
         }
 
         .btn-primary:hover {
-            background: var(--primary-hover)
+            background: var(--primary-hover);
         }
 
         .btn-secondary {
             background: var(--bg-hover);
             color: var(--text);
-            border: 1px solid var(--border)
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
-            background: var(--border)
+            background: var(--border);
         }
 
         .btn-danger {
-            background: rgba(239, 68, 68, .12);
+            background: rgba(239, 68, 68, 0.12);
             color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, .25)
+            border: 1px solid rgba(239, 68, 68, 0.25);
         }
 
         .btn-sm {
             padding: 8px 14px;
-            font-size: 13px
+            font-size: 13px;
         }
 
         .btn-icon {
@@ -165,40 +206,22 @@
             cursor: pointer;
             padding: 6px 8px;
             border-radius: 6px;
-            font-size: 15px
+            font-size: 15px;
         }
 
         .btn-icon:hover {
             background: var(--bg-hover);
-            color: var(--text)
-        }
-
-        .btn-ankuon {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: #fff;
-            font-weight: 700;
-            border: none;
-            padding: 11px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            letter-spacing: .5px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, .35)
-        }
-
-        .btn-ankuon:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px)
+            color: var(--text);
         }
 
         /* APP */
         .app {
             display: none;
-            min-height: 100vh
+            min-height: 100vh;
         }
 
         .app.active {
-            display: flex
+            display: flex;
         }
 
         .sidebar {
@@ -210,38 +233,38 @@
             padding: 28px 18px;
             position: fixed;
             height: 100vh;
-            z-index: 100
+            z-index: 100;
         }
 
         .logo-app {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 0 6px 20px;
+            padding: 0 6px 28px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 18px
+            margin-bottom: 28px;
         }
 
         .logo-app .icon {
-            font-size: 28px
+            font-size: 28px;
         }
 
         .logo-app h1 {
             font-size: 18px;
-            font-weight: 700
+            font-weight: 700;
         }
 
         .tagline {
             font-size: 11px;
             color: var(--text-muted);
-            margin-top: 3px
+            margin-top: 3px;
         }
 
         .nav-app {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            flex: 1
+            flex: 1;
         }
 
         .nav-btn {
@@ -254,102 +277,94 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all .18s
+            transition: all 0.18s;
         }
 
         .nav-btn:hover {
             background: var(--bg-hover);
-            color: var(--text)
+            color: var(--text);
         }
 
         .nav-btn.active {
-            background: rgba(59, 130, 246, .15);
-            color: var(--primary)
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
         }
 
         .sidebar-footer {
             border-top: 1px solid var(--border);
-            padding-top: 20px
+            padding-top: 20px;
         }
 
         .qs-item {
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            margin-bottom: 10px
+            margin-bottom: 10px;
         }
 
         .qs-label {
-            color: var(--text-muted)
+            color: var(--text-muted);
         }
 
         .qs-value {
-            font-weight: 600
+            font-weight: 600;
         }
 
         .logout-btn {
             margin-top: 18px;
             width: 100%;
-            background: rgba(239, 68, 68, .12);
+            background: rgba(239, 68, 68, 0.12);
             color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, .25);
+            border: 1px solid rgba(239, 68, 68, 0.25);
             padding: 11px;
             border-radius: 10px;
             font-size: 13px;
             font-weight: 500;
-            cursor: pointer
+            cursor: pointer;
         }
 
         .main {
             flex: 1;
             margin-left: 260px;
-            padding: 28px 44px 60px;
-            max-width: 1800px
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-            gap: 16px;
-            flex-wrap: wrap
-        }
-
-        .top-bar h2 {
-            font-size: 26px;
-            font-weight: 750;
-            letter-spacing: -.4px
+            padding: 36px 44px 60px;
+            max-width: 1800px;
         }
 
         .view {
-            display: none
+            display: none;
         }
 
         .view.active {
             display: block;
-            animation: fadeIn .25s ease
+            animation: fadeIn 0.25s ease;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(6px)
+                transform: translateY(6px);
             }
 
             to {
                 opacity: 1;
-                transform: none
+                transform: none;
             }
         }
 
         .view-header {
-            margin-bottom: 22px
+            margin-bottom: 24px;
+        }
+
+        .view-header h2 {
+            font-size: 28px;
+            font-weight: 750;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
         }
 
         .view-header p {
             color: var(--text-muted);
-            font-size: 15px
+            font-size: 15px;
         }
 
         .card {
@@ -358,77 +373,77 @@
             border-radius: var(--radius);
             padding: 26px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 20px
+            padding: 22px;
         }
 
         .stat-card .label {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 6px
+            margin-bottom: 8px;
         }
 
         .stat-card .value {
-            font-size: 22px;
-            font-weight: 700
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .stat-card .value.positive {
-            color: var(--success)
+            color: var(--success);
         }
 
         .stat-card .value.negative {
-            color: var(--danger)
+            color: var(--danger);
         }
 
         /* SHEET */
         .sheet-toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 14px 18px
+            padding: 16px 20px;
         }
 
         .week-nav {
             display: flex;
             align-items: center;
-            gap: 8px
+            gap: 10px;
         }
 
         .week-label {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            min-width: 210px;
+            min-width: 230px;
             text-align: center;
             background: var(--bg);
-            padding: 8px 12px;
+            padding: 9px 14px;
             border-radius: 8px;
-            border: 1px solid var(--border)
+            border: 1px solid var(--border);
         }
 
         .sheet-add {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex: 1;
-            min-width: 260px
+            min-width: 300px;
         }
 
         .sheet-add input {
@@ -436,54 +451,54 @@
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 11px 13px;
+            padding: 12px 14px;
             border-radius: 10px;
-            font-size: 14px
+            font-size: 14px;
         }
 
         .sheet-add input:focus {
             outline: none;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .sheet-status {
             font-size: 13px;
             color: var(--success);
             font-weight: 500;
-            min-width: 80px
+            min-width: 110px;
         }
 
         .day-selector {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 14px
+            margin-bottom: 16px;
         }
 
         .day-btn {
-            padding: 8px 14px;
+            padding: 9px 16px;
             border-radius: 8px;
             border: 1px solid var(--border);
             background: var(--bg-card);
             color: var(--text-muted);
             font-size: 13px;
             font-weight: 500;
-            cursor: pointer
+            cursor: pointer;
         }
 
         .day-btn:hover {
             border-color: var(--primary);
-            color: var(--text)
+            color: var(--text);
         }
 
         .day-btn.active {
-            background: rgba(59, 130, 246, .15);
+            background: rgba(59, 130, 246, 0.15);
             border-color: var(--primary);
-            color: var(--primary)
+            color: var(--primary);
         }
 
         .day-btn.today {
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, .35)
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
         }
 
         .sheet-wrap {
@@ -491,21 +506,21 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             background: var(--bg-card);
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         .excel-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13.5px;
-            min-width: 1750px
+            min-width: 1680px;
         }
 
         .excel-table th {
             background: #161e2e;
             color: var(--text-muted);
             font-weight: 600;
-            padding: 12px 8px;
+            padding: 13px 10px;
             text-align: center;
             border-bottom: 1px solid var(--border);
             border-right: 1px solid var(--border);
@@ -513,12 +528,12 @@
             position: sticky;
             top: 0;
             z-index: 20;
-            font-size: 12px
+            font-size: 12.5px;
         }
 
         .excel-table th.today-col {
-            background: rgba(59, 130, 246, .18);
-            color: var(--primary)
+            background: rgba(59, 130, 246, 0.18);
+            color: var(--primary);
         }
 
         .excel-table th:first-child,
@@ -528,30 +543,30 @@
             left: 0;
             background: var(--bg-card);
             z-index: 15;
-            min-width: 130px;
+            min-width: 140px;
             border-right: 2px solid var(--border-light);
-            padding-left: 14px
+            padding-left: 16px;
         }
 
         .excel-table th:first-child {
             z-index: 30;
-            background: #161e2e
+            background: #161e2e;
         }
 
         .excel-table td {
-            padding: 4px 5px;
+            padding: 5px 6px;
             border-bottom: 1px solid var(--border);
             border-right: 1px solid var(--border);
             text-align: center;
-            vertical-align: middle
+            vertical-align: middle;
         }
 
         .excel-table td.today-col {
-            background: rgba(59, 130, 246, .04)
+            background: rgba(59, 130, 246, 0.04);
         }
 
         .excel-table tr:hover td {
-            background: rgba(59, 130, 246, .05)
+            background: rgba(59, 130, 246, 0.05);
         }
 
         .excel-table input {
@@ -560,57 +575,57 @@
             border: 1px solid transparent;
             color: var(--text);
             text-align: center;
-            padding: 8px 4px;
+            padding: 9px 5px;
             border-radius: 6px;
-            font-size: 13px;
-            font-family: inherit
+            font-size: 13.5px;
+            font-family: inherit;
         }
 
         .excel-table input:focus {
             outline: none;
             border-color: var(--primary);
-            background: var(--bg-input)
+            background: var(--bg-input);
         }
 
         .excel-table input.pred {
             color: var(--primary);
-            font-weight: 500
+            font-weight: 500;
         }
 
         .excel-table input.actual {
-            font-weight: 650
+            font-weight: 650;
         }
 
         .excel-table input.actual.positive {
-            color: var(--success)
+            color: var(--success);
         }
 
         .excel-table input.actual.negative {
-            color: var(--danger)
+            color: var(--danger);
         }
 
         .day-header {
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 650;
             color: var(--text);
-            margin-bottom: 2px
+            margin-bottom: 2px;
         }
 
         .day-sub {
-            font-size: 10.5px;
+            font-size: 11px;
             color: var(--text-muted);
-            font-weight: 400
+            font-weight: 400;
         }
 
         .stock-name {
             font-weight: 650;
-            font-size: 13.5px
+            font-size: 14px;
         }
 
         .selected-date {
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--text-muted);
-            white-space: nowrap
+            white-space: nowrap;
         }
 
         .remove-row {
@@ -618,21 +633,21 @@
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 15px;
-            padding: 5px 8px;
-            border-radius: 6px
+            font-size: 16px;
+            padding: 6px 10px;
+            border-radius: 6px;
         }
 
         .remove-row:hover {
             color: var(--danger);
-            background: rgba(239, 68, 68, .12)
+            background: rgba(239, 68, 68, 0.12);
         }
 
         .note-cell {
             display: flex;
             align-items: center;
-            gap: 5px;
-            max-width: 200px
+            gap: 6px;
+            max-width: 220px;
         }
 
         .note-preview {
@@ -641,52 +656,30 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             text-align: left;
-            padding: 5px 7px;
-            font-size: 12.5px;
+            padding: 6px 8px;
+            font-size: 13px;
             color: var(--text-muted);
-            cursor: pointer
+            cursor: pointer;
         }
 
         .note-preview.has-text {
-            color: var(--text)
+            color: var(--text);
         }
 
         .view-note-btn {
-            background: rgba(59, 130, 246, .12);
+            background: rgba(59, 130, 246, 0.12);
             color: var(--primary);
             border: none;
-            padding: 4px 9px;
+            padding: 5px 10px;
             border-radius: 6px;
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            white-space: nowrap
+            white-space: nowrap;
         }
 
         .view-note-btn:hover {
-            background: rgba(59, 130, 246, .22)
-        }
-
-        .cap-badge {
-            font-size: 10.5px;
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-weight: 600
-        }
-
-        .badge-large {
-            background: rgba(59, 130, 246, .15);
-            color: #60a5fa
-        }
-
-        .badge-mid {
-            background: rgba(245, 158, 11, .15);
-            color: #fbbf24
-        }
-
-        .badge-small {
-            background: rgba(16, 185, 129, .15);
-            color: #34d399
+            background: rgba(59, 130, 246, 0.22);
         }
 
         /* Note Modal */
@@ -694,165 +687,180 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .7);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 300;
             align-items: center;
             justify-content: center;
-            padding: 20px
+            padding: 20px;
         }
 
         .note-modal.open {
-            display: flex
+            display: flex;
         }
 
         .note-modal-content {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 26px;
+            padding: 28px;
             width: 100%;
             max-width: 560px;
             max-height: 80vh;
             display: flex;
-            flex-direction: column
+            flex-direction: column;
         }
 
         .note-modal-content h3 {
-            font-size: 17px;
-            margin-bottom: 6px
+            font-size: 18px;
+            margin-bottom: 6px;
         }
 
         .note-modal-content .stock-label {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 14px
+            margin-bottom: 16px;
         }
 
         .note-modal-content textarea {
             width: 100%;
-            min-height: 200px;
+            min-height: 220px;
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 13px;
+            padding: 14px;
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             resize: vertical;
-            line-height: 1.6
+            line-height: 1.6;
         }
 
         .note-modal-content textarea:focus {
             outline: none;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .note-modal-actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
-            margin-top: 18px
+            margin-top: 20px;
         }
 
         .workflow-box {
-            margin-top: 18px;
-            padding: 16px 20px;
-            background: rgba(59, 130, 246, .07);
-            border: 1px solid rgba(59, 130, 246, .18);
+            margin-top: 20px;
+            padding: 18px 22px;
+            background: rgba(59, 130, 246, 0.07);
+            border: 1px solid rgba(59, 130, 246, 0.18);
             border-radius: 12px;
             font-size: 13.5px;
             color: var(--text-muted);
-            line-height: 1.7
+            line-height: 1.75;
         }
 
         .workflow-box strong {
-            color: var(--text)
+            color: var(--text);
         }
 
         .workflow-box ol {
-            margin: 8px 0 0 18px
+            margin: 10px 0 0 18px;
         }
 
         .workflow-box li {
-            margin-bottom: 5px
+            margin-bottom: 6px;
         }
 
         /* Tables & Forms */
         .table-wrap {
-            overflow-x: auto
+            overflow-x: auto;
         }
 
         .trades-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13.5px
+            font-size: 13.5px;
         }
 
         .trades-table th {
             text-align: left;
-            padding: 11px 13px;
+            padding: 12px 14px;
             color: var(--text-muted);
             font-weight: 550;
-            border-bottom: 1px solid var(--border)
+            border-bottom: 1px solid var(--border);
         }
 
         .trades-table td {
-            padding: 12px 13px;
-            border-bottom: 1px solid var(--border)
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
         }
 
         .trades-table tr:hover td {
-            background: var(--bg-hover)
+            background: var(--bg-hover);
         }
 
         .badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 4px 9px;
             border-radius: 6px;
             font-size: 11.5px;
-            font-weight: 600
+            font-weight: 600;
         }
 
         .badge-long {
-            background: rgba(16, 185, 129, .15);
-            color: var(--success)
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
         }
 
         .badge-short {
-            background: rgba(239, 68, 68, .15);
-            color: var(--danger)
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
         }
 
         .badge-win {
             color: var(--success);
-            font-weight: 650
+            font-weight: 650;
         }
 
         .badge-loss {
             color: var(--danger);
-            font-weight: 650
+            font-weight: 650;
+        }
+
+        .badge-large {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+        }
+
+        .badge-mid {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        .badge-small {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px
+            gap: 20px;
         }
 
         .form-group-form {
             display: flex;
             flex-direction: column;
-            gap: 6px
+            gap: 7px;
         }
 
         .form-group-form.full {
-            grid-column: 1/-1
+            grid-column: 1 / -1;
         }
 
         .form-group-form label {
             font-size: 13px;
             font-weight: 500;
-            color: var(--text-muted)
+            color: var(--text-muted);
         }
 
         .form-group-form input,
@@ -861,54 +869,54 @@
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 11px 13px;
+            padding: 12px 14px;
             border-radius: 10px;
             font-size: 14px;
-            font-family: inherit
+            font-family: inherit;
         }
 
         .form-group-form input:focus,
         .form-group-form select:focus,
         .form-group-form textarea:focus {
             outline: none;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .form-actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border)
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
         }
 
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px
+            gap: 22px;
         }
 
         .breakdown-item {
             display: flex;
             justify-content: space-between;
-            padding: 11px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 13.5px
+            font-size: 13.5px;
         }
 
         .empty-state {
             text-align: center;
-            padding: 45px 20px;
+            padding: 50px 20px;
             color: var(--text-muted);
-            font-size: 15px
+            font-size: 15px;
         }
 
         .filters {
             display: flex;
-            gap: 10px;
-            margin-top: 14px;
-            flex-wrap: wrap
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
         }
 
         .filters select,
@@ -916,225 +924,194 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 8px 12px;
+            padding: 9px 14px;
             border-radius: 9px;
-            font-size: 13.5px
+            font-size: 13.5px;
         }
 
-        /* RESEARCH */
+        /* RESEARCH PAGE */
         .research-toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 14px 18px
+            padding: 16px 20px;
         }
 
         .research-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .research-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 16px;
+            padding: 18px;
             cursor: pointer;
-            transition: all .18s
+            transition: all 0.18s;
         }
 
         .research-card:hover {
             border-color: var(--primary);
-            background: var(--bg-hover)
+            background: var(--bg-hover);
         }
 
         .research-card h4 {
-            font-size: 15px;
-            margin-bottom: 5px
+            font-size: 16px;
+            margin-bottom: 6px;
         }
 
         .research-card .meta {
-            font-size: 12px;
-            color: var(--text-muted)
+            font-size: 12.5px;
+            color: var(--text-muted);
         }
 
         .research-section {
             border: 1px solid var(--border);
             border-radius: 12px;
-            margin-bottom: 12px;
-            overflow: hidden
+            margin-bottom: 14px;
+            overflow: hidden;
         }
 
         .research-section-header {
             background: #161e2e;
-            padding: 13px 16px;
+            padding: 14px 18px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 14.5px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            user-select: none
+            user-select: none;
         }
 
         .research-section-header:hover {
-            background: #1a2234
+            background: #1a2234;
         }
 
         .research-section-body {
-            padding: 14px 16px;
-            display: none
+            padding: 16px 18px;
+            display: none;
         }
 
         .research-section.open .research-section-body {
-            display: block
+            display: block;
         }
 
         .research-section-body textarea {
             width: 100%;
-            min-height: 100px;
+            min-height: 110px;
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 11px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 13.5px;
             font-family: inherit;
             resize: vertical;
-            line-height: 1.55
+            line-height: 1.55;
         }
 
         .research-section-body textarea:focus {
             outline: none;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .research-section-body .hint {
             font-size: 12.5px;
             color: var(--text-muted);
-            margin-bottom: 9px;
-            line-height: 1.5
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
 
         .cap-select {
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 10px 13px;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 14px
+            font-size: 14px;
         }
 
-        /* ANKUON HUB */
-        .ankuon-hero {
-            background: linear-gradient(135deg, #1e3a8a 0%, #4c1d95 50%, #0f172a 100%);
-            border-radius: 18px;
-            padding: 32px 36px;
-            margin-bottom: 28px;
-            border: 1px solid rgba(139, 92, 246, .3);
-            position: relative;
-            overflow: hidden
+        .auto-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
         }
 
-        .ankuon-hero h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            letter-spacing: -.5px
-        }
-
-        .ankuon-hero p {
-            color: #c4b5fd;
-            font-size: 15px;
-            max-width: 520px
-        }
-
-        .ankuon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px
-        }
-
-        .ankuon-card {
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all .18s
-        }
-
-        .ankuon-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px)
-        }
-
-        .ankuon-card .icon {
-            font-size: 26px;
-            margin-bottom: 10px
-        }
-
-        .ankuon-card h3 {
-            font-size: 15px;
-            margin-bottom: 4px
-        }
-
-        .ankuon-card p {
-            font-size: 12.5px;
-            color: var(--text-muted)
-        }
-
-        .personal-notes textarea {
-            width: 100%;
-            min-height: 140px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
             color: var(--text);
-            padding: 14px;
+            padding: 12px 18px;
             border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            resize: vertical
+            box-shadow: var(--shadow);
+            z-index: 500;
+            font-size: 13.5px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.25s ease;
+            pointer-events: none;
         }
 
-        @media(max-width:900px) {
+        .toast.show {
+            opacity: 1;
+            transform: none;
+        }
+
+        .toast.success {
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        @media (max-width: 900px) {
             .sidebar {
                 width: 72px;
-                padding: 18px 10px
+                padding: 18px 10px;
             }
 
             .logo-app h1,
             .tagline,
             .nav-btn,
             .sidebar-footer .qs-item,
-            .logout-btn,
-            .btn-ankuon span {
-                display: none
+            .logout-btn {
+                display: none;
             }
 
             .logo-app {
                 justify-content: center;
                 border: none;
                 margin: 0;
-                padding-bottom: 16px
+                padding-bottom: 18px;
             }
 
             .main {
                 margin-left: 72px;
-                padding: 18px 14px
+                padding: 20px 16px;
             }
 
             .form-grid,
             .two-col {
-                grid-template-columns: 1fr
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1146,19 +1123,30 @@
     <div class="login-screen" id="login-screen">
         <div class="login-box">
             <h1>📒 Trader’s Diary</h1>
-            <p>ANKUON • Admin Access</p>
+            <p>Private access • ankuon</p>
             <div class="login-error" id="login-error">Invalid credentials</div>
+
+            <!-- Biometric unlock (shown when registered) -->
+            <div id="bio-login-section" class="hidden">
+                <button class="btn btn-bio" id="btn-bio-login" onclick="loginWithBiometric()">
+                    👆 Unlock with Fingerprint / Face ID
+                </button>
+                <div class="bio-status" id="bio-login-status"></div>
+                <div class="login-divider">or use password</div>
+            </div>
+
             <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="login-email" value="admin@tradersdiary.com">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Username" autocomplete="username" value="ankuon">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="login-password" value="admin123">
+                <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password"
+                    value="ankuon4495">
             </div>
-            <button class="btn btn-primary" onclick="doLogin()">Login as Admin</button>
-            <p style="margin-top:18px;font-size:12px;color:var(--text-muted);text-align:center">
-                admin@tradersdiary.com / admin123
+            <button class="btn btn-primary" onclick="doLogin()">Login with Password</button>
+            <p style="margin-top:20px;font-size:12px;color:var(--text-muted);text-align:center">
+                Username: ankuon<br>Password: ankuon4495
             </p>
         </div>
     </div>
@@ -1170,17 +1158,11 @@
                 <div class="icon">📒</div>
                 <div>
                     <h1>Trader’s Diary</h1>
-                    <p class="tagline">ANKUON Edition</p>
+                    <p class="tagline">ankuon • Full Access</p>
                 </div>
             </div>
-
-            <!-- ANKUON BUTTON (always visible) -->
-            <button class="btn-ankuon" onclick="showView('ankuon')" style="margin-bottom:18px">
-                ⚡ <span>ANKUON</span>
-            </button>
-
             <nav class="nav-app">
-                <button class="nav-btn" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
                 <button class="nav-btn" data-view="sheet">📊 Stock Sheet</button>
                 <button class="nav-btn" data-view="research">🏢 Research</button>
                 <button class="nav-btn" data-view="trades">All Trades</button>
@@ -1188,7 +1170,6 @@
                 <button class="nav-btn" data-view="stats">Statistics</button>
                 <button class="nav-btn" data-view="settings">Settings</button>
             </nav>
-
             <div class="sidebar-footer">
                 <div class="qs-item"><span class="qs-label">Total Trades</span><span class="qs-value"
                         id="qs-total">0</span></div>
@@ -1201,77 +1182,21 @@
         </aside>
 
         <main class="main">
-            <!-- ANKUON HUB (NEW) -->
-            <section id="view-ankuon" class="view">
-                <div class="ankuon-hero">
-                    <h1>⚡ ANKUON</h1>
-                    <p>Your personal advanced command center. Quick access, flexible notes, and overview of the whole
-                        diary.</p>
-                </div>
-
-                <div class="ankuon-grid">
-                    <div class="ankuon-card" onclick="showView('sheet')">
-                        <div class="icon">📊</div>
-                        <h3>Daily Stock Planner</h3>
-                        <p>Weekly Pred % vs Actual % • Latest on top</p>
-                    </div>
-                    <div class="ankuon-card" onclick="showView('research')">
-                        <div class="icon">🏢</div>
-                        <h3>Investment Research</h3>
-                        <p>14-point fundamental checklist • Cap categories</p>
-                    </div>
-                    <div class="ankuon-card" onclick="showView('trades')">
-                        <div class="icon">📋</div>
-                        <h3>All Trades</h3>
-                        <p>Filter, search, edit & review every trade</p>
-                    </div>
-                    <div class="ankuon-card" onclick="showView('stats')">
-                        <div class="icon">📈</div>
-                        <h3>Statistics</h3>
-                        <p>Win rate, P&L, market & setup breakdown</p>
-                    </div>
-                    <div class="ankuon-card" onclick="showView('add')">
-                        <div class="icon">➕</div>
-                        <h3>Log New Trade</h3>
-                        <p>Full form with R-multiple & emotions</p>
-                    </div>
-                    <div class="ankuon-card" onclick="showView('dashboard')">
-                        <div class="icon">🏠</div>
-                        <h3>Dashboard</h3>
-                        <p>Overview of performance</p>
-                    </div>
-                </div>
-
-                <div class="stats-grid" id="ankuon-stats"></div>
-
-                <div class="card personal-notes">
-                    <h3 style="margin-bottom:12px;font-size:16px">📝 ANKUON Personal Notes</h3>
-                    <p style="color:var(--text-muted);font-size:13px;margin-bottom:12px">Flexible space for strategy
-                        rules, goals, or daily thoughts. Auto-saves.</p>
-                    <textarea id="ankuon-notes"
-                        placeholder="Write anything here... goals, rules, reminders, market bias..."></textarea>
-                    <div style="margin-top:12px;display:flex;justify-content:flex-end">
-                        <button class="btn btn-primary btn-sm" onclick="saveAnkuonNotes()" style="width:auto">Save
-                            Notes</button>
-                    </div>
-                </div>
-            </section>
-
             <!-- DASHBOARD -->
             <section id="view-dashboard" class="view active">
-                <div class="top-bar">
-                    <div>
-                        <h2>Dashboard</h2>
-                        <p style="color:var(--text-muted);margin-top:4px">Overview of your trading performance</p>
-                    </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
+                <header class="view-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of your trading performance • Auto-updated</p>
+                </header>
                 <div class="stats-grid" id="dashboard-stats"></div>
                 <div class="card">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                    <div
+                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px">
                         <h3 style="font-size:16px;font-weight:600">Recent Trades</h3>
-                        <button class="btn btn-secondary btn-sm" onclick="showView('trades')">View All →</button>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <span class="auto-badge" id="auto-save-indicator">● Auto-save on</span>
+                            <button class="btn btn-secondary btn-sm" onclick="showView('trades')">View All →</button>
+                        </div>
                     </div>
                     <div class="table-wrap">
                         <table class="trades-table" id="recent-trades-table">
@@ -1290,19 +1215,12 @@
                     </div>
                 </div>
             </section>
-
             <!-- STOCK SHEET -->
             <section id="view-sheet" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2>📊 Daily Stock Planner</h2>
-                        <p style="color:var(--text-muted);margin-top:4px">Latest stocks on top • Cap category • Full
-                            notes</p>
-                    </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
-
+                <header class="view-header">
+                    <h2>📊 Daily Stock Planner</h2>
+                    <p>Latest stocks on top • Auto-saves as you type • Selected date & full notes</p>
+                </header>
                 <div class="sheet-toolbar">
                     <div class="week-nav">
                         <button class="btn btn-secondary btn-sm" onclick="changeWeek(-1)">← Prev</button>
@@ -1311,92 +1229,82 @@
                         <button class="btn btn-secondary btn-sm" onclick="goToCurrentWeek()">This Week</button>
                     </div>
                     <div class="sheet-add">
-                        <input type="text" id="new-stock" placeholder="Stock (RELIANCE, ANANT RAJ...)"
-                            onkeydown="if(event.key==='Enter')addStockRow()">
-                        <select id="new-stock-cap" class="cap-select" style="width:120px">
-                            <option value="Large Cap">Large Cap</option>
-                            <option value="Mid Cap">Mid Cap</option>
-                            <option value="Small Cap" selected>Small Cap</option>
-                        </select>
-                        <button class="btn btn-primary" onclick="addStockRow()" style="width:auto">+ Add</button>
+                        <input type="text" id="new-stock" placeholder="Stock name (RELIANCE, NIFTY, BANKNIFTY...)"
+                            onkeydown="if(event.key==='Enter') addStockRow()">
+                        <button class="btn btn-primary" onclick="addStockRow()">+ Add Stock</button>
                     </div>
                     <button class="btn btn-secondary" onclick="saveSheet(true)">💾 Save</button>
                     <span class="sheet-status" id="sheet-status"></span>
                 </div>
-
                 <div class="day-selector">
-                    <button class="day-btn" data-day="mon" onclick="focusDay('mon')">Mon</button>
-                    <button class="day-btn" data-day="tue" onclick="focusDay('tue')">Tue</button>
-                    <button class="day-btn" data-day="wed" onclick="focusDay('wed')">Wed</button>
-                    <button class="day-btn" data-day="thu" onclick="focusDay('thu')">Thu</button>
-                    <button class="day-btn" data-day="fri" onclick="focusDay('fri')">Fri</button>
+                    <button class="day-btn" data-day="mon" onclick="focusDay('mon')">Monday</button>
+                    <button class="day-btn" data-day="tue" onclick="focusDay('tue')">Tuesday</button>
+                    <button class="day-btn" data-day="wed" onclick="focusDay('wed')">Wednesday</button>
+                    <button class="day-btn" data-day="thu" onclick="focusDay('thu')">Thursday</button>
+                    <button class="day-btn" data-day="fri" onclick="focusDay('fri')">Friday</button>
                 </div>
-
                 <div class="sheet-wrap">
                     <table class="excel-table">
                         <thead>
                             <tr>
                                 <th>Stock</th>
-                                <th>Cap</th>
-                                <th>Selected</th>
+                                <th>Selected On</th>
                                 <th>Price</th>
                                 <th>SL</th>
                                 <th>TG</th>
                                 <th class="day-col" data-day="mon">
-                                    <div class="day-header">Mon</div>
-                                    <div class="day-sub">Pred | Act</div>
+                                    <div class="day-header">Monday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
                                 </th>
                                 <th class="day-col" data-day="tue">
-                                    <div class="day-header">Tue</div>
-                                    <div class="day-sub">Pred | Act</div>
+                                    <div class="day-header">Tuesday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
                                 </th>
                                 <th class="day-col" data-day="wed">
-                                    <div class="day-header">Wed</div>
-                                    <div class="day-sub">Pred | Act</div>
+                                    <div class="day-header">Wednesday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
                                 </th>
                                 <th class="day-col" data-day="thu">
-                                    <div class="day-header">Thu</div>
-                                    <div class="day-sub">Pred | Act</div>
+                                    <div class="day-header">Thursday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
                                 </th>
                                 <th class="day-col" data-day="fri">
-                                    <div class="day-header">Fri</div>
-                                    <div class="day-sub">Pred | Act</div>
+                                    <div class="day-header">Friday</div>
+                                    <div class="day-sub">Pred % | Actual %</div>
                                 </th>
-                                <th style="min-width:180px">Notes</th>
-                                <th>Research</th>
-                                <th></th>
+                                <th style="min-width:200px">Notes / Analysis</th>
+                                <th style="width:90px">Research</th>
+                                <th style="width:50px"></th>
                             </tr>
                         </thead>
                         <tbody id="sheet-body"></tbody>
                     </table>
                 </div>
-
                 <div class="workflow-box">
-                    <strong>Flexible workflow:</strong>
+                    <strong>How to use (auto features on):</strong>
                     <ol>
-                        <li>Add stock + choose Cap → fill Price / SL / TG + Pred %</li>
-                        <li>End of day → fill Actual %</li>
-                        <li>Click <strong>Research</strong> for full 14-point analysis before investing</li>
-                        <li>Use <strong>ANKUON</strong> button anytime for quick navigation</li>
+                        <li>Before market open → Research → Add stock (appears on top) → Fill Price, SL, TG + Pred %
+                        </li>
+                        <li>Everything auto-saves while you type (no need to click Save every time)</li>
+                        <li>End of day → Fill Actual % (auto color-coded green/red)</li>
+                        <li>Next day → Add new stocks (they appear on top)</li>
+                        <li>Long notes → Click <strong>View</strong> to read/edit full note</li>
+                        <li>Before investing long-term → Click <strong>Research</strong> on any stock</li>
                     </ol>
                 </div>
             </section>
 
-            <!-- RESEARCH -->
+            <!-- RESEARCH PAGE -->
             <section id="view-research" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2>🏢 Investment Research</h2>
-                        <p style="color:var(--text-muted);margin-top:4px">Advanced 14-point checklist • Large / Mid /
-                            Small Cap</p>
-                    </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
+                <header class="view-header">
+                    <h2>🏢 Investment Research</h2>
+                    <p>Deep fundamental analysis • Large / Mid / Small Cap • Auto-saved</p>
+                </header>
 
                 <div class="research-toolbar">
-                    <input type="text" id="research-stock-name" placeholder="Stock name"
-                        style="flex:1;min-width:200px;background:var(--bg-input);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:10px">
+                    <input type="text" id="research-stock-name" placeholder="Stock name (e.g. ANANT RAJ, RELIANCE)"
+                        style="flex:1;min-width:220px;background:var(--bg-input);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:14px"
+                        onkeydown="if(event.key==='Enter') startNewResearch()">
                     <select id="research-cap" class="cap-select">
                         <option value="Large Cap">Large Cap</option>
                         <option value="Mid Cap">Mid Cap</option>
@@ -1409,30 +1317,33 @@
 
                 <div id="research-list-view">
                     <div class="research-list" id="research-list"></div>
-                    <p class="empty-state" id="research-empty" style="display:none">No research yet.</p>
+                    <p class="empty-state" id="research-empty" style="display:none">No research yet. Add a stock above
+                        to begin.</p>
                 </div>
 
                 <div id="research-form-view" class="hidden">
-                    <div class="card" style="margin-bottom:18px">
+                    <div class="card" style="margin-bottom:20px">
                         <div
                             style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
                             <div>
-                                <h3 id="research-title" style="font-size:19px;margin-bottom:4px">—</h3>
+                                <h3 id="research-title" style="font-size:20px;margin-bottom:4px">—</h3>
                                 <div style="display:flex;gap:10px;align-items:center">
                                     <span id="research-cap-badge" class="badge"></span>
                                     <span style="font-size:13px;color:var(--text-muted)" id="research-updated">—</span>
                                 </div>
                             </div>
-                            <div style="display:flex;gap:8px">
+                            <div style="display:flex;gap:10px">
                                 <button class="btn btn-secondary btn-sm" onclick="showResearchList()">← Back</button>
                                 <button class="btn btn-primary btn-sm" onclick="saveCurrentResearch()"
-                                    style="width:auto">💾 Save</button>
+                                    style="width:auto">💾 Save Research</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteCurrentResearch()">Delete</button>
                             </div>
                         </div>
                     </div>
+
                     <div id="research-sections"></div>
-                    <div class="form-actions">
+
+                    <div class="form-actions" style="margin-top:10px">
                         <button class="btn btn-secondary" onclick="showResearchList()">Cancel</button>
                         <button class="btn btn-primary" onclick="saveCurrentResearch()" style="width:auto">💾 Save
                             Research</button>
@@ -1442,29 +1353,26 @@
 
             <!-- ALL TRADES -->
             <section id="view-trades" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2>All Trades</h2>
-                        <div class="filters">
-                            <select id="filter-market">
-                                <option value="all">All Markets</option>
-                                <option value="Indian Stocks">Indian Stocks</option>
-                                <option value="Crypto">Crypto</option>
-                                <option value="Forex">Forex</option>
-                                <option value="Commodities">Commodities</option>
-                                <option value="Other">Other</option>
-                            </select>
-                            <select id="filter-result">
-                                <option value="all">All Results</option>
-                                <option value="win">Wins</option>
-                                <option value="loss">Losses</option>
-                            </select>
-                            <input type="text" id="search-trades" placeholder="Search..." style="min-width:180px">
-                        </div>
+                <header class="view-header">
+                    <h2>All Trades</h2>
+                    <div class="filters">
+                        <select id="filter-market">
+                            <option value="all">All Markets</option>
+                            <option value="Indian Stocks">Indian Stocks</option>
+                            <option value="Crypto">Crypto</option>
+                            <option value="Forex">Forex</option>
+                            <option value="Commodities">Commodities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="filter-result">
+                            <option value="all">All Results</option>
+                            <option value="win">Wins</option>
+                            <option value="loss">Losses</option>
+                        </select>
+                        <input type="text" id="search-trades" placeholder="Search instrument / setup..."
+                            style="min-width:220px">
                     </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
+                </header>
                 <div class="card">
                     <div class="table-wrap">
                         <table class="trades-table" id="all-trades-table">
@@ -1491,30 +1399,31 @@
 
             <!-- ADD TRADE -->
             <section id="view-add" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2 id="form-title">Add New Trade</h2>
-                        <p style="color:var(--text-muted);margin-top:4px">Log every detail for better review</p>
-                    </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
+                <header class="view-header">
+                    <h2 id="form-title">Add New Trade</h2>
+                    <p>Log every detail • R-Multiple auto-calculates when Risk + P&L are filled</p>
+                </header>
                 <form id="trade-form" class="card" style="max-width:860px">
+                    <input type="hidden" id="trade-id">
                     <div class="form-grid">
-                        <div class="form-group-form"><label>Date & Time *</label><input type="datetime-local" id="date"
-                                required></div>
+                        <div class="form-group-form">
+                            <label>Date & Time *</label>
+                            <input type="datetime-local" id="date" required>
+                        </div>
                         <div class="form-group-form">
                             <label>Market *</label>
                             <select id="market" required>
-                                <option value="Indian Stocks">Indian Stocks</option>
+                                <option value="Indian Stocks">Indian Stocks (NSE/BSE)</option>
                                 <option value="Crypto">Crypto</option>
                                 <option value="Forex">Forex</option>
                                 <option value="Commodities">Commodities</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div class="form-group-form"><label>Instrument *</label><input type="text" id="instrument"
-                                required></div>
+                        <div class="form-group-form">
+                            <label>Instrument *</label>
+                            <input type="text" id="instrument" placeholder="Nifty, BankNifty, RELIANCE..." required>
+                        </div>
                         <div class="form-group-form">
                             <label>Direction *</label>
                             <select id="direction" required>
@@ -1522,26 +1431,29 @@
                                 <option value="Short">Short</option>
                             </select>
                         </div>
-                        <div class="form-group-form"><label>Entry *</label><input type="number" id="entry" step="any"
-                                required></div>
-                        <div class="form-group-form"><label>Exit *</label><input type="number" id="exit" step="any"
-                                required></div>
+                        <div class="form-group-form"><label>Entry Price *</label><input type="number" id="entry"
+                                step="any" required></div>
+                        <div class="form-group-form"><label>Exit Price *</label><input type="number" id="exit"
+                                step="any" required></div>
                         <div class="form-group-form"><label>Stop Loss</label><input type="number" id="sl" step="any">
                         </div>
                         <div class="form-group-form"><label>Target</label><input type="number" id="target" step="any">
                         </div>
-                        <div class="form-group-form"><label>Qty</label><input type="number" id="qty" step="any"></div>
-                        <div class="form-group-form"><label>Risk (₹)</label><input type="number" id="risk" step="any">
-                        </div>
+                        <div class="form-group-form"><label>Position Size (Qty)</label><input type="number" id="qty"
+                                step="any"></div>
+                        <div class="form-group-form"><label>Risk Amount (₹)</label><input type="number" id="risk"
+                                step="any"></div>
                         <div class="form-group-form"><label>P&L (₹) *</label><input type="number" id="pnl" step="any"
                                 required></div>
-                        <div class="form-group-form"><label>R-Multiple</label><input type="number" id="rMultiple"
-                                step="0.01"></div>
-                        <div class="form-group-form full"><label>Setup</label><input type="text" id="setup"></div>
-                        <div class="form-group-form full"><label>Emotions</label><textarea id="emotions"
-                                rows="2"></textarea></div>
-                        <div class="form-group-form full"><label>Notes</label><textarea id="notes" rows="3"></textarea>
-                        </div>
+                        <div class="form-group-form"><label>R-Multiple <span
+                                    style="color:var(--success);font-size:11px">(auto)</span></label><input
+                                type="number" id="rMultiple" step="0.01" placeholder="Auto if Risk filled"></div>
+                        <div class="form-group-form full"><label>Setup / Strategy</label><input type="text" id="setup"
+                                placeholder="ORB, Order Block, RSI Divergence..."></div>
+                        <div class="form-group-form full"><label>Emotions / Mental State</label><textarea id="emotions"
+                                rows="2" placeholder="Calm, FOMO, Revenge..."></textarea></div>
+                        <div class="form-group-form full"><label>Notes / Lessons</label><textarea id="notes" rows="3"
+                                placeholder="What went well? What to improve?"></textarea></div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
@@ -1552,22 +1464,18 @@
 
             <!-- STATISTICS -->
             <section id="view-stats" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2>Statistics</h2>
-                        <p style="color:var(--text-muted);margin-top:4px">Deep dive into performance</p>
-                    </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
-                </div>
+                <header class="view-header">
+                    <h2>Statistics</h2>
+                    <p>Deep dive into your performance • Auto-calculated</p>
+                </header>
                 <div class="stats-grid" id="detailed-stats"></div>
                 <div class="two-col">
                     <div class="card">
-                        <h3 style="margin-bottom:12px;font-size:15px">By Market</h3>
+                        <h3 style="margin-bottom:14px;font-size:16px">Performance by Market</h3>
                         <div id="market-breakdown"></div>
                     </div>
                     <div class="card">
-                        <h3 style="margin-bottom:12px;font-size:15px">By Setup</h3>
+                        <h3 style="margin-bottom:14px;font-size:16px">Performance by Setup</h3>
                         <div id="setup-breakdown"></div>
                     </div>
                 </div>
@@ -1575,19 +1483,33 @@
 
             <!-- SETTINGS -->
             <section id="view-settings" class="view">
-                <div class="top-bar">
-                    <div>
-                        <h2>Settings & Data</h2>
+                <header class="view-header">
+                    <h2>Settings & Data</h2>
+                </header>
+                <div class="card">
+                    <h3 style="margin-bottom:8px">🔐 Biometric Login (Fingerprint / Face ID)</h3>
+                    <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:14px">
+                        Unlock the app with your fingerprint or Face ID. Works on most modern phones and laptops.
+                    </p>
+                    <div id="bio-settings-status" style="margin-bottom:14px;font-size:13.5px"></div>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap">
+                        <button class="btn btn-primary" id="btn-enable-bio" onclick="registerBiometric()"
+                            style="width:auto">Enable Fingerprint / Face ID</button>
+                        <button class="btn btn-danger btn-sm" id="btn-disable-bio" onclick="disableBiometric()"
+                            style="display:none">Disable Biometrics</button>
                     </div>
-                    <button class="btn-ankuon" onclick="showView('ankuon')" style="width:auto;padding:10px 20px">⚡
-                        ANKUON</button>
+                    <p style="color:var(--text-muted);font-size:12px;margin-top:12px">
+                        Note: Requires HTTPS or localhost. Password login always remains available as backup.
+                    </p>
                 </div>
                 <div class="card">
                     <h3 style="margin-bottom:8px">Data Management</h3>
-                    <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:16px">Everything is stored locally.
-                        Export regularly.</p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap">
-                        <button class="btn btn-primary" onclick="exportData()">Export Trades</button>
+                    <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:18px">
+                        All data is stored locally in your browser. Export regularly for backup. Auto-save is always on.
+                    </p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap">
+                        <button class="btn btn-primary" onclick="exportAllData()">Export Everything (JSON)</button>
+                        <button class="btn btn-secondary" onclick="exportData()">Export Trades Only</button>
                         <button class="btn btn-secondary"
                             onclick="document.getElementById('import-file').click()">Import Trades</button>
                         <input type="file" id="import-file" accept=".json" hidden>
@@ -1595,10 +1517,12 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h3 style="margin-bottom:6px">About</h3>
-                    <p>Trader’s Diary – ANKUON Advanced Edition</p>
-                    <p style="color:var(--text-muted);font-size:13px;margin-top:5px">Flexible stock planner + Research +
-                        Cap categories + ANKUON Hub</p>
+                    <h3 style="margin-bottom:8px">About</h3>
+                    <p>Trader’s Diary – Private for ankuon</p>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:6px">
+                        Full features • Daily Stock Planner • Investment Research • Auto-save • Fingerprint / Face ID
+                        login
+                    </p>
                 </div>
             </section>
         </main>
@@ -1607,60 +1531,307 @@
     <!-- NOTE MODAL -->
     <div class="note-modal" id="note-modal">
         <div class="note-modal-content">
-            <h3>Full Note</h3>
+            <h3>Full Note / Analysis</h3>
             <div class="stock-label" id="note-stock-label">Stock: —</div>
-            <textarea id="note-full-text"></textarea>
+            <textarea id="note-full-text" placeholder="Write your full analysis, news summary, reasons..."></textarea>
             <div class="note-modal-actions">
                 <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveNoteFromModal()">Save</button>
+                <button class="btn btn-primary" onclick="saveNoteFromModal()">Save Note</button>
             </div>
         </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
-        const ADMIN_EMAIL = 'admin@tradersdiary.com', ADMIN_PASS = 'admin123', SESSION_KEY = 'td_admin_session';
+        // ==================== AUTH ====================
+        const ADMIN_USER = 'ankuon';
+        const ADMIN_PASS = 'ankuon4495';
+        const SESSION_KEY = 'td_ankuon_session';
+        const BIO_CRED_KEY = 'td_ankuon_bio_cred';
+        const BIO_ENABLED_KEY = 'td_ankuon_bio_enabled';
+
+        function isWebAuthnSupported() {
+            return !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create);
+        }
+
+        function bufferToBase64(buf) {
+            return btoa(String.fromCharCode(...new Uint8Array(buf)));
+        }
+
+        function base64ToBuffer(b64) {
+            const str = atob(b64);
+            const buf = new Uint8Array(str.length);
+            for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i);
+            return buf.buffer;
+        }
+
+        function getRandomChallenge() {
+            const arr = new Uint8Array(32);
+            crypto.getRandomValues(arr);
+            return arr.buffer;
+        }
+
+        async function registerBiometric() {
+            if (!isWebAuthnSupported()) {
+                showToast('Biometrics not supported on this device/browser', 'error');
+                return;
+            }
+            try {
+                const challenge = getRandomChallenge();
+                const userId = new TextEncoder().encode('ankuon-traders-diary');
+
+                const credential = await navigator.credentials.create({
+                    publicKey: {
+                        challenge,
+                        rp: { name: "Trader's Diary", id: location.hostname || 'localhost' },
+                        user: {
+                            id: userId,
+                            name: 'ankuon',
+                            displayName: 'ankuon'
+                        },
+                        pubKeyCredParams: [
+                            { type: 'public-key', alg: -7 },
+                            { type: 'public-key', alg: -257 }
+                        ],
+                        authenticatorSelection: {
+                            authenticatorAttachment: 'platform',
+                            userVerification: 'required',
+                            residentKey: 'preferred'
+                        },
+                        timeout: 60000,
+                        attestation: 'none'
+                    }
+                });
+
+                if (!credential) throw new Error('No credential returned');
+
+                const credId = bufferToBase64(credential.rawId);
+                localStorage.setItem(BIO_CRED_KEY, credId);
+                localStorage.setItem(BIO_ENABLED_KEY, '1');
+                updateBioSettingsUI();
+                showToast('Fingerprint / Face ID enabled ✓', 'success');
+            } catch (err) {
+                console.error(err);
+                if (err.name === 'NotAllowedError') {
+                    showToast('Biometric registration cancelled', 'error');
+                } else {
+                    showToast('Could not enable biometrics: ' + (err.message || 'Unknown error'), 'error');
+                }
+            }
+        }
+
+        async function loginWithBiometric() {
+            if (!isWebAuthnSupported()) {
+                showToast('Biometrics not supported', 'error');
+                return;
+            }
+            const storedId = localStorage.getItem(BIO_CRED_KEY);
+            if (!storedId) {
+                showToast('No biometric registered. Login with password first.', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('bio-login-status');
+            const btn = document.getElementById('btn-bio-login');
+            btn.disabled = true;
+            statusEl.textContent = 'Waiting for fingerprint / Face ID...';
+
+            try {
+                const challenge = getRandomChallenge();
+                const assertion = await navigator.credentials.get({
+                    publicKey: {
+                        challenge,
+                        allowCredentials: [{
+                            type: 'public-key',
+                            id: base64ToBuffer(storedId),
+                            transports: ['internal']
+                        }],
+                        userVerification: 'required',
+                        timeout: 60000
+                    }
+                });
+
+                if (assertion) {
+                    localStorage.setItem(SESSION_KEY, '1');
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('app').classList.add('active');
+                    initApp();
+                    showToast('Unlocked with biometrics ✓', 'success');
+                }
+            } catch (err) {
+                console.error(err);
+                if (err.name === 'NotAllowedError') {
+                    statusEl.textContent = 'Cancelled or timed out. Try again or use password.';
+                } else {
+                    statusEl.textContent = 'Biometric failed. Use password.';
+                }
+                showToast('Biometric login failed', 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function disableBiometric() {
+            if (!confirm('Disable fingerprint / Face ID login?')) return;
+            localStorage.removeItem(BIO_CRED_KEY);
+            localStorage.removeItem(BIO_ENABLED_KEY);
+            updateBioSettingsUI();
+            showToast('Biometrics disabled', 'success');
+        }
+
+        function updateBioSettingsUI() {
+            const enabled = localStorage.getItem(BIO_ENABLED_KEY) === '1' && localStorage.getItem(BIO_CRED_KEY);
+            const statusEl = document.getElementById('bio-settings-status');
+            const enableBtn = document.getElementById('btn-enable-bio');
+            const disableBtn = document.getElementById('btn-disable-bio');
+
+            if (!isWebAuthnSupported()) {
+                if (statusEl) statusEl.innerHTML = '<span style="color:var(--warning)">⚠ Biometrics not supported on this browser/device</span>';
+                if (enableBtn) enableBtn.style.display = 'none';
+                if (disableBtn) disableBtn.style.display = 'none';
+                return;
+            }
+
+            if (enabled) {
+                if (statusEl) statusEl.innerHTML = '<span style="color:var(--success)">✓ Fingerprint / Face ID is enabled</span>';
+                if (enableBtn) enableBtn.style.display = 'none';
+                if (disableBtn) disableBtn.style.display = 'inline-flex';
+            } else {
+                if (statusEl) statusEl.innerHTML = '<span style="color:var(--text-muted)">Not enabled yet</span>';
+                if (enableBtn) enableBtn.style.display = 'inline-flex';
+                if (disableBtn) disableBtn.style.display = 'none';
+            }
+        }
+
+        function showBioLoginOption() {
+            const enabled = localStorage.getItem(BIO_ENABLED_KEY) === '1' && localStorage.getItem(BIO_CRED_KEY);
+            const section = document.getElementById('bio-login-section');
+            if (section) {
+                if (enabled && isWebAuthnSupported()) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            }
+        }
+
         function doLogin() {
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
             const pass = document.getElementById('login-password').value;
-            if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+            const errorEl = document.getElementById('login-error');
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
                 localStorage.setItem(SESSION_KEY, '1');
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app').classList.add('active');
                 initApp();
-            } else document.getElementById('login-error').style.display = 'block';
+                showToast('Welcome back, ankuon', 'success');
+                setTimeout(() => {
+                    if (isWebAuthnSupported() && localStorage.getItem(BIO_ENABLED_KEY) !== '1') {
+                        if (confirm('Enable Fingerprint / Face ID for faster login next time?')) {
+                            registerBiometric();
+                        }
+                    }
+                }, 600);
+            } else {
+                errorEl.style.display = 'block';
+            }
         }
-        function logout() { localStorage.removeItem(SESSION_KEY); location.reload() }
+
+        function logout() {
+            localStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
         if (localStorage.getItem(SESSION_KEY) === '1') {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.add('active');
             window.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            window.addEventListener('DOMContentLoaded', () => {
+                showBioLoginOption();
+            });
         }
-        document.getElementById('login-password')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin() });
 
-        /* SHEET */
-        const SHEET_KEY = 'traders_diary_sheet_v6';
-        let currentWeekStart = getMonday(new Date()), sheetData = {}, focusedDay = null, currentNoteIdx = null;
-        function getMonday(d) { d = new Date(d); const day = d.getDay(); const diff = d.getDate() - day + (day === 0 ? -6 : 1); return new Date(d.setDate(diff)) }
-        function formatWeekKey(date) { return date.toISOString().slice(0, 10) }
-        function formatWeekLabel(monday) { const end = new Date(monday); end.setDate(end.getDate() + 4); const o = { day: 'numeric', month: 'short' }; return `${monday.toLocaleDateString('en-IN', o)} – ${end.toLocaleDateString('en-IN', o)} ${monday.getFullYear()}` }
-        function formatSelectedDate(iso) { if (!iso) return '—'; return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }) }
-        function getTodayDayKey() { const day = new Date().getDay(); return { 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri' }[day] || null }
+        document.getElementById('login-password')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') doLogin();
+        });
+        document.getElementById('login-user')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('login-password').focus();
+        });
+
+        // ==================== TOAST ====================
+        let toastTimer;
+        function showToast(msg, type = 'success') {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.className = 'toast show ' + type;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+        }
+
+        // ==================== STOCK SHEET ====================
+        const SHEET_KEY = 'traders_diary_sheet_v5';
+        let currentWeekStart = getMonday(new Date());
+        let sheetData = {};
+        let focusedDay = null;
+        let currentNoteIdx = null;
+
+        function getMonday(d) {
+            d = new Date(d);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatWeekKey(date) {
+            return date.toISOString().slice(0, 10);
+        }
+
+        function formatWeekLabel(monday) {
+            const end = new Date(monday);
+            end.setDate(end.getDate() + 4);
+            const opts = { day: 'numeric', month: 'short' };
+            return `${monday.toLocaleDateString('en-IN', opts)} – ${end.toLocaleDateString('en-IN', opts)} ${monday.getFullYear()}`;
+        }
+
+        function formatSelectedDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
+        }
+
+        function getTodayDayKey() {
+            const day = new Date().getDay();
+            const map = { 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri' };
+            return map[day] || null;
+        }
 
         function loadSheet() {
-            try { sheetData = JSON.parse(localStorage.getItem(SHEET_KEY) || '{}') } catch (e) { sheetData = {} }
-            const t = getTodayDayKey(); if (t) focusedDay = t;
-            renderSheet(); updateDayButtons();
+            try {
+                sheetData = JSON.parse(localStorage.getItem(SHEET_KEY) || '{}');
+            } catch (e) {
+                sheetData = {};
+            }
+            const todayKey = getTodayDayKey();
+            if (todayKey) focusedDay = todayKey;
+            renderSheet();
+            updateDayButtons();
         }
         function collectFromDOM() {
-            const key = formatWeekKey(currentWeekStart), rows = [];
+            const key = formatWeekKey(currentWeekStart);
+            const rows = [];
             document.querySelectorAll('#sheet-body tr').forEach(tr => {
-                const nameEl = tr.querySelector('.stock-name'); if (!nameEl) return;
-                const stock = nameEl.textContent.trim(); if (!stock) return;
+                const nameEl = tr.querySelector('.stock-name');
+                if (!nameEl) return;
+                const stock = nameEl.textContent.trim();
+                if (!stock) return;
                 const inputs = tr.querySelectorAll('input');
                 rows.push({
-                    stock, cap: tr.dataset.cap || 'Small Cap',
+                    stock,
                     selectedOn: tr.dataset.selectedOn || new Date().toISOString(),
-                    price: inputs[0]?.value || '', sl: inputs[1]?.value || '', tg: inputs[2]?.value || '',
+                    price: inputs[0]?.value || '',
+                    sl: inputs[1]?.value || '',
+                    tg: inputs[2]?.value || '',
                     monPred: inputs[3]?.value || '', monAct: inputs[4]?.value || '',
                     tuePred: inputs[5]?.value || '', tueAct: inputs[6]?.value || '',
                     wedPred: inputs[7]?.value || '', wedAct: inputs[8]?.value || '',
@@ -1671,67 +1842,803 @@
             });
             sheetData[key] = rows;
         }
-        function saveSheet(show = false) {
+
+        function saveSheet(showMsg = false) {
             collectFromDOM();
             localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
-            if (show) { const el = document.getElementById('sheet-status'); el.textContent = 'Saved ✓'; setTimeout(() => el.textContent = '', 2000) }
+            if (showMsg) {
+                const el = document.getElementById('sheet-status');
+                el.textContent = 'Saved ✓';
+                setTimeout(() => el.textContent = '', 2000);
+                showToast('Sheet saved', 'success');
+            }
         }
+
         function renderSheet() {
             document.getElementById('week-label').textContent = formatWeekLabel(currentWeekStart);
-            const key = formatWeekKey(currentWeekStart), rows = sheetData[key] || [];
-            const tbody = document.getElementById('sheet-body'); tbody.innerHTML = '';
+            const key = formatWeekKey(currentWeekStart);
+            const rows = sheetData[key] || [];
+            const tbody = document.getElementById('sheet-body');
+            tbody.innerHTML = '';
             const todayKey = getTodayDayKey();
-            document.querySelectorAll('.day-col').forEach(th => th.classList.toggle('today-col', th.dataset.day === todayKey));
-            if (!rows.length) {
-                tbody.innerHTML = `<tr><td colspan="14" class="empty-state">No stocks this week. Add one above.</td></tr>`;
+            document.querySelectorAll('.day-col').forEach(th => {
+                th.classList.toggle('today-col', th.dataset.day === todayKey);
+            });
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="13" class="empty-state">
+                    No stocks yet this week.<br>Type a stock name and click <strong>+ Add Stock</strong> (latest appears on top)
+                </td></tr>`;
                 return;
             }
+
             rows.forEach((r, idx) => {
-                const notePreview = r.notes ? (r.notes.length > 30 ? r.notes.substring(0, 30) + '...' : r.notes) : 'No notes';
-                const hasNote = r.notes && r.notes.trim();
-                const capClass = r.cap === 'Large Cap' ? 'badge-large' : r.cap === 'Mid Cap' ? 'badge-mid' : 'badge-small';
+                const notePreview = r.notes ? (r.notes.length > 35 ? r.notes.substring(0, 35) + '...' : r.notes) : 'No notes';
+                const hasNote = r.notes && r.notes.trim().length > 0;
                 const tr = document.createElement('tr');
                 tr.dataset.selectedOn = r.selectedOn || new Date().toISOString();
                 tr.dataset.notes = r.notes || '';
-                tr.dataset.cap = r.cap || 'Small Cap';
                 tr.innerHTML = `
- <td><span class="stock-name">${escapeHtml(r.stock)}</span></td>
- <td><span class="cap-badge ${capClass}">${r.cap || 'Small Cap'}</span></td>
- <td><span class="selected-date">${formatSelectedDate(r.selectedOn)}</span></td>
- <td><input type="text" value="${escapeHtml(r.price)}" placeholder="Price"></td>
- <td><input type="text" value="${escapeHtml(r.sl)}" placeholder="SL"></td>
- <td><input type="text" value="${escapeHtml(r.tg)}" placeholder="TG"></td>
- <td class="${todayKey === 'mon' ? 'today-col' : ''}"><input class="pred" value="${escapeHtml(r.monPred)}" placeholder="+3"><input class="actual" value="${escapeHtml(r.monAct)}" placeholder="Act"></td>
- <td class="${todayKey === 'tue' ? 'today-col' : ''}"><input class="pred" value="${escapeHtml(r.tuePred)}" placeholder="+2"><input class="actual" value="${escapeHtml(r.tueAct)}" placeholder="Act"></td>
- <td class="${todayKey === 'wed' ? 'today-col' : ''}"><input class="pred" value="${escapeHtml(r.wedPred)}" placeholder="0"><input class="actual" value="${escapeHtml(r.wedAct)}" placeholder="Act"></td>
- <td class="${todayKey === 'thu' ? 'today-col' : ''}"><input class="pred" value="${escapeHtml(r.thuPred)}" placeholder="-1"><input class="actual" value="${escapeHtml(r.thuAct)}" placeholder="Act"></td>
- <td class="${todayKey === 'fri' ? 'today-col' : ''}"><input class="pred" value="${escapeHtml(r.friPred)}" placeholder="+2"><input class="actual" value="${escapeHtml(r.friAct)}" placeholder="Act"></td>
- <td><div class="note-cell"><div class="note-preview ${hasNote ? 'has-text' : ''}" onclick="openNoteModal(${idx})">${escapeHtml(notePreview)}</div><button class="view-note-btn" onclick="openNoteModal(${idx})">View</button></div></td>
- <td><button class="view-note-btn" onclick="openResearchForStock('${escapeHtml(r.stock)}')">Research</button></td>
- <td><button class="remove-row" onclick="removeStockRow(${idx})">🗑️</button></td>`;
+                    <td><span class="stock-name">${escapeHtml(r.stock)}</span></td>
+                    <td><span class="selected-date">${formatSelectedDate(r.selectedOn)}</span></td>
+                    <td><input class="price" type="text" value="${escapeHtml(r.price)}" placeholder="Price"></td>
+                    <td><input class="sl" type="text" value="${escapeHtml(r.sl)}" placeholder="SL"></td>
+                    <td><input class="tg" type="text" value="${escapeHtml(r.tg)}" placeholder="TG"></td>
+                    <td class="${todayKey === 'mon' ? 'today-col' : ''}">
+                        <input class="pred" type="text" value="${escapeHtml(r.monPred)}" placeholder="+3">
+                        <input class="actual" type="text" value="${escapeHtml(r.monAct)}" placeholder="Act">
+                    </td>
+                    <td class="${todayKey === 'tue' ? 'today-col' : ''}">
+                        <input class="pred" type="text" value="${escapeHtml(r.tuePred)}" placeholder="+2">
+                        <input class="actual" type="text" value="${escapeHtml(r.tueAct)}" placeholder="Act">
+                    </td>
+                    <td class="${todayKey === 'wed' ? 'today-col' : ''}">
+                        <input class="pred" type="text" value="${escapeHtml(r.wedPred)}" placeholder="0">
+                        <input class="actual" type="text" value="${escapeHtml(r.wedAct)}" placeholder="Act">
+                    </td>
+                    <td class="${todayKey === 'thu' ? 'today-col' : ''}">
+                        <input class="pred" type="text" value="${escapeHtml(r.thuPred)}" placeholder="-1">
+                        <input class="actual" type="text" value="${escapeHtml(r.thuAct)}" placeholder="Act">
+                    </td>
+                    <td class="${todayKey === 'fri' ? 'today-col' : ''}">
+                        <input class="pred" type="text" value="${escapeHtml(r.friPred)}" placeholder="+2.5">
+                        <input class="actual" type="text" value="${escapeHtml(r.friAct)}" placeholder="Act">
+                    </td>
+                    <td>
+                        <div class="note-cell">
+                            <div class="note-preview ${hasNote ? 'has-text' : ''}" onclick="openNoteModal(${idx})">${escapeHtml(notePreview)}</div>
+                            <button class="view-note-btn" onclick="openNoteModal(${idx})">View</button>
+                        </div>
+                    </td>
+                    <td><button class="view-note-btn" onclick="openResearchForStock('${escapeHtml(r.stock)}')">Research</button></td>
+                    <td><button class="remove-row" onclick="removeStockRow(${idx})" title="Remove">🗑️</button></td>
+                `;
                 tbody.appendChild(tr);
                 tr.querySelectorAll('input.actual').forEach(inp => colorActual(inp));
             });
         }
-        function escapeHtml(t) { if (!t) return ''; return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') }
-        function colorActual(input) { const v = parseFloat(input.value); input.classList.remove('positive', 'negative'); if (!isNaN(v)) { if (v > 0) input.classList.add('positive'); else if (v < 0) input.classList.add('negative') } }
-        function updateDayButtons() { const t = getTodayDayKey(); document.querySelectorAll('.day-btn').forEach(b => { b.classList.toggle('active', b.dataset.day === focusedDay); b.classList.toggle('today', b.dataset.day === t) }) }
-        function focusDay(d) { focusedDay = d; updateDayButtons() }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function colorActual(input) {
+            const val = parseFloat(input.value);
+            input.classList.remove('positive', 'negative');
+            if (!isNaN(val)) {
+                if (val > 0) input.classList.add('positive');
+                else if (val < 0) input.classList.add('negative');
+            }
+        }
+
+        function updateDayButtons() {
+            const todayKey = getTodayDayKey();
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.day === focusedDay);
+                btn.classList.toggle('today', btn.dataset.day === todayKey);
+            });
+        }
+
+        function focusDay(day) {
+            focusedDay = day;
+            updateDayButtons();
+        }
+
         function addStockRow() {
             const input = document.getElementById('new-stock');
             const name = input.value.trim().toUpperCase();
-            if (!name) { alert('Type a stock name'); return }
-            const cap = document.getElementById('new-stock-cap').value;
+            if (!name) {
+                alert('Please type a stock name');
+                input.focus();
+                return;
+            }
             const key = formatWeekKey(currentWeekStart);
             if (!sheetData[key]) sheetData[key] = [];
-            if (sheetData[key].some(r => r.stock === name)) { alert(`"${name}" already added`); return }
-            sheetData[key].unshift({ stock: name, cap, selectedOn: new Date().toISOString(), price: '', sl: '', tg: '', monPred: '', monAct: '', tuePred: '', tueAct: '', wedPred: '', wedAct: '', thuPred: '', thuAct: '', friPred: '', friAct: '', notes: '' });
+            if (sheetData[key].some(r => r.stock === name)) {
+                alert(`"${name}" is already added this week`);
+                input.focus();
+                return;
+            }
+            sheetData[key].unshift({
+                stock: name,
+                selectedOn: new Date().toISOString(),
+                price: '', sl: '', tg: '',
+                monPred: '', monAct: '', tuePred: '', tueAct: '',
+                wedPred: '', wedAct: '', thuPred: '', thuAct: '',
+                friPred: '', friAct: '', notes: ''
+            });
             localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
-            input.value = ''; renderSheet();
-            document.getElementById('sheet-status').textContent = `"${name}" added ✓`;
-            setTimeout(() => document.getElementById('sheet-status').textContent = '', 2200);
+            input.value = '';
+            renderSheet();
+            const status = document.getElementById('sheet-status');
+            status.textContent = `"${name}" added ✓`;
+            setTimeout(() => status.textContent = '', 2500);
+            showToast(`"${name}" added on top`, 'success');
+            setTimeout(() => {
+                const firstRow = document.querySelector('#sheet-body tr:first-child');
+                if (!firstRow) return;
+                const dayMap = { mon: 3, tue: 5, wed: 7, thu: 9, fri: 11 };
+                const focusIdx = dayMap[focusedDay] ?? 3;
+                const inputs = firstRow.querySelectorAll('input');
+                if (inputs[focusIdx]) inputs[focusIdx].focus();
+                else inputs[0]?.focus();
+            }, 60);
         }
-        function removeStockRow(idx) { if (!confirm('Remove?')) return; const key = formatWeekKey(currentWeekStart); sheetData[key].splice(idx, 1); localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData)); renderSheet() }
+
+        function removeStockRow(idx) {
+            if (!confirm('Remove this stock?')) return;
+            const key = formatWeekKey(currentWeekStart);
+            sheetData[key].splice(idx, 1);
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            renderSheet();
+            showToast('Stock removed', 'success');
+        }
+
         function openNoteModal(idx) {
-            currentNoteIdx = idx; const key
-    
+            currentNoteIdx = idx;
+            const key = formatWeekKey(currentWeekStart);
+            const row = sheetData[key][idx];
+            if (!row) return;
+            document.getElementById('note-stock-label').textContent =
+                `Stock: ${row.stock}  •  Selected: ${formatSelectedDate(row.selectedOn)}`;
+            document.getElementById('note-full-text').value = row.notes || '';
+            document.getElementById('note-modal').classList.add('open');
+            setTimeout(() => document.getElementById('note-full-text').focus(), 100);
+        }
+
+        function closeNoteModal() {
+            document.getElementById('note-modal').classList.remove('open');
+            currentNoteIdx = null;
+        }
+
+        function saveNoteFromModal() {
+            if (currentNoteIdx === null) return;
+            const key = formatWeekKey(currentWeekStart);
+            sheetData[key][currentNoteIdx].notes = document.getElementById('note-full-text').value;
+            localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+            closeNoteModal();
+            renderSheet();
+            showToast('Note saved', 'success');
+        }
+
+        document.getElementById('note-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeNoteModal();
+        });
+
+        function changeWeek(dir) {
+            saveSheet();
+            currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7));
+            renderSheet();
+            updateDayButtons();
+        }
+
+        function goToCurrentWeek() {
+            saveSheet();
+            currentWeekStart = getMonday(new Date());
+            const todayKey = getTodayDayKey();
+            if (todayKey) focusedDay = todayKey;
+            renderSheet();
+            updateDayButtons();
+            showToast('Jumped to current week', 'success');
+        }
+
+        let saveTimer;
+        document.addEventListener('input', (e) => {
+            if (e.target.closest('#sheet-body')) {
+                clearTimeout(saveTimer);
+                saveTimer = setTimeout(() => {
+                    saveSheet(false);
+                    const el = document.getElementById('sheet-status');
+                    el.textContent = 'Auto-saved ✓';
+                    setTimeout(() => { if (el.textContent === 'Auto-saved ✓') el.textContent = ''; }, 1500);
+                }, 500);
+                if (e.target.classList.contains('actual')) colorActual(e.target);
+            }
+            if (e.target.id === 'pnl' || e.target.id === 'risk') {
+                autoCalcR();
+            }
+        });
+
+        // ==================== RESEARCH ====================
+        const RESEARCH_KEY = 'traders_diary_research_v1';
+        let researchData = {};
+        let currentResearchId = null;
+        let researchSaveTimer;
+
+        const RESEARCH_SECTIONS = [
+            { id: 'business', title: '🏢 1. Business', hint: 'What does the company sell? How does it make money? Is the business easy to understand? Is demand growing? Market size? Competitive advantage (moat)? Competition strength? Cyclical or stable?' },
+            { id: 'revenue', title: '📈 2. Revenue', hint: 'Revenue growth & consistency (3–5–10 years). Which products/segments generate revenue? Customer concentration? Domestic vs international?' },
+            { id: 'profitability', title: '💰 3. Profitability', hint: 'Net profit growth, Operating profit & margin, Net profit margin. Are margins improving? Is profit growth from the actual business?' },
+            { id: 'cashflow', title: '💵 4. Cash Flow', hint: 'Operating cash flow, Free cash flow. Is cash flow consistent with reported profit? Is the company generating cash? How much is reinvested?' },
+            { id: 'debt', title: '🏦 5. Debt & Financial Strength', hint: 'Total debt, Debt-to-Equity, Interest coverage, Current assets vs liabilities, Ability to repay debt, Cash & investments available.' },
+            { id: 'efficiency', title: '📊 6. Efficiency & Returns', hint: 'ROE, ROCE, Asset turnover, Working-capital efficiency. Look for sustainable returns, not just one good year.' },
+            { id: 'valuation', title: '💵 7. Valuation', hint: 'Is the current price reasonable vs fundamentals & growth? P/E, P/B, EV/EBITDA, Dividend yield, PEG, Historical valuation, vs competitors.' },
+            { id: 'management', title: '👨‍💼 8. Management', hint: 'Promoter/management track record, Capital allocation, Business decisions, Communication with shareholders, Related-party transactions, Auditor observations, Governance.' },
+            { id: 'promoters', title: '👥 9. Promoters & Shareholding', hint: 'Promoter holding, Buying/selling, Pledge, Institutional ownership, Changes in shareholding.' },
+            { id: 'growth', title: '🚀 10. Future Growth', hint: 'Industry growth, New products, Expansion plans, Capacity expansion, Technology, New markets, Pricing power, Long-term earnings potential.' },
+            { id: 'risk', title: '⚠️ 11. Risk', hint: 'What can go wrong? Strong competitors? Regulatory risk? High debt? Commodity/currency risk? Customer concentration? Technology disruption? Cyclicality? Governance problems?' },
+            { id: 'industry', title: '🏭 12. Industry', hint: 'Company → Competitors → Industry → Economy. How does this company compare within its industry?' },
+            { id: 'statements', title: '📋 13. Financial Statements', hint: 'P&L (Revenue, expenses, profit), Balance Sheet (Assets, liabilities, debt, equity), Cash Flow Statement (actual cash movement).' },
+            { id: 'portfolio', title: '🎯 14. Portfolio Fit', hint: 'Does this company fit your investment style/mandate? Existing exposure, Sector concentration, Position size, Diversification, Liquidity, Risk limits.' }
+        ];
+
+        function loadResearch() {
+            try {
+                researchData = JSON.parse(localStorage.getItem(RESEARCH_KEY) || '{}');
+            } catch (e) {
+                researchData = {};
+            }
+        }
+
+        function saveResearchData() {
+            localStorage.setItem(RESEARCH_KEY, JSON.stringify(researchData));
+        }
+
+        function showResearchList() {
+            document.getElementById('research-list-view').classList.remove('hidden');
+            document.getElementById('research-form-view').classList.add('hidden');
+            currentResearchId = null;
+            renderResearchList();
+        }
+
+        function renderResearchList() {
+            const list = document.getElementById('research-list');
+            const empty = document.getElementById('research-empty');
+            const ids = Object.keys(researchData).sort((a, b) => {
+                return (researchData[b].updated || '').localeCompare(researchData[a].updated || '');
+            });
+
+            if (ids.length === 0) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            list.innerHTML = ids.map(id => {
+                const r = researchData[id];
+                const capClass = r.cap === 'Large Cap' ? 'badge-large' : r.cap === 'Mid Cap' ? 'badge-mid' : 'badge-small';
+                return `
+                    <div class="research-card" onclick="openResearch('${id}')">
+                        <h4>${escapeHtml(r.stock)}</h4>
+                        <div class="meta">
+                            <span class="badge ${capClass}">${r.cap || '—'}</span>
+                            &nbsp; Updated: ${r.updated ? new Date(r.updated).toLocaleDateString('en-IN') : '—'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function startNewResearch() {
+            const name = document.getElementById('research-stock-name').value.trim().toUpperCase();
+            if (!name) {
+                alert('Enter a stock name');
+                return;
+            }
+            const cap = document.getElementById('research-cap').value;
+            const id = name.replace(/\s+/g, '_');
+            if (researchData[id]) {
+                if (!confirm(`Research for ${name} already exists. Open it?`)) return;
+                openResearch(id);
+                return;
+            }
+            researchData[id] = {
+                stock: name,
+                cap,
+                sections: {},
+                updated: new Date().toISOString(),
+                created: new Date().toISOString()
+            };
+            saveResearchData();
+            document.getElementById('research-stock-name').value = '';
+            openResearch(id);
+            showToast(`Research started for ${name}`, 'success');
+        }
+
+        function openResearchForStock(stockName) {
+            showView('research');
+            const id = stockName.replace(/\s+/g, '_');
+            if (researchData[id]) {
+                openResearch(id);
+            } else {
+                document.getElementById('research-stock-name').value = stockName;
+                document.getElementById('research-cap').value = 'Small Cap';
+                startNewResearch();
+            }
+        }
+
+        function openResearch(id) {
+            currentResearchId = id;
+            const r = researchData[id];
+            if (!r) return;
+
+            document.getElementById('research-list-view').classList.add('hidden');
+            document.getElementById('research-form-view').classList.remove('hidden');
+
+            document.getElementById('research-title').textContent = r.stock;
+            const badge = document.getElementById('research-cap-badge');
+            badge.textContent = r.cap || '—';
+            badge.className = 'badge ' + (r.cap === 'Large Cap' ? 'badge-large' : r.cap === 'Mid Cap' ? 'badge-mid' : 'badge-small');
+            document.getElementById('research-updated').textContent =
+                'Last saved: ' + (r.updated ? new Date(r.updated).toLocaleString('en-IN') : '—');
+
+            const container = document.getElementById('research-sections');
+            container.innerHTML = RESEARCH_SECTIONS.map(sec => {
+                const val = (r.sections && r.sections[sec.id]) || '';
+                return `
+                    <div class="research-section" id="sec-${sec.id}">
+                        <div class="research-section-header" onclick="toggleSection('${sec.id}')">
+                            <span>${sec.title}</span>
+                            <span style="font-size:18px;color:var(--text-muted)">▾</span>
+                        </div>
+                        <div class="research-section-body">
+                            <div class="hint">${sec.hint}</div>
+                            <textarea id="rs-${sec.id}" placeholder="Your notes...">${escapeHtml(val)}</textarea>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.querySelectorAll('textarea').forEach(ta => {
+                ta.addEventListener('input', () => {
+                    clearTimeout(researchSaveTimer);
+                    researchSaveTimer = setTimeout(() => {
+                        if (!currentResearchId) return;
+                        const r = researchData[currentResearchId];
+                        if (!r) return;
+                        r.sections = r.sections || {};
+                        RESEARCH_SECTIONS.forEach(sec => {
+                            const el = document.getElementById('rs-' + sec.id);
+                            if (el) r.sections[sec.id] = el.value;
+                        });
+                        r.updated = new Date().toISOString();
+                        saveResearchData();
+                        document.getElementById('research-updated').textContent =
+                            'Last saved: ' + new Date(r.updated).toLocaleString('en-IN') + ' (auto)';
+                    }, 800);
+                });
+            });
+        }
+
+        function toggleSection(id) {
+            document.getElementById('sec-' + id).classList.toggle('open');
+        }
+
+        function saveCurrentResearch() {
+            if (!currentResearchId) return;
+            const r = researchData[currentResearchId];
+            if (!r) return;
+            r.sections = {};
+            RESEARCH_SECTIONS.forEach(sec => {
+                const el = document.getElementById('rs-' + sec.id);
+                if (el) r.sections[sec.id] = el.value;
+            });
+            r.updated = new Date().toISOString();
+            saveResearchData();
+            document.getElementById('research-updated').textContent =
+                'Last saved: ' + new Date(r.updated).toLocaleString('en-IN');
+            showToast('Research saved ✓', 'success');
+        }
+
+        function deleteCurrentResearch() {
+            if (!currentResearchId || !confirm('Delete this research permanently?')) return;
+            delete researchData[currentResearchId];
+            saveResearchData();
+            showResearchList();
+            showToast('Research deleted', 'success');
+        }
+
+        // ==================== TRADES ====================
+        const STORAGE_KEY = 'traders_diary_v1';
+        let trades = [];
+        let editingId = null;
+
+        function loadTrades() {
+            try {
+                trades = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch (e) {
+                trades = [];
+            }
+        }
+
+        function saveTrades() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+            updateUI();
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('en-IN', {
+                day: '2-digit', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function formatMoney(n) {
+            if (n == null || isNaN(n)) return '—';
+            const abs = Math.abs(n);
+            const f = abs >= 1000 ? abs.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : abs.toFixed(2);
+            return (n >= 0 ? '+' : '−') + '₹' + f;
+        }
+
+        function calcR(pnl, risk) {
+            if (!risk || risk === 0) return null;
+            return +(pnl / risk).toFixed(2);
+        }
+
+        function autoCalcR() {
+            const p = parseFloat(document.getElementById('pnl').value);
+            const r = parseFloat(document.getElementById('risk').value);
+            if (!isNaN(p) && !isNaN(r) && r) {
+                document.getElementById('rMultiple').value = calcR(p, r);
+            }
+        }
+
+        function showView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + name)?.classList.add('active');
+            document.querySelector(`.nav-btn[data-view="${name}"]`)?.classList.add('active');
+            if (name === 'sheet') {
+                renderSheet();
+                updateDayButtons();
+            }
+            if (name === 'research') {
+                showResearchList();
+            }
+            if (name === 'add' && !editingId) resetForm(true);
+            if (name === 'settings') {
+                updateBioSettingsUI();
+            }
+        }
+
+        function resetForm(keep = false) {
+            editingId = null;
+            document.getElementById('trade-form').reset();
+            document.getElementById('form-title').textContent = 'Add New Trade';
+            document.getElementById('submit-btn').textContent = 'Save Trade';
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('date').value = now.toISOString().slice(0, 16);
+            if (!keep) showView('trades');
+        }
+
+        document.getElementById('trade-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const pnl = parseFloat(document.getElementById('pnl').value);
+            const risk = parseFloat(document.getElementById('risk').value) || null;
+            let r = parseFloat(document.getElementById('rMultiple').value);
+            if (isNaN(r) && risk) r = calcR(pnl, risk);
+
+            const trade = {
+                id: editingId || generateId(),
+                date: document.getElementById('date').value,
+                market: document.getElementById('market').value,
+                instrument: document.getElementById('instrument').value.trim(),
+                direction: document.getElementById('direction').value,
+                entry: parseFloat(document.getElementById('entry').value),
+                exit: parseFloat(document.getElementById('exit').value),
+                sl: parseFloat(document.getElementById('sl').value) || null,
+                target: parseFloat(document.getElementById('target').value) || null,
+                qty: parseFloat(document.getElementById('qty').value) || null,
+                risk, pnl,
+                rMultiple: isNaN(r) ? null : r,
+                setup: document.getElementById('setup').value.trim(),
+                emotions: document.getElementById('emotions').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            if (editingId) {
+                const i = trades.findIndex(t => t.id === editingId);
+                if (i > -1) trades[i] = trade;
+            } else {
+                trades.unshift(trade);
+            }
+            saveTrades();
+            resetForm();
+            showView('trades');
+            showToast(editingId ? 'Trade updated' : 'Trade saved', 'success');
+        });
+
+        function updateUI() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const net = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            document.getElementById('qs-total').textContent = total;
+            document.getElementById('qs-winrate').textContent = total ? ((wins / total) * 100).toFixed(1) + '%' : '0%';
+            const pnlEl = document.getElementById('qs-pnl');
+            pnlEl.textContent = formatMoney(net);
+            pnlEl.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            const losses = total - wins;
+            const avgWin = wins ? trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0) / wins : 0;
+            const avgLoss = losses ? Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0) / losses) : 0;
+            const pf = avgLoss ? ((avgWin * wins) / (avgLoss * losses)).toFixed(2) : (wins ? '∞' : '0');
+            const withR = trades.filter(t => t.rMultiple != null);
+            const avgR = withR.length ? (withR.reduce((s, t) => s + t.rMultiple, 0) / withR.length).toFixed(2) : '—';
+
+            document.getElementById('dashboard-stats').innerHTML = [
+                { l: 'Total Trades', v: total },
+                { l: 'Win Rate', v: (total ? ((wins / total) * 100).toFixed(1) : 0) + '%' },
+                { l: 'Net P&L', v: formatMoney(net), c: net >= 0 ? 'positive' : 'negative' },
+                { l: 'Avg Win', v: formatMoney(avgWin), c: 'positive' },
+                { l: 'Avg Loss', v: formatMoney(-avgLoss), c: 'negative' },
+                { l: 'Profit Factor', v: pf },
+                { l: 'Avg R-Multiple', v: avgR },
+                { l: 'Wins / Losses', v: `${wins} / ${losses}` }
+            ].map(s => `
+                <div class="stat-card">
+                    <div class="label">${s.l}</div>
+                    <div class="value ${s.c || ''}">${s.v}</div>
+                </div>
+            `).join('');
+
+            const tbody = document.querySelector('#recent-trades-table tbody');
+            tbody.innerHTML = trades.slice(0, 8).map(t => `
+                <tr>
+                    <td>${formatDate(t.date)}</td>
+                    <td>${t.instrument}</td>
+                    <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+                    <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+                    <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+                    <td>${t.setup || '—'}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" class="empty-state">No trades yet</td></tr>';
+
+            renderAllTrades();
+            renderDetailedStats();
+        }
+
+        function renderAllTrades() {
+            const mF = document.getElementById('filter-market')?.value || 'all';
+            const rF = document.getElementById('filter-result')?.value || 'all';
+            const q = (document.getElementById('search-trades')?.value || '').toLowerCase();
+            let list = [...trades];
+            if (mF !== 'all') list = list.filter(t => t.market === mF);
+            if (rF === 'win') list = list.filter(t => t.pnl > 0);
+            if (rF === 'loss') list = list.filter(t => t.pnl < 0);
+            if (q) list = list.filter(t =>
+                (t.instrument || '').toLowerCase().includes(q) ||
+                (t.setup || '').toLowerCase().includes(q)
+            );
+
+            const tbody = document.querySelector('#all-trades-table tbody');
+            const empty = document.getElementById('trades-empty');
+            if (!list.length) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            tbody.innerHTML = list.map(t => `
+                <tr>
+                    <td>${formatDate(t.date)}</td>
+                    <td>${t.market}</td>
+                    <td><strong>${t.instrument}</strong></td>
+                    <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+                    <td>${t.entry}</td>
+                    <td>${t.exit}</td>
+                    <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+                    <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+                    <td>${t.setup || '—'}</td>
+                    <td>
+                        <button class="btn-icon" onclick="editTrade('${t.id}')">✏️</button>
+                        <button class="btn-icon" onclick="deleteTrade('${t.id}')">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDetailedStats() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const net = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            const best = trades.length ? Math.max(...trades.map(t => t.pnl)) : 0;
+            const worst = trades.length ? Math.min(...trades.map(t => t.pnl)) : 0;
+
+            document.getElementById('detailed-stats').innerHTML = [
+                { l: 'Total Trades', v: total },
+                { l: 'Win Rate', v: (total ? ((wins / total) * 100).toFixed(1) : 0) + '%' },
+                { l: 'Net P&L', v: formatMoney(net), c: net >= 0 ? 'positive' : 'negative' },
+                { l: 'Best Trade', v: formatMoney(best), c: 'positive' },
+                { l: 'Worst Trade', v: formatMoney(worst), c: 'negative' },
+                { l: 'Wins', v: wins },
+                { l: 'Losses', v: total - wins }
+            ].map(s => `
+                <div class="stat-card">
+                    <div class="label">${s.l}</div>
+                    <div class="value ${s.c || ''}">${s.v}</div>
+                </div>
+            `).join('');
+
+            const byM = {}, byS = {};
+            trades.forEach(t => {
+                if (!byM[t.market]) byM[t.market] = { c: 0, p: 0 };
+                byM[t.market].c++;
+                byM[t.market].p += t.pnl || 0;
+                const k = t.setup || 'No Setup';
+                if (!byS[k]) byS[k] = { c: 0, p: 0 };
+                byS[k].c++;
+                byS[k].p += t.pnl || 0;
+            });
+
+            document.getElementById('market-breakdown').innerHTML = Object.entries(byM)
+                .sort((a, b) => b[1].p - a[1].p)
+                .map(([m, d]) => `
+                    <div class="breakdown-item">
+                        <span>${m} (${d.c})</span>
+                        <span class="${d.p >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.p)}</span>
+                    </div>
+                `).join('') || '<p style="color:var(--text-muted)">No data</p>';
+
+            document.getElementById('setup-breakdown').innerHTML = Object.entries(byS)
+                .sort((a, b) => b[1].p - a[1].p)
+                .map(([s, d]) => `
+                    <div class="breakdown-item">
+                        <span>${s} (${d.c})</span>
+                        <span class="${d.p >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.p)}</span>
+                    </div>
+                `).join('') || '<p style="color:var(--text-muted)">No data</p>';
+        }
+
+        function editTrade(id) {
+            const t = trades.find(x => x.id === id);
+            if (!t) return;
+            editingId = id;
+            document.getElementById('date').value = t.date ? t.date.slice(0, 16) : '';
+            document.getElementById('market').value = t.market || 'Indian Stocks';
+            document.getElementById('instrument').value = t.instrument || '';
+            document.getElementById('direction').value = t.direction || 'Long';
+            document.getElementById('entry').value = t.entry ?? '';
+            document.getElementById('exit').value = t.exit ?? '';
+            document.getElementById('sl').value = t.sl ?? '';
+            document.getElementById('target').value = t.target ?? '';
+            document.getElementById('qty').value = t.qty ?? '';
+            document.getElementById('risk').value = t.risk ?? '';
+            document.getElementById('pnl').value = t.pnl ?? '';
+            document.getElementById('rMultiple').value = t.rMultiple ?? '';
+            document.getElementById('setup').value = t.setup || '';
+            document.getElementById('emotions').value = t.emotions || '';
+            document.getElementById('notes').value = t.notes || '';
+            document.getElementById('form-title').textContent = 'Edit Trade';
+            document.getElementById('submit-btn').textContent = 'Update Trade';
+            showView('add');
+        }
+
+        function deleteTrade(id) {
+            if (!confirm('Delete this trade?')) return;
+            trades = trades.filter(t => t.id !== id);
+            saveTrades();
+            showToast('Trade deleted', 'success');
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(trades, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `traders-diary-trades-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            showToast('Trades exported', 'success');
+        }
+
+        function exportAllData() {
+            const payload = {
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                user: 'ankuon',
+                trades,
+                sheet: sheetData,
+                research: researchData
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `traders-diary-full-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            showToast('Full backup exported', 'success');
+        }
+
+        document.getElementById('import-file').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                try {
+                    const imp = JSON.parse(ev.target.result);
+                    if (Array.isArray(imp)) {
+                        if (confirm(`Import ${imp.length} trades?`)) {
+                            imp.forEach(t => {
+                                if (!t.id) t.id = generateId();
+                                trades.unshift(t);
+                            });
+                            saveTrades();
+                            showToast('Trades imported', 'success');
+                        }
+                    } else if (imp.trades || imp.sheet || imp.research) {
+                        if (confirm('Import full backup (trades + sheet + research)? This will merge data.')) {
+                            if (Array.isArray(imp.trades)) {
+                                imp.trades.forEach(t => {
+                                    if (!t.id) t.id = generateId();
+                                    if (!trades.some(x => x.id === t.id)) trades.unshift(t);
+                                });
+                                saveTrades();
+                            }
+                            if (imp.sheet && typeof imp.sheet === 'object') {
+                                sheetData = { ...sheetData, ...imp.sheet };
+                                localStorage.setItem(SHEET_KEY, JSON.stringify(sheetData));
+                                loadSheet();
+                            }
+                            if (imp.research && typeof imp.research === 'object') {
+                                researchData = { ...researchData, ...imp.research };
+                                saveResearchData();
+                            }
+                            showToast('Full backup imported', 'success');
+                        }
+                    } else {
+                        throw 0;
+                    }
+                } catch (err) {
+                    alert('Invalid file');
+                    showToast('Import failed', 'error');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        function clearAllData() {
+            if (!confirm('Delete ALL trades?') || !confirm('Really sure?')) return;
+            trades = [];
+            saveTrades();
+            showToast('All trades cleared', 'success');
+        }
+
+        // Events
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => showView(btn.dataset.view));
+        });
+        document.getElementById('filter-market')?.addEventListener('change', renderAllTrades);
+        document.getElementById('filter-result')?.addEventListener('change', renderAllTrades);
+        document.getElementById('search-trades')?.addEventListener('input', renderAllTrades);
+
+        function initApp() {
+            loadTrades();
+            loadSheet();
+            loadResearch();
+            updateUI();
+            updateBioSettingsUI();
+            showView('dashboard');
+        }
+    </script>
+</body>
+
+</html>
