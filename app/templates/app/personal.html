@@ -3,23 +3,37 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ANKUON — Personal Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #14141c;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #eab308;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Inter, system-ui, sans-serif;
+            font-family: Inter, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: #e5e7eb;
+            -webkit-font-smoothing: antialiased;
         }
 
         .fade {
-            animation: fadeIn 0.25s ease;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(10px);
             }
 
             to {
@@ -29,13 +43,19 @@
         }
 
         .tab-btn.active {
-            border-color: #eab308;
-            color: #eab308;
+            border-color: #eab308 !important;
+            color: #eab308 !important;
+            background: rgba(234, 179, 8, 0.08);
         }
 
         .card {
-            background: #1f2937;
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: var(--card);
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .shloka {
@@ -45,14 +65,23 @@
         input,
         textarea,
         select {
-            background: #111827 !important;
-            color: #e5e7eb;
+            background: #0d0d14 !important;
+            color: #e5e7eb !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #eab308 !important;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
         }
 
         .progress-bar {
             height: 8px;
             border-radius: 9999px;
-            background: #374151;
+            background: #1f2937;
             overflow: hidden;
         }
 
@@ -65,15 +94,16 @@
 
         .btn {
             transition: all 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
         }
 
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
 
         ::-webkit-scrollbar-track {
@@ -81,46 +111,72 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #4b5563;
+            background: #374151;
             border-radius: 3px;
+        }
+
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #4b5563;
+            transition: all 0.15s;
+        }
+
+        .pin-dot.filled {
+            background: #eab308;
+            border-color: #eab308;
+        }
+
+        .nav-scroll {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .tab-btn {
+                padding-left: 0.9rem;
+                padding-right: 0.9rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-950 text-white min-h-screen">
+<body class="min-h-screen">
 
-    <!-- ==================== LOGIN ==================== -->
+    <!-- ==================== LOGIN (PIN ONLY – NO BUTTON) ==================== -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-md">
-            <div class="text-center mb-10">
-                <h1 class="text-4xl font-bold tracking-tight">ANKUON</h1>
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold tracking-tight text-white">ANKUON</h1>
             </div>
-            <div class="bg-gray-900 border border-white/10 rounded-2xl p-8 shadow-2xl">
+            <div class="bg-[#14141c] border border-white/10 rounded-2xl p-7 shadow-2xl">
                 <p class="text-center text-gray-400 text-sm mb-6">Admin access only</p>
 
                 <div id="login-error"
                     class="hidden mb-4 p-3 bg-red-500/15 border border-red-500/30 text-red-400 text-sm rounded-xl text-center">
                 </div>
 
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-gray-400 text-sm mb-2">Username</label>
-                        <input id="login-user" type="text"
-                            class="w-full border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-yellow-500 text-base"
-                            placeholder="Enter username" autofocus>
-                    </div>
-                    <div>
-                        <label class="block text-gray-400 text-sm mb-2">Password</label>
-                        <input id="login-pass" type="password"
-                            class="w-full border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-yellow-500 text-base"
-                            placeholder="Enter password">
-                    </div>
-                    <button onclick="doLogin()"
-                        class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-3.5 rounded-xl text-base btn mt-2">Login</button>
+                <!-- PIN Dots -->
+                <div class="flex justify-center gap-3 mb-6" id="pin-dots">
+                    <div class="pin-dot" data-idx="0"></div>
+                    <div class="pin-dot" data-idx="1"></div>
+                    <div class="pin-dot" data-idx="2"></div>
+                    <div class="pin-dot" data-idx="3"></div>
                 </div>
 
-                <div class="mt-8 text-center">
-                    <a href="https://ankuon.onrender.com/"
+                <!-- Only PIN box – auto unlocks when correct 4 digits entered -->
+                <input id="login-pin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*"
+                    class="w-full border border-white/10 rounded-xl px-4 py-3.5 text-center text-2xl tracking-[0.5em] focus:outline-none"
+                    placeholder="••••" autofocus autocomplete="off">
+
+                <div class="mt-7 text-center">
+                    <a href="{% url 'index' %}"
                         class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-yellow-400 transition">
                         ← Back to ANKUON
                     </a>
@@ -132,87 +188,86 @@
     <!-- ==================== APP ==================== -->
     <div id="app" class="hidden min-h-screen">
         <!-- Header -->
-        <header class="bg-gray-900/95 backdrop-blur border-b border-white/10 py-3 sticky top-0 z-50">
+        <header class="bg-[#0f0f16]/95 backdrop-blur-md border-b border-white/10 py-3 sticky top-0 z-50">
             <div class="container mx-auto px-4 flex items-center justify-between max-w-6xl">
                 <div>
-                    <h1 class="text-xl font-bold">ANKUON Personal</h1>
+                    <h1 class="text-lg sm:text-xl font-bold">ANKUON Personal</h1>
                     <p class="text-yellow-400/90 text-xs mt-0.5">6-Month Mission</p>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
                     <a href="{% url 'index' %}"
                         class="text-gray-400 hover:text-yellow-400 text-sm flex items-center gap-1.5 transition">
                         <span>←</span> <span class="hidden sm:inline">Main ANKUON</span>
                     </a>
                     <button onclick="doLogout()"
-                        class="bg-red-500/15 text-red-400 px-3.5 py-1.5 rounded-lg text-sm hover:bg-red-500 hover:text-white transition btn">Logout</button>
+                        class="bg-red-500/15 text-red-400 px-3 py-1.5 rounded-lg text-sm hover:bg-red-500 hover:text-white transition btn">
+                        Logout
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- Navigation -->
-        <nav class="bg-gray-900/80 border-b border-white/10 overflow-x-auto">
-            <div class="container mx-auto px-2 max-w-6xl flex gap-1 min-w-max">
-                <button onclick="showPage('dashboard')"
-                    class="tab-btn active px-4 py-3.5 text-sm font-medium border-b-2 border-yellow-500 text-yellow-400 whitespace-nowrap"
-                    data-page="dashboard">Dashboard</button>
-                <button onclick="showPage('routine')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="routine">Routine</button>
-                <button onclick="showPage('journal')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="journal">Journal</button>
-                <button onclick="showPage('goals')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="goals">Goals</button>
-                <button onclick="showPage('finance')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="finance">Finance</button>
-                <button onclick="showPage('skills')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="skills">Skills</button>
-                <button onclick="showPage('income')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="income">Income</button>
-                <button onclick="showPage('mindset')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="mindset">Mindset</button>
-                <button onclick="showPage('gita')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="gita">Gita</button>
-                <button onclick="showPage('notes')"
-                    class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
-                    data-page="notes">Notes</button>
-
-                <!-- Travelling Button -->
-                <a href="{% url 'travelling' %}"
-                    class="px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-yellow-400 hover:border-yellow-500 whitespace-nowrap transition">
-                    Travelling
-                </a>
-                </a>
+        <nav class="bg-[#0f0f16]/90 border-b border-white/10 sticky top-[57px] z-40">
+            <div class="container mx-auto px-2 max-w-6xl">
+                <div class="flex gap-1 overflow-x-auto nav-scroll py-1">
+                    <button onclick="showPage('dashboard')"
+                        class="tab-btn active px-4 py-3 text-sm font-medium border-b-2 border-yellow-500 text-yellow-400 whitespace-nowrap rounded-t-lg"
+                        data-page="dashboard">Dashboard</button>
+                    <button onclick="showPage('routine')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="routine">Routine</button>
+                    <button onclick="showPage('journal')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="journal">Journal</button>
+                    <button onclick="showPage('goals')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="goals">Goals</button>
+                    <button onclick="showPage('finance')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="finance">Finance</button>
+                    <button onclick="showPage('skills')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="skills">Skills</button>
+                    <button onclick="showPage('income')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="income">Income</button>
+                    <button onclick="showPage('mindset')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="mindset">Mindset</button>
+                    <button onclick="showPage('gita')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="gita">Gita</button>
+                    <button onclick="showPage('notes')"
+                        class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white whitespace-nowrap"
+                        data-page="notes">Notes</button>
+                    <a href="{% url 'travelling' %}"
+                        class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-yellow-400 whitespace-nowrap transition">
+                        Travelling
+                    </a>
+                </div>
             </div>
         </nav>
 
-        <main class="container mx-auto px-4 py-6 max-w-6xl">
+        <main class="container mx-auto px-3 sm:px-4 py-5 sm:py-6 max-w-6xl pb-20">
 
             <!-- ==================== DASHBOARD ==================== -->
             <div id="page-dashboard" class="page fade">
-                <h2 class="text-2xl font-bold mb-1">Mission Control</h2>
-                <p class="text-gray-400 mb-6 text-sm">Discipline + Learning + Multi-Income</p>
+                <h2 class="text-xl sm:text-2xl font-bold mb-1">Mission Control</h2>
+                <p class="text-gray-400 mb-5 text-sm">Discipline + Learning + Multi-Income</p>
 
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <!-- Days Left with Set Date -->
-                    <div class="card rounded-2xl p-5">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <div class="flex justify-between items-start mb-1">
                             <p class="text-gray-400 text-xs">Days Left</p>
-                            <button onclick="toggleSetDate()" class="text-xs text-yellow-400 hover:text-yellow-300">Set
-                                Date</button>
+                            <button onclick="toggleSetDate()"
+                                class="text-xs text-yellow-400 hover:text-yellow-300">Set</button>
                         </div>
-                        <p class="text-2xl font-bold text-yellow-400" id="days-left">—</p>
+                        <p class="text-xl sm:text-2xl font-bold text-yellow-400" id="days-left">—</p>
                         <p class="text-xs text-gray-400 mt-1" id="time-left"></p>
-
                         <div id="set-date-box" class="mt-3 hidden">
                             <input type="datetime-local" id="target-date-input"
-                                class="w-full border border-white/20 rounded-lg px-2 py-1.5 text-sm mb-2">
+                                class="w-full border rounded-lg px-2 py-1.5 text-sm mb-2">
                             <div class="flex gap-2">
                                 <button onclick="saveTargetDate()"
                                     class="flex-1 bg-yellow-600 hover:bg-yellow-500 text-xs py-1.5 rounded-lg btn">Save</button>
@@ -222,35 +277,34 @@
                         </div>
                     </div>
 
-                    <div class="card rounded-2xl p-5">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">Naam Jaap Target</p>
-                        <p class="text-2xl font-bold text-emerald-400">21,600</p>
-                        <div class="mt-3 flex items-center gap-2">
-                            <input id="jaap-done" type="number"
-                                class="w-20 border border-white/15 rounded-lg px-2 py-1 text-sm" placeholder="Done">
+                        <p class="text-xl sm:text-2xl font-bold text-emerald-400">21,600</p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <input id="jaap-done" type="number" class="w-16 sm:w-20 border rounded-lg px-2 py-1 text-sm"
+                                placeholder="Done">
                             <button onclick="saveJaap()"
-                                class="text-xs bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-lg btn">Save</button>
+                                class="text-xs bg-emerald-600 hover:bg-emerald-500 px-2.5 py-1.5 rounded-lg btn">Save</button>
                         </div>
                         <p class="text-xs text-gray-400 mt-1.5">Today: <span id="jaap-today"
                                 class="text-emerald-400">0</span></p>
                     </div>
 
-                    <div class="card rounded-2xl p-5">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">Monthly EMI</p>
-                        <p class="text-2xl font-bold text-red-400">₹8,073</p>
+                        <p class="text-xl sm:text-2xl font-bold text-red-400">₹8,073</p>
                     </div>
 
-                    <div class="card rounded-2xl p-5">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">Need / Month</p>
-                        <p class="text-2xl font-bold text-orange-400">₹12,073</p>
+                        <p class="text-xl sm:text-2xl font-bold text-orange-400">₹12,073</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- 6-Month Focus -->
-                    <div class="card rounded-2xl p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    <div class="card rounded-2xl p-5 sm:p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-semibold text-lg text-yellow-400">6-Month Focus</h3>
+                            <h3 class="font-semibold text-base sm:text-lg text-yellow-400">6-Month Focus</h3>
                             <button id="focus-edit-btn" onclick="toggleFocusEdit()"
                                 class="text-xs bg-yellow-600/70 hover:bg-yellow-500 px-3 py-1.5 rounded-lg btn">Edit</button>
                         </div>
@@ -258,17 +312,16 @@
                         <div id="focus-add-area" class="mt-4 hidden">
                             <div class="flex gap-2">
                                 <input id="focus-new-input" type="text" placeholder="Add focus item..."
-                                    class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                    class="flex-1 border rounded-lg px-3 py-2 text-sm">
                                 <button onclick="addFocusItem()"
                                     class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Core Skills -->
-                    <div class="card rounded-2xl p-6">
+                    <div class="card rounded-2xl p-5 sm:p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-semibold text-lg text-emerald-400">Core Skills to Master</h3>
+                            <h3 class="font-semibold text-base sm:text-lg text-emerald-400">Core Skills to Master</h3>
                             <button id="core-edit-btn" onclick="toggleCoreEdit()"
                                 class="text-xs bg-emerald-600/70 hover:bg-emerald-500 px-3 py-1.5 rounded-lg btn">Edit</button>
                         </div>
@@ -276,7 +329,7 @@
                         <div id="core-add-area" class="mt-4 hidden">
                             <div class="flex gap-2">
                                 <input id="core-new-input" type="text" placeholder="Add skill..."
-                                    class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                    class="flex-1 border rounded-lg px-3 py-2 text-sm">
                                 <button onclick="addCoreSkill()"
                                     class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                             </div>
@@ -287,21 +340,21 @@
 
             <!-- ==================== ROUTINE ==================== -->
             <div id="page-routine" class="page hidden fade">
-                <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-2xl font-bold">Ideal Daily Routine</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+                    <h2 class="text-xl sm:text-2xl font-bold">Ideal Daily Routine</h2>
                     <button onclick="addRoutineRow()"
                         class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-4 py-2 rounded-xl text-sm btn">+
                         Add Row</button>
                 </div>
                 <div class="card rounded-2xl overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm min-w-[580px]">
+                        <table class="w-full text-sm min-w-[520px]">
                             <thead class="bg-gray-800/80 text-yellow-400">
                                 <tr>
-                                    <th class="text-left p-4 font-medium">Time</th>
-                                    <th class="text-left p-4 font-medium">Activity</th>
-                                    <th class="text-left p-4 font-medium">Duration</th>
-                                    <th class="text-left p-4 font-medium w-24">Actions</th>
+                                    <th class="text-left p-3 sm:p-4 font-medium">Time</th>
+                                    <th class="text-left p-3 sm:p-4 font-medium">Activity</th>
+                                    <th class="text-left p-3 sm:p-4 font-medium">Duration</th>
+                                    <th class="text-left p-3 sm:p-4 font-medium w-20">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="routine-body" class="text-gray-300"></tbody>
@@ -312,9 +365,9 @@
 
             <!-- ==================== JOURNAL ==================== -->
             <div id="page-journal" class="page hidden fade">
-                <h2 class="text-2xl font-bold mb-5">Daily Journal</h2>
-                <div class="card rounded-2xl p-6 mb-8">
-                    <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl sm:text-2xl font-bold mb-5">Daily Journal</h2>
+                <div class="card rounded-2xl p-5 sm:p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
                         <h3 class="font-semibold text-lg" id="journal-form-title">New Entry</h3>
                         <button onclick="resetJournalForm()"
                             class="text-sm text-gray-400 hover:text-white">Clear</button>
@@ -322,33 +375,32 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Date</label>
-                            <input id="j-date" type="date"
-                                class="w-full border border-white/10 rounded-xl px-4 py-3 text-base">
+                            <input id="j-date" type="date" class="w-full border rounded-xl px-4 py-3 text-base">
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">What happened today?</label>
                             <textarea id="j-happened" rows="3"
-                                class="w-full border border-white/10 rounded-xl px-4 py-3 text-base resize-y"></textarea>
+                                class="w-full border rounded-xl px-4 py-3 text-base resize-y"></textarea>
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">How did I feel?</label>
                             <textarea id="j-feel" rows="2"
-                                class="w-full border border-white/10 rounded-xl px-4 py-3 text-base resize-y"></textarea>
+                                class="w-full border rounded-xl px-4 py-3 text-base resize-y"></textarea>
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">What did I learn?</label>
                             <textarea id="j-learn" rows="2"
-                                class="w-full border border-white/10 rounded-xl px-4 py-3 text-base resize-y"></textarea>
+                                class="w-full border rounded-xl px-4 py-3 text-base resize-y"></textarea>
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">What do I want tomorrow?</label>
                             <textarea id="j-want" rows="2"
-                                class="w-full border border-white/10 rounded-xl px-4 py-3 text-base resize-y"></textarea>
+                                class="w-full border rounded-xl px-4 py-3 text-base resize-y"></textarea>
                         </div>
                         <div>
                             <label class="block text-gray-400 text-sm mb-1.5">Did I follow the promises I made to
                                 myself?</label>
-                            <select id="j-promise" class="w-full border border-white/10 rounded-xl px-4 py-3 text-base">
+                            <select id="j-promise" class="w-full border rounded-xl px-4 py-3 text-base">
                                 <option value="">Select...</option>
                                 <option value="Yes – fully">Yes – fully</option>
                                 <option value="Mostly">Mostly</option>
@@ -357,7 +409,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="flex gap-3 mt-6">
+                    <div class="flex flex-wrap gap-3 mt-5">
                         <button onclick="saveJournalEntry()" id="journal-save-btn"
                             class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-xl btn">Save
                             Entry</button>
@@ -365,14 +417,14 @@
                             class="bg-gray-700 hover:bg-gray-600 px-5 py-3 rounded-xl text-sm btn">Cancel</button>
                     </div>
                 </div>
-                <div id="journal-list" class="space-y-5"></div>
+                <div id="journal-list" class="space-y-4"></div>
             </div>
 
             <!-- ==================== GOALS ==================== -->
             <div id="page-goals" class="page hidden fade">
-                <h2 class="text-2xl font-bold mb-5">Goals & Life Vision</h2>
+                <h2 class="text-xl sm:text-2xl font-bold mb-5">Goals & Life Vision</h2>
 
-                <div class="card rounded-2xl p-6 mb-8">
+                <div class="card rounded-2xl p-5 sm:p-6 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-semibold text-yellow-400 text-lg">Goal of Life</h3>
                         <button id="life-edit-btn" onclick="toggleLifeEdit()"
@@ -382,7 +434,7 @@
                     <div id="life-add-area" class="mt-4 hidden">
                         <div class="flex gap-2">
                             <input id="life-new-input" type="text" placeholder="Add life goal..."
-                                class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                class="flex-1 border rounded-lg px-3 py-2 text-sm">
                             <button onclick="addLifeGoal()"
                                 class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                         </div>
@@ -390,8 +442,7 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 mb-5">
-                    <input id="goal-input" type="text"
-                        class="flex-1 border border-white/10 rounded-xl px-4 py-3.5 text-base"
+                    <input id="goal-input" type="text" class="flex-1 border rounded-xl px-4 py-3.5 text-base"
                         placeholder="Add a custom goal...">
                     <button onclick="addGoal()"
                         class="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3.5 rounded-xl btn">Add
@@ -402,8 +453,10 @@
 
             <!-- ==================== FINANCE ==================== -->
             <div id="page-finance" class="page hidden fade">
-                <h2 class="text-2xl font-bold mb-5">Finance Tracker</h2>
-                <a href="{% url 'trader' %}" target="_blank">
+                <h2 class="text-xl sm:text-2xl font-bold mb-5">Finance Tracker</h2>
+
+                <a href="{% url 'trader' %}" target="_blank"
+                    class="card rounded-2xl p-4 mb-5 flex items-center gap-4 hover:border-emerald-500/40 transition group">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-2xl">📈
                     </div>
                     <div class="flex-1">
@@ -414,37 +467,36 @@
                     <span class="text-emerald-400 text-sm font-medium">Open →</span>
                 </a>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div class="card rounded-2xl p-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">SBI Balance</p>
                         <div class="flex items-center gap-2">
                             <span class="text-xl font-bold text-emerald-400">₹</span>
                             <input id="bal-sbi" type="number"
-                                class="w-full border border-white/15 rounded-lg px-2 py-1 text-lg font-bold text-emerald-400"
+                                class="w-full border rounded-lg px-2 py-1 text-lg font-bold text-emerald-400"
                                 onchange="saveBalances()">
                         </div>
                     </div>
-                    <div class="card rounded-2xl p-5">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">PUNB Balance</p>
                         <div class="flex items-center gap-2">
                             <span class="text-xl font-bold">₹</span>
                             <input id="bal-punb" type="number"
-                                class="w-full border border-white/15 rounded-lg px-2 py-1 text-lg font-bold"
-                                onchange="saveBalances()">
+                                class="w-full border rounded-lg px-2 py-1 text-lg font-bold" onchange="saveBalances()">
                         </div>
                     </div>
-                    <div class="card rounded-2xl p-5">
+                    <div class="card rounded-2xl p-4 sm:p-5">
                         <p class="text-gray-400 text-xs mb-1">Investment</p>
                         <div class="flex items-center gap-2">
                             <span class="text-xl font-bold text-yellow-400">₹</span>
                             <input id="bal-inv" type="number"
-                                class="w-full border border-white/15 rounded-lg px-2 py-1 text-lg font-bold text-yellow-400"
+                                class="w-full border rounded-lg px-2 py-1 text-lg font-bold text-yellow-400"
                                 onchange="saveBalances()">
                         </div>
                     </div>
                 </div>
 
-                <div class="card rounded-2xl p-6 mb-6">
+                <div class="card rounded-2xl p-5 sm:p-6 mb-5">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-semibold text-red-400">Monthly EMIs</h3>
                         <button id="emi-edit-btn" onclick="toggleEmiEdit()"
@@ -454,21 +506,21 @@
                     <div id="emi-add-area" class="mt-4 hidden">
                         <div class="flex gap-2">
                             <input id="emi-new-input" type="text" placeholder="e.g. MPokket – ₹2300 (5th)"
-                                class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                class="flex-1 border rounded-lg px-3 py-2 text-sm">
                             <button onclick="addEmi()"
                                 class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card rounded-2xl p-6 mb-6">
+                <div class="card rounded-2xl p-5 sm:p-6 mb-5">
                     <h3 class="font-semibold text-orange-400 mb-2">Monthly Need</h3>
-                    <input id="monthly-need" type="text"
-                        class="w-full border border-white/15 rounded-lg px-3 py-2 text-sm" onchange="saveMonthlyNeed()">
+                    <input id="monthly-need" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                        onchange="saveMonthlyNeed()">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                    <div class="card rounded-2xl p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-5">
+                    <div class="card rounded-2xl p-5 sm:p-6">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-semibold text-emerald-400">Receivable</h3>
                             <button id="recv-edit-btn" onclick="toggleRecvEdit()"
@@ -478,13 +530,13 @@
                         <div id="recv-add-area" class="mt-4 hidden">
                             <div class="flex gap-2">
                                 <input id="recv-new-input" type="text" placeholder="Add receivable..."
-                                    class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                    class="flex-1 border rounded-lg px-3 py-2 text-sm">
                                 <button onclick="addReceivable()"
                                     class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                             </div>
                         </div>
                     </div>
-                    <div class="card rounded-2xl p-6">
+                    <div class="card rounded-2xl p-5 sm:p-6">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-semibold text-red-400">Payable</h3>
                             <button id="pay-edit-btn" onclick="togglePayEdit()"
@@ -494,7 +546,7 @@
                         <div id="pay-add-area" class="mt-4 hidden">
                             <div class="flex gap-2">
                                 <input id="pay-new-input" type="text" placeholder="Add payable..."
-                                    class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                    class="flex-1 border rounded-lg px-3 py-2 text-sm">
                                 <button onclick="addPayable()"
                                     class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                             </div>
@@ -502,7 +554,7 @@
                     </div>
                 </div>
 
-                <div class="card rounded-2xl p-6 mb-6">
+                <div class="card rounded-2xl p-5 sm:p-6 mb-5">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-semibold">Money Rules</h3>
                         <button id="rules-edit-btn" onclick="toggleRulesEdit()"
@@ -512,7 +564,7 @@
                     <div id="rules-add-area" class="mt-4 hidden">
                         <div class="flex gap-2">
                             <input id="rules-new-input" type="text" placeholder="Add money rule..."
-                                class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                class="flex-1 border rounded-lg px-3 py-2 text-sm">
                             <button onclick="addMoneyRule()"
                                 class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                         </div>
@@ -520,7 +572,7 @@
                 </div>
 
                 <textarea id="finance-notes" rows="5"
-                    class="w-full border border-white/10 rounded-2xl p-5 text-base text-gray-200 mb-4"
+                    class="w-full border rounded-2xl p-4 sm:p-5 text-base text-gray-200 mb-4"
                     placeholder="Finance notes..."></textarea>
                 <button onclick="saveFinanceNotes()"
                     class="bg-green-500 hover:bg-green-400 text-white font-semibold px-6 py-3 rounded-xl btn">Save
@@ -530,20 +582,19 @@
 
             <!-- ==================== SKILLS ==================== -->
             <div id="page-skills" class="page hidden fade">
-                <h2 class="text-2xl font-bold mb-2">Skills Progress (Hours)</h2>
+                <h2 class="text-xl sm:text-2xl font-bold mb-1">Skills Progress (Hours)</h2>
                 <p class="text-gray-400 text-sm mb-5">Track focused hours over 6 months</p>
 
                 <div class="flex flex-col sm:flex-row gap-3 mb-6">
-                    <input id="skill-item" type="text"
-                        class="flex-1 border border-white/10 rounded-xl px-4 py-3.5 text-base"
+                    <input id="skill-item" type="text" class="flex-1 border rounded-xl px-4 py-3.5 text-base"
                         placeholder="Add new skill...">
                     <button onclick="addSkillItem()"
                         class="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-3.5 rounded-xl btn">Add
                         Skill</button>
                 </div>
-                <div id="skills-list" class="space-y-4 mb-8"></div>
+                <div id="skills-list" class="space-y-4 mb-6"></div>
                 <textarea id="skills-notes" rows="4"
-                    class="w-full border border-white/10 rounded-2xl p-5 text-base text-gray-200 mb-4"
+                    class="w-full border rounded-2xl p-4 sm:p-5 text-base text-gray-200 mb-4"
                     placeholder="Learning notes..."></textarea>
                 <button onclick="saveSkillsNotes()"
                     class="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-3 rounded-xl btn">Save
@@ -554,17 +605,17 @@
             <!-- ==================== INCOME ==================== -->
             <div id="page-income" class="page hidden fade">
                 <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-2xl font-bold">Multiple Income Sources</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold">Multiple Income Sources</h2>
                     <button id="income-edit-btn" onclick="toggleIncomeEdit()"
                         class="text-xs bg-purple-600/70 hover:bg-purple-500 px-3 py-1.5 rounded-lg btn">Edit</button>
                 </div>
-                <div id="income-list" class="space-y-5"></div>
-                <div id="income-add-area" class="mt-6 hidden">
+                <div id="income-list" class="space-y-4"></div>
+                <div id="income-add-area" class="mt-5 hidden">
                     <div class="card rounded-2xl p-5">
                         <p class="text-sm text-gray-400 mb-3">Add new income source (format: Category | Item)</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="income-new-input" type="text" placeholder="e.g. Side Hustle | Content Creation"
-                                class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                                class="flex-1 border rounded-lg px-3 py-2 text-sm">
                             <button onclick="addIncomeItem()"
                                 class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                         </div>
@@ -575,15 +626,15 @@
             <!-- ==================== MINDSET ==================== -->
             <div id="page-mindset" class="page hidden fade">
                 <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-2xl font-bold">Mindset & Attitude</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold">Mindset & Attitude</h2>
                     <button id="mindset-edit-btn" onclick="toggleMindsetEdit()"
                         class="text-xs bg-pink-600/70 hover:bg-pink-500 px-3 py-1.5 rounded-lg btn">Edit</button>
                 </div>
-                <div id="mindset-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                <div id="mindset-add-area" class="mt-6 hidden">
+                <div id="mindset-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>
+                <div id="mindset-add-area" class="mt-5 hidden">
                     <div class="flex gap-2 max-w-xl">
                         <input id="mindset-new-input" type="text" placeholder="Add mindset point..."
-                            class="flex-1 border border-white/15 rounded-lg px-3 py-2 text-sm">
+                            class="flex-1 border rounded-lg px-3 py-2 text-sm">
                         <button onclick="addMindset()"
                             class="bg-pink-600 hover:bg-pink-500 px-4 py-2 rounded-lg text-sm btn">Add</button>
                     </div>
@@ -592,23 +643,20 @@
 
             <!-- ==================== GITA ==================== -->
             <div id="page-gita" class="page hidden fade">
-                <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-2xl font-bold">Bhagavad Gita – Full Shlokas</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+                    <h2 class="text-xl sm:text-2xl font-bold">Bhagavad Gita – Full Shlokas</h2>
                     <button onclick="showAddShloka()"
                         class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-4 py-2 rounded-xl text-sm btn">+
                         Add Shloka</button>
                 </div>
 
-                <div id="add-shloka-form" class="card rounded-2xl p-6 mb-6 hidden">
+                <div id="add-shloka-form" class="card rounded-2xl p-5 sm:p-6 mb-6 hidden">
                     <h3 class="font-semibold mb-4">Add New Shloka</h3>
-                    <textarea id="new-sanskrit" rows="3"
-                        class="w-full border border-white/10 rounded-xl px-4 py-3 mb-3 text-base"
+                    <textarea id="new-sanskrit" rows="3" class="w-full border rounded-xl px-4 py-3 mb-3 text-base"
                         placeholder="Sanskrit..."></textarea>
-                    <textarea id="new-eng" rows="2"
-                        class="w-full border border-white/10 rounded-xl px-4 py-3 mb-3 text-base"
+                    <textarea id="new-eng" rows="2" class="w-full border rounded-xl px-4 py-3 mb-3 text-base"
                         placeholder="English meaning..."></textarea>
-                    <textarea id="new-hin" rows="2"
-                        class="w-full border border-white/10 rounded-xl px-4 py-3 mb-4 text-base"
+                    <textarea id="new-hin" rows="2" class="w-full border rounded-xl px-4 py-3 mb-4 text-base"
                         placeholder="Hindi meaning..."></textarea>
                     <div class="flex gap-3">
                         <button onclick="addShloka()"
@@ -617,14 +665,13 @@
                             class="bg-gray-700 hover:bg-gray-600 px-5 py-2.5 rounded-xl text-sm btn">Cancel</button>
                     </div>
                 </div>
-                <div id="gita-list" class="space-y-6"></div>
+                <div id="gita-list" class="space-y-5"></div>
             </div>
 
             <!-- ==================== NOTES ==================== -->
             <div id="page-notes" class="page hidden fade">
-                <h2 class="text-2xl font-bold mb-5">Private Notes</h2>
-                <textarea id="notes-text" rows="18"
-                    class="w-full border border-white/10 rounded-2xl p-5 text-base text-gray-200"
+                <h2 class="text-xl sm:text-2xl font-bold mb-5">Private Notes</h2>
+                <textarea id="notes-text" rows="16" class="w-full border rounded-2xl p-4 sm:p-5 text-base text-gray-200"
                     placeholder="Write anything here..."></textarea>
                 <div class="mt-4 flex gap-3">
                     <button onclick="saveNotes()"
@@ -638,32 +685,59 @@
     </div>
 
     <script>
-        // ==================== AUTH ====================
-        const USER = "ankuon";
-        const PASS = "ankuon4495";
+        // ==================== AUTH (PIN ONLY – AUTO UNLOCK) ====================
+        const PIN = "4495";
+
+        function updatePinDots() {
+            const val = document.getElementById('login-pin').value;
+            document.querySelectorAll('.pin-dot').forEach((dot, i) => {
+                if (i < val.length) dot.classList.add('filled');
+                else dot.classList.remove('filled');
+            });
+        }
 
         function doLogin() {
-            const u = document.getElementById('login-user').value.trim();
-            const p = document.getElementById('login-pass').value;
-            if (u === USER && p === PASS) {
+            const p = document.getElementById('login-pin').value.trim();
+            if (p === PIN) {
                 sessionStorage.setItem('personal_ok', '1');
                 showApp();
             } else {
                 const err = document.getElementById('login-error');
-                err.textContent = 'Wrong username or password';
+                err.textContent = 'Wrong PIN';
                 err.classList.remove('hidden');
+                document.getElementById('login-pin').value = '';
+                updatePinDots();
+                setTimeout(() => err.classList.add('hidden'), 2500);
             }
         }
+
         function doLogout() {
             sessionStorage.removeItem('personal_ok');
             location.reload();
         }
+
         function showApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
             loadAll();
             updateCountdown();
         }
+
+        // Auto unlock when 4 correct digits are entered
+        document.addEventListener('DOMContentLoaded', () => {
+            const pinInput = document.getElementById('login-pin');
+            if (pinInput) {
+                pinInput.addEventListener('input', () => {
+                    updatePinDots();
+                    if (pinInput.value.length === 4) {
+                        setTimeout(doLogin, 120);
+                    }
+                });
+                pinInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') doLogin();
+                });
+            }
+        });
 
         // ==================== NAV ====================
         function showPage(page) {
@@ -678,22 +752,21 @@
                 btn.classList.add('active', 'border-yellow-500', 'text-yellow-400');
                 btn.classList.remove('border-transparent', 'text-gray-400');
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ==================== LIVE COUNTDOWN + SET DATE ====================
+        // ==================== COUNTDOWN ====================
         function getTargetDate() {
             const saved = localStorage.getItem('mission_end_date');
-            return saved ? new Date(saved) : new Date('2026-12-31T23:59:59'); // default future date
+            return saved ? new Date(saved) : new Date('2026-12-31T23:59:59');
         }
 
         function updateCountdown() {
             const end = getTargetDate();
             const now = new Date();
             const diff = end - now;
-
             const daysEl = document.getElementById('days-left');
             const timeEl = document.getElementById('time-left');
-
             if (!daysEl) return;
 
             if (diff <= 0) {
@@ -714,7 +787,6 @@
         function toggleSetDate() {
             const box = document.getElementById('set-date-box');
             box.classList.toggle('hidden');
-
             if (!box.classList.contains('hidden')) {
                 const current = getTargetDate();
                 const year = current.getFullYear();
@@ -729,7 +801,6 @@
         function saveTargetDate() {
             const input = document.getElementById('target-date-input').value;
             if (!input) return alert('Please select a date and time');
-
             localStorage.setItem('mission_end_date', new Date(input).toISOString());
             document.getElementById('set-date-box').classList.add('hidden');
             updateCountdown();
@@ -741,9 +812,16 @@
         function saveJaap() {
             const val = document.getElementById('jaap-done').value || 0;
             localStorage.setItem('jaap_today', val);
+            localStorage.setItem('jaap_date', new Date().toDateString());
             document.getElementById('jaap-today').textContent = val;
         }
         function loadJaap() {
+            const today = new Date().toDateString();
+            const savedDate = localStorage.getItem('jaap_date');
+            if (savedDate !== today) {
+                localStorage.setItem('jaap_today', '0');
+                localStorage.setItem('jaap_date', today);
+            }
             const val = localStorage.getItem('jaap_today') || 0;
             document.getElementById('jaap-today').textContent = val;
             document.getElementById('jaap-done').value = val;
@@ -758,10 +836,10 @@
             const ul = document.getElementById('focus-list');
             if (list.length === 0) { ul.innerHTML = '<li class="text-gray-500">No items yet</li>'; return; }
             ul.innerHTML = list.map((item, i) => `
- <li class="flex justify-between items-center gap-2">
- <span>✅ ${item}</span>
- ${focusEditMode ? `<button onclick="deleteFocus(${i})" class="text-red-400 text-xs">Delete</button>` : ''}
- </li>`).join('');
+                <li class="flex justify-between items-center gap-2">
+                    <span>✅ ${item}</span>
+                    ${focusEditMode ? `<button onclick="deleteFocus(${i})" class="text-red-400 text-xs">Delete</button>` : ''}
+                </li>`).join('');
         }
         function toggleFocusEdit() {
             focusEditMode = !focusEditMode;
@@ -788,10 +866,10 @@
             const ul = document.getElementById('core-skills-list');
             if (list.length === 0) { ul.innerHTML = '<li class="text-gray-500">No skills yet</li>'; return; }
             ul.innerHTML = list.map((item, i) => `
- <li class="flex justify-between items-center gap-2">
- <span>• ${item}</span>
- ${coreEditMode ? `<button onclick="deleteCoreSkill(${i})" class="text-red-400 text-xs">Delete</button>` : ''}
- </li>`).join('');
+                <li class="flex justify-between items-center gap-2">
+                    <span>• ${item}</span>
+                    ${coreEditMode ? `<button onclick="deleteCoreSkill(${i})" class="text-red-400 text-xs">Delete</button>` : ''}
+                </li>`).join('');
         }
         function toggleCoreEdit() {
             coreEditMode = !coreEditMode;
@@ -818,10 +896,10 @@
             const ol = document.getElementById('life-goals-list');
             if (list.length === 0) { ol.innerHTML = '<li class="text-gray-500">No goals yet</li>'; return; }
             ol.innerHTML = list.map((g, i) => `
- <li class="flex justify-between items-start gap-3">
- <span>${g}</span>
- ${lifeEditMode ? `<button onclick="deleteLifeGoal(${i})" class="text-red-400 text-xs shrink-0">Delete</button>` : ''}
- </li>`).join('');
+                <li class="flex justify-between items-start gap-3">
+                    <span>${g}</span>
+                    ${lifeEditMode ? `<button onclick="deleteLifeGoal(${i})" class="text-red-400 text-xs shrink-0">Delete</button>` : ''}
+                </li>`).join('');
         }
         function toggleLifeEdit() {
             lifeEditMode = !lifeEditMode;
@@ -846,13 +924,13 @@
             const list = getGoals();
             document.getElementById('goals-list').innerHTML = list.length === 0 ? '<li class="text-gray-500 text-sm py-4">No custom goals yet.</li>' :
                 list.map((g, i) => `
- <li class="card rounded-2xl px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
- <span class="${g.done ? 'line-through text-gray-500' : ''}">${g.text}</span>
- <div class="flex gap-2">
- <button onclick="toggleGoal(${i})" class="text-sm ${g.done ? 'text-emerald-400' : 'text-gray-400'}">${g.done ? '✓ Done' : 'Mark done'}</button>
- <button onclick="deleteGoal(${i})" class="text-sm text-red-400">Delete</button>
- </div>
- </li>`).join('');
+                <li class="card rounded-2xl px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <span class="${g.done ? 'line-through text-gray-500' : ''}">${g.text}</span>
+                    <div class="flex gap-2">
+                        <button onclick="toggleGoal(${i})" class="text-sm ${g.done ? 'text-emerald-400' : 'text-gray-400'}">${g.done ? '✓ Done' : 'Mark done'}</button>
+                        <button onclick="deleteGoal(${i})" class="text-sm text-red-400">Delete</button>
+                    </div>
+                </li>`).join('');
         }
         function addGoal() {
             const input = document.getElementById('goal-input');
@@ -987,12 +1065,12 @@
         function renderRoutine() {
             const list = getRoutine();
             document.getElementById('routine-body').innerHTML = list.map((r, i) => `
- <tr class="border-b border-white/5">
- <td class="p-3"><input value="${r.time}" onchange="updateRoutine(${i},'time',this.value)" class="w-full border border-white/10 rounded px-2 py-1 text-sm"></td>
- <td class="p-3"><input value="${r.activity}" onchange="updateRoutine(${i},'activity',this.value)" class="w-full border border-white/10 rounded px-2 py-1 text-sm"></td>
- <td class="p-3"><input value="${r.duration}" onchange="updateRoutine(${i},'duration',this.value)" class="w-full border border-white/10 rounded px-2 py-1 text-sm"></td>
- <td class="p-3"><button onclick="deleteRoutine(${i})" class="text-red-400 text-xs">Delete</button></td>
- </tr>`).join('');
+                <tr class="border-b border-white/5">
+                    <td class="p-2 sm:p-3"><input value="${r.time}" onchange="updateRoutine(${i},'time',this.value)" class="w-full border rounded px-2 py-1 text-sm"></td>
+                    <td class="p-2 sm:p-3"><input value="${r.activity}" onchange="updateRoutine(${i},'activity',this.value)" class="w-full border rounded px-2 py-1 text-sm"></td>
+                    <td class="p-2 sm:p-3"><input value="${r.duration}" onchange="updateRoutine(${i},'duration',this.value)" class="w-full border rounded px-2 py-1 text-sm"></td>
+                    <td class="p-2 sm:p-3"><button onclick="deleteRoutine(${i})" class="text-red-400 text-xs">Delete</button></td>
+                </tr>`).join('');
         }
         function updateRoutine(i, field, value) {
             const list = getRoutine(); list[i][field] = value; saveRoutine(list);
@@ -1015,29 +1093,29 @@
                     const hours = s.hours || 0;
                     const pct = Math.min(100, Math.round((hours / target) * 100));
                     return `
- <div class="card rounded-2xl p-5">
- <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
- <h4 class="font-medium text-gray-100">${s.text}</h4>
- <div class="flex gap-2">
- <button onclick="editSkill(${i})" class="text-sm text-blue-400">Edit</button>
- <button onclick="deleteSkill(${i})" class="text-sm text-red-400">Delete</button>
- </div>
- </div>
- <div class="flex items-center gap-4">
- <div class="flex-1">
- <div class="progress-bar mb-1.5"><div class="progress-fill" style="width:${pct}%"></div></div>
- <div class="flex justify-between text-xs text-gray-400">
- <span>${hours} / ${target} hours</span>
- <span>${pct}%</span>
- </div>
- </div>
- <div class="flex gap-1">
- <button onclick="changeHours(${i}, -1)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm btn">−</button>
- <button onclick="changeHours(${i}, 1)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm btn">+</button>
- <button onclick="changeHours(${i}, 5)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-xs btn">+5</button>
- </div>
- </div>
- </div>`;
+                    <div class="card rounded-2xl p-4 sm:p-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                            <h4 class="font-medium text-gray-100">${s.text}</h4>
+                            <div class="flex gap-2">
+                                <button onclick="editSkill(${i})" class="text-sm text-blue-400">Edit</button>
+                                <button onclick="deleteSkill(${i})" class="text-sm text-red-400">Delete</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="flex-1">
+                                <div class="progress-bar mb-1.5"><div class="progress-fill" style="width:${pct}%"></div></div>
+                                <div class="flex justify-between text-xs text-gray-400">
+                                    <span>${hours} / ${target} hours</span>
+                                    <span>${pct}%</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="changeHours(${i}, -1)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm btn">−</button>
+                                <button onclick="changeHours(${i}, 1)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm btn">+</button>
+                                <button onclick="changeHours(${i}, 5)" class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 text-xs btn">+5</button>
+                            </div>
+                        </div>
+                    </div>`;
                 }).join('');
         }
         function addSkillItem() {
@@ -1085,15 +1163,15 @@
 
             let html = '';
             Object.keys(groups).forEach(cat => {
-                html += `<div class="card rounded-2xl p-6">
- <h3 class="font-semibold text-lg mb-3 text-yellow-400">${cat}</h3>
- <ul class="text-sm text-gray-300 space-y-1.5">`;
+                html += `<div class="card rounded-2xl p-5 sm:p-6">
+                    <h3 class="font-semibold text-lg mb-3 text-yellow-400">${cat}</h3>
+                    <ul class="text-sm text-gray-300 space-y-1.5">`;
                 groups[cat].forEach((item) => {
                     const globalIndex = list.indexOf(item.original);
                     html += `<li class="flex justify-between items-center gap-2">
- <span>• ${item.text}</span>
- ${incomeEditMode ? `<button onclick="deleteIncome(${globalIndex})" class="text-red-400 text-xs">Delete</button>` : ''}
- </li>`;
+                        <span>• ${item.text}</span>
+                        ${incomeEditMode ? `<button onclick="deleteIncome(${globalIndex})" class="text-red-400 text-xs">Delete</button>` : ''}
+                    </li>`;
                 });
                 html += `</ul></div>`;
             });
@@ -1133,10 +1211,10 @@
             const list = getMindset();
             document.getElementById('mindset-list').innerHTML = list.length === 0 ? '<p class="text-gray-500">No points yet</p>' :
                 list.map((m, i) => `
- <div class="card rounded-xl p-4 text-sm text-gray-300 flex justify-between items-start gap-3">
- <span>► ${m}</span>
- ${mindsetEditMode ? `<button onclick="deleteMindset(${i})" class="text-red-400 text-xs shrink-0">Delete</button>` : ''}
- </div>`).join('');
+                <div class="card rounded-xl p-4 text-sm text-gray-300 flex justify-between items-start gap-3">
+                    <span>► ${m}</span>
+                    ${mindsetEditMode ? `<button onclick="deleteMindset(${i})" class="text-red-400 text-xs shrink-0">Delete</button>` : ''}
+                </div>`).join('');
         }
         function toggleMindsetEdit() {
             mindsetEditMode = !mindsetEditMode;
@@ -1161,12 +1239,12 @@
             const list = getGita();
             document.getElementById('gita-list').innerHTML = list.length === 0 ? '<p class="text-gray-500">No shlokas yet.</p>' :
                 list.map((s, i) => `
- <div class="card rounded-2xl p-6 shloka relative">
- <button onclick="deleteShloka(${i})" class="absolute top-4 right-4 text-red-400 text-sm hover:text-red-300">Delete</button>
- <p class="text-yellow-300 font-medium mb-4 text-lg leading-relaxed whitespace-pre-line pr-16">${s.sanskrit}</p>
- <p class="text-sm text-gray-300 mb-2"><strong class="text-gray-400">English:</strong> ${s.eng}</p>
- <p class="text-sm text-gray-400"><strong class="text-gray-500">Hindi:</strong> ${s.hin}</p>
- </div>`).join('');
+                <div class="card rounded-2xl p-5 sm:p-6 shloka relative">
+                    <button onclick="deleteShloka(${i})" class="absolute top-4 right-4 text-red-400 text-sm hover:text-red-300">Delete</button>
+                    <p class="text-yellow-300 font-medium mb-4 text-base sm:text-lg leading-relaxed whitespace-pre-line pr-12">${s.sanskrit}</p>
+                    <p class="text-sm text-gray-300 mb-2"><strong class="text-gray-400">English:</strong> ${s.eng}</p>
+                    <p class="text-sm text-gray-400"><strong class="text-gray-500">Hindi:</strong> ${s.hin}</p>
+                </div>`).join('');
         }
         function showAddShloka() { document.getElementById('add-shloka-form').classList.remove('hidden'); }
         function hideAddShloka() {
@@ -1195,22 +1273,22 @@
             const list = getJournals().sort((a, b) => b.date.localeCompare(a.date));
             document.getElementById('journal-list').innerHTML = list.length === 0 ? '<p class="text-gray-500 text-sm py-6 text-center">No entries yet.</p>' :
                 list.map(j => `
- <div class="card rounded-2xl p-6">
- <div class="flex justify-between items-start mb-4">
- <span class="text-yellow-400 font-semibold text-lg">${j.date}</span>
- <div class="flex gap-2">
- <button onclick="editJournal('${j.id}')" class="text-sm text-blue-400">Edit</button>
- <button onclick="deleteJournal('${j.id}')" class="text-sm text-red-400">Delete</button>
- </div>
- </div>
- <div class="space-y-3 text-sm">
- <div><span class="text-gray-400">What happened:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.happened || '—'}</p></div>
- <div><span class="text-gray-400">How I felt:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.feel || '—'}</p></div>
- <div><span class="text-gray-400">What I learned:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.learn || '—'}</p></div>
- <div><span class="text-gray-400">Want for tomorrow:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.want || '—'}</p></div>
- <div><span class="text-gray-400">Followed promises?</span><p class="text-gray-200 mt-0.5">${j.promise || '—'}</p></div>
- </div>
- </div>`).join('');
+                <div class="card rounded-2xl p-5 sm:p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-yellow-400 font-semibold text-lg">${j.date}</span>
+                        <div class="flex gap-2">
+                            <button onclick="editJournal('${j.id}')" class="text-sm text-blue-400">Edit</button>
+                            <button onclick="deleteJournal('${j.id}')" class="text-sm text-red-400">Delete</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div><span class="text-gray-400">What happened:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.happened || '—'}</p></div>
+                        <div><span class="text-gray-400">How I felt:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.feel || '—'}</p></div>
+                        <div><span class="text-gray-400">What I learned:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.learn || '—'}</p></div>
+                        <div><span class="text-gray-400">Want for tomorrow:</span><p class="text-gray-200 mt-0.5 whitespace-pre-wrap">${j.want || '—'}</p></div>
+                        <div><span class="text-gray-400">Followed promises?</span><p class="text-gray-200 mt-0.5">${j.promise || '—'}</p></div>
+                    </div>
+                </div>`).join('');
         }
         function saveJournalEntry() {
             const date = document.getElementById('j-date').value || new Date().toISOString().slice(0, 10);

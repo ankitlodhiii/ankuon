@@ -2,354 +2,1260 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANKUON AI Chat Box</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trader’s Diary – Crypto • Indian Markets • Forex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0b0f19;
+            --bg-card: #121826;
+            --bg-hover: #1a2234;
+            --border: #1e2a3a;
+            --text: #e8eef7;
+            --text-muted: #8b9bb4;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #0a0f1f, #064e3b);
-            min-height: 100vh;
-            color: #e5e7eb;
-        }
-
-        /* Floating Button */
-        .ai-chat-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #059669, #047857);
-            color: white;
-            border: none;
-            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.45);
-            cursor: pointer;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .ai-chat-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.6);
-        }
-
-        .ai-chat-button svg {
-            width: 28px;
-            height: 28px;
-        }
-
-        /* Chat Panel */
-        .ai-chat-panel {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            width: 370px;
-            max-width: calc(100vw - 40px);
-            height: 520px;
-            max-height: 75vh;
-            background: #111827;
-            border-radius: 18px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .ai-chat-panel.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* Header */
-        .ai-chat-header {
-            background: linear-gradient(135deg, #059669, #047857);
-            color: white;
-            padding: 16px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .ai-chat-header button {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 26px;
-            cursor: pointer;
-            line-height: 1;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-
-        .ai-chat-header button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Messages Area */
-        .ai-chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            background: #0f172a;
-        }
-
-        .ai-message {
-            max-width: 82%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 14.5px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.5;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
+            min-height: 100vh;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .ai-message.bot {
-            background: rgba(5, 150, 105, 0.18);
-            color: #d1fae5;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
-        .ai-message.user {
-            background: #059669;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-typing {
-            font-size: 13px;
-            color: #9ca3af;
-            padding: 6px 10px;
-            align-self: flex-start;
-            font-style: italic;
-        }
-
-        /* Input Area */
-        .ai-chat-input-area {
-            padding: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        .app {
             display: flex;
-            gap: 10px;
-            background: #111827;
+            min-height: 100vh;
         }
 
-        .ai-chat-input-area input {
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        .logo h1 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
             flex: 1;
-            background: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: white;
-            font-size: 14.5px;
-            outline: none;
-            transition: border-color 0.2s;
         }
 
-        .ai-chat-input-area input:focus {
-            border-color: #059669;
-        }
-
-        .ai-chat-input-area input::placeholder {
-            color: #9ca3af;
-        }
-
-        .ai-chat-input-area button {
-            background: #059669;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 0 20px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .ai-chat-input-area button:hover {
-            background: #047857;
-        }
-
-        /* Scrollbar */
-        .ai-chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .ai-chat-messages::-webkit-scrollbar-track {
+        .nav-btn {
             background: transparent;
+            border: none;
+            color: var(--text-muted);
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .ai-chat-messages::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 10px;
+        .nav-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .nav-btn.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .quick-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .qs-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .qs-label {
+            color: var(--text-muted);
+        }
+
+        .qs-value {
+            font-weight: 600;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 32px 40px;
+            max-width: 1200px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .view-header {
+            margin-bottom: 28px;
+        }
+
+        .view-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .view-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filters select,
+        .filters input {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .filters input {
+            min-width: 220px;
+        }
+
+        /* Cards & Stats */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-card .value.positive {
+            color: var(--success);
+        }
+
+        .stat-card .value.negative {
+            color: var(--danger);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .trades-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .trades-table th {
+            text-align: left;
+            padding: 10px 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .trades-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .trades-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-long {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .badge-short {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-win {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .badge-loss {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        /* Form */
+        .form-card {
+            max-width: 800px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.15s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-hover);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .muted {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        /* Breakdown lists */
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .modal-body-row .label {
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 72px;
+                padding: 16px 8px;
+            }
+
+            .logo h1,
+            .tagline,
+            .nav-btn,
+            .sidebar-footer {
+                display: none;
+            }
+
+            .logo {
+                justify-content: center;
+                border: none;
+                margin: 0;
+                padding-bottom: 16px;
+            }
+
+            .main {
+                margin-left: 72px;
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Floating Button -->
-    <button class="ai-chat-button" id="ai-chat-toggle" aria-label="Open AI Chat">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-    </button>
-
-    <!-- Chat Panel -->
-    <div class="ai-chat-panel" id="ai-chat-panel">
-        <div class="ai-chat-header">
-            <span>ANKUON AI Assistant</span>
-            <button id="ai-chat-close" aria-label="Close">×</button>
-        </div>
-
-        <div class="ai-chat-messages" id="ai-chat-messages">
-            <div class="ai-message bot">
-                Hello! 👋 I'm ANKUON AI Assistant.<br>
-                How can I help you today?
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">📒</span>
+                <div>
+                    <h1>Trader’s Diary</h1>
+                    <p class="tagline">Crypto • NSE/BSE • Forex</p>
+                </div>
             </div>
-        </div>
 
-        <div class="ai-chat-input-area">
-            <input type="text" id="ai-chat-input" placeholder="Type your message..." autocomplete="off">
-            <button id="ai-chat-send">Send</button>
+            <nav class="nav">
+                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn" data-view="trades">All Trades</button>
+                <button class="nav-btn" data-view="add">+ Add Trade</button>
+                <button class="nav-btn" data-view="stats">Statistics</button>
+                <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="quick-stats" id="quick-stats">
+                    <div class="qs-item">
+                        <span class="qs-label">Total Trades</span>
+                        <span class="qs-value" id="qs-total">0</span>
+                    </div>
+                    <div class="qs-item">
+                        <span class="qs-label">Win Rate</span>
+                        <span class="qs-value" id="qs-winrate">0%</span>
+                    </div>
+                    <div class="qs-item">
+                        <span class="qs-label">Net P&L</span>
+                        <span class="qs-value" id="qs-pnl">₹0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view active">
+                <header class="view-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of your trading performance</p>
+                </header>
+
+                <div class="stats-grid" id="dashboard-stats"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Trades</h3>
+                        <button class="btn-text" onclick="showView('trades')">View All →</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="trades-table" id="recent-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Instrument</th>
+                                    <th>Dir</th>
+                                    <th>P&L</th>
+                                    <th>R</th>
+                                    <th>Setup</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- All Trades View -->
+            <section id="view-trades" class="view">
+                <header class="view-header">
+                    <h2>All Trades</h2>
+                    <div class="filters">
+                        <select id="filter-market">
+                            <option value="all">All Markets</option>
+                            <option value="Indian Stocks">Indian Stocks</option>
+                            <option value="Crypto">Crypto</option>
+                            <option value="Forex">Forex</option>
+                            <option value="Commodities">Commodities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="filter-result">
+                            <option value="all">All Results</option>
+                            <option value="win">Wins</option>
+                            <option value="loss">Losses</option>
+                        </select>
+                        <input type="text" id="search-trades" placeholder="Search instrument / setup..." />
+                    </div>
+                </header>
+
+                <div class="card">
+                    <div class="table-wrap">
+                        <table class="trades-table" id="all-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Market</th>
+                                    <th>Instrument</th>
+                                    <th>Dir</th>
+                                    <th>Entry</th>
+                                    <th>Exit</th>
+                                    <th>P&L</th>
+                                    <th>R</th>
+                                    <th>Setup</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="empty-state" id="trades-empty" style="display:none;">No trades yet. Add your first trade!
+                    </p>
+                </div>
+            </section>
+
+            <!-- Add / Edit Trade View -->
+            <section id="view-add" class="view">
+                <header class="view-header">
+                    <h2 id="form-title">Add New Trade</h2>
+                    <p>Log every detail for better review</p>
+                </header>
+
+                <form id="trade-form" class="card form-card">
+                    <input type="hidden" id="trade-id" />
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Date & Time *</label>
+                            <input type="datetime-local" id="date" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Market *</label>
+                            <select id="market" required>
+                                <option value="Indian Stocks">Indian Stocks (NSE/BSE)</option>
+                                <option value="Crypto">Crypto</option>
+                                <option value="Forex">Forex</option>
+                                <option value="Commodities">Commodities</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Instrument *</label>
+                            <input type="text" id="instrument" placeholder="Nifty, BankNifty, BTCUSDT, EURUSD..."
+                                required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Direction *</label>
+                            <select id="direction" required>
+                                <option value="Long">Long</option>
+                                <option value="Short">Short</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Entry Price *</label>
+                            <input type="number" id="entry" step="any" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Exit Price *</label>
+                            <input type="number" id="exit" step="any" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Stop Loss</label>
+                            <input type="number" id="sl" step="any" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Target</label>
+                            <input type="number" id="target" step="any" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Position Size (Qty / Lots)</label>
+                            <input type="number" id="qty" step="any" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Risk Amount (₹ / $)</label>
+                            <input type="number" id="risk" step="any" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>P&L (₹ / $) *</label>
+                            <input type="number" id="pnl" step="any" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>R-Multiple</label>
+                            <input type="number" id="rMultiple" step="0.01"
+                                placeholder="Auto-calculated if Risk filled" />
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Setup / Strategy Name</label>
+                            <input type="text" id="setup"
+                                placeholder="e.g. Opening Range Breakout, Order Block, RSI Divergence" />
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Market Condition</label>
+                            <select id="condition">
+                                <option value="">Select...</option>
+                                <option value="Trending">Trending</option>
+                                <option value="Ranging">Ranging</option>
+                                <option value="High Volatility">High Volatility</option>
+                                <option value="News Driven">News Driven</option>
+                                <option value="Low Volatility">Low Volatility</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Emotions / Mental State</label>
+                            <textarea id="emotions" rows="2"
+                                placeholder="Calm, FOMO, Revenge, Overconfident, Tired..."></textarea>
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Notes / Lessons</label>
+                            <textarea id="notes" rows="3"
+                                placeholder="What went well? What will you improve next time?"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-btn">Save Trade</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Statistics View -->
+            <section id="view-stats" class="view">
+                <header class="view-header">
+                    <h2>Statistics</h2>
+                    <p>Deep dive into your performance</p>
+                </header>
+
+                <div class="stats-grid" id="detailed-stats"></div>
+
+                <div class="two-col">
+                    <div class="card">
+                        <h3>Performance by Market</h3>
+                        <div id="market-breakdown"></div>
+                    </div>
+                    <div class="card">
+                        <h3>Performance by Setup</h3>
+                        <div id="setup-breakdown"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="view-settings" class="view">
+                <header class="view-header">
+                    <h2>Settings & Data</h2>
+                </header>
+
+                <div class="card">
+                    <h3>Data Management</h3>
+                    <p class="muted">Your data is stored locally in this browser. Export regularly for backup.</p>
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" onclick="exportData()">Export All Trades (JSON)</button>
+                        <button class="btn btn-secondary"
+                            onclick="document.getElementById('import-file').click()">Import Trades</button>
+                        <input type="file" id="import-file" accept=".json" hidden />
+                        <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>About</h3>
+                    <p>Trader’s Diary – Simple offline trading journal for Crypto, Indian Markets (NSE/BSE), Forex &
+                        more.</p>
+                    <p class="muted">All data stays on your device. No account required.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Trade Detail Modal -->
+    <div class="modal" id="trade-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modal-body"></div>
         </div>
     </div>
 
     <script>
-        const toggleBtn = document.getElementById('ai-chat-toggle');
-        const panel = document.getElementById('ai-chat-panel');
-        const closeBtn = document.getElementById('ai-chat-close');
-        const messages = document.getElementById('ai-chat-messages');
-        const input = document.getElementById('ai-chat-input');
-        const sendBtn = document.getElementById('ai-chat-send');
+        const STORAGE_KEY = 'traders_diary_v1';
+        let trades = [];
+        let editingId = null;
 
-        const demoReplies = [
-            "Thanks for reaching out! How can I assist you with ANKUON?",
-            "We offer Python, Django, Data Science, and AI solutions.",
-            "You can check our Ventures section for AnkuOn2 investment details.",
-            "Feel free to ask about our projects or services!",
-            "I'm currently a demo AI. Real AI coming soon!",
-            "Would you like to know more about our tech stack?",
-            "You can contact the founder directly from the Contact section."
-        ];
-
-        function openChat() {
-            panel.classList.add('active');
-            input.focus();
-        }
-
-        function closeChat() {
-            panel.classList.remove('active');
-        }
-
-        function addMessage(text, isUser = false) {
-            const div = document.createElement('div');
-            div.className = `ai-message ${isUser ? 'user' : 'bot'}`;
-            div.innerHTML = text;
-            messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function showTyping() {
-            const typing = document.createElement('div');
-            typing.className = 'ai-typing';
-            typing.id = 'ai-typing';
-            typing.textContent = 'AI is typing...';
-            messages.appendChild(typing);
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        function removeTyping() {
-            const el = document.getElementById('ai-typing');
-            if (el) el.remove();
-        }
-
-        function botReply() {
-            showTyping();
-            setTimeout(() => {
-                removeTyping();
-                const reply = demoReplies[Math.floor(Math.random() * demoReplies.length)];
-                addMessage(reply);
-            }, 700 + Math.random() * 900);
-        }
-
-        function sendMessage() {
-            const text = input.value.trim();
-            if (!text) return;
-
-            addMessage(text, true);
-            input.value = '';
-            botReply();
-        }
-
-        // Events
-        toggleBtn.addEventListener('click', () => {
-            panel.classList.contains('active') ? closeChat() : openChat();
-        });
-
-        closeBtn.addEventListener('click', closeChat);
-
-        sendBtn.addEventListener('click', sendMessage);
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
+        function loadTrades() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                trades = raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                trades = [];
             }
-        });
+        }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeChat();
-        });
+        function saveTrades() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+            updateUI();
+        }
 
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (panel.classList.contains('active') &&
-                !panel.contains(e.target) &&
-                !toggleBtn.contains(e.target)) {
-                closeChat();
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return d.toLocaleDateString('en-IN', {
+                day: '2-digit', month: 'short', year: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function formatMoney(n) {
+            if (n === null || n === undefined || isNaN(n)) return '—';
+            const abs = Math.abs(n);
+            const formatted = abs >= 1000 ? abs.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : abs.toFixed(2);
+            return (n >= 0 ? '+' : '−') + '₹' + formatted;
+        }
+
+        function calcR(pnl, risk) {
+            if (!risk || risk === 0) return null;
+            return +(pnl / risk).toFixed(2);
+        }
+
+        function showView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const view = document.getElementById('view-' + name);
+            if (view) view.classList.add('active');
+            const btn = document.querySelector(`.nav-btn[data-view="${name}"]`);
+            if (btn) btn.classList.add('active');
+            if (name === 'add' && !editingId) resetForm(true);
+        }
+
+        function resetForm(keepView = false) {
+            editingId = null;
+            document.getElementById('trade-form').reset();
+            document.getElementById('trade-id').value = '';
+            document.getElementById('form-title').textContent = 'Add New Trade';
+            document.getElementById('submit-btn').textContent = 'Save Trade';
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('date').value = now.toISOString().slice(0, 16);
+            if (!keepView) showView('trades');
+        }
+
+        function fillForm(trade) {
+            editingId = trade.id;
+            document.getElementById('trade-id').value = trade.id;
+            document.getElementById('date').value = trade.date ? trade.date.slice(0, 16) : '';
+            document.getElementById('market').value = trade.market || 'Indian Stocks';
+            document.getElementById('instrument').value = trade.instrument || '';
+            document.getElementById('direction').value = trade.direction || 'Long';
+            document.getElementById('entry').value = trade.entry ?? '';
+            document.getElementById('exit').value = trade.exit ?? '';
+            document.getElementById('sl').value = trade.sl ?? '';
+            document.getElementById('target').value = trade.target ?? '';
+            document.getElementById('qty').value = trade.qty ?? '';
+            document.getElementById('risk').value = trade.risk ?? '';
+            document.getElementById('pnl').value = trade.pnl ?? '';
+            document.getElementById('rMultiple').value = trade.rMultiple ?? '';
+            document.getElementById('setup').value = trade.setup || '';
+            document.getElementById('condition').value = trade.condition || '';
+            document.getElementById('emotions').value = trade.emotions || '';
+            document.getElementById('notes').value = trade.notes || '';
+            document.getElementById('form-title').textContent = 'Edit Trade';
+            document.getElementById('submit-btn').textContent = 'Update Trade';
+            showView('add');
+        }
+
+        document.getElementById('pnl')?.addEventListener('input', autoR);
+        document.getElementById('risk')?.addEventListener('input', autoR);
+
+        function autoR() {
+            const pnl = parseFloat(document.getElementById('pnl').value);
+            const risk = parseFloat(document.getElementById('risk').value);
+            if (!isNaN(pnl) && !isNaN(risk) && risk !== 0) {
+                document.getElementById('rMultiple').value = calcR(pnl, risk);
             }
+        }
+
+        document.getElementById('trade-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const pnl = parseFloat(document.getElementById('pnl').value);
+            const risk = parseFloat(document.getElementById('risk').value) || null;
+            let rMultiple = parseFloat(document.getElementById('rMultiple').value);
+            if (isNaN(rMultiple) && risk) rMultiple = calcR(pnl, risk);
+
+            const trade = {
+                id: editingId || generateId(),
+                date: document.getElementById('date').value,
+                market: document.getElementById('market').value,
+                instrument: document.getElementById('instrument').value.trim(),
+                direction: document.getElementById('direction').value,
+                entry: parseFloat(document.getElementById('entry').value),
+                exit: parseFloat(document.getElementById('exit').value),
+                sl: parseFloat(document.getElementById('sl').value) || null,
+                target: parseFloat(document.getElementById('target').value) || null,
+                qty: parseFloat(document.getElementById('qty').value) || null,
+                risk: risk,
+                pnl: pnl,
+                rMultiple: isNaN(rMultiple) ? null : rMultiple,
+                setup: document.getElementById('setup').value.trim(),
+                condition: document.getElementById('condition').value,
+                emotions: document.getElementById('emotions').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                createdAt: editingId ? (trades.find(t => t.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString()
+            };
+
+            if (editingId) {
+                const idx = trades.findIndex(t => t.id === editingId);
+                if (idx !== -1) trades[idx] = trade;
+            } else {
+                trades.unshift(trade);
+            }
+            saveTrades();
+            resetForm();
+            showView('trades');
         });
+
+        function updateUI() {
+            renderQuickStats();
+            renderDashboard();
+            renderAllTrades();
+            renderDetailedStats();
+        }
+
+        function renderQuickStats() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
+            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            document.getElementById('qs-total').textContent = total;
+            document.getElementById('qs-winrate').textContent = winRate + '%';
+            const pnlEl = document.getElementById('qs-pnl');
+            pnlEl.textContent = formatMoney(netPnl);
+            pnlEl.style.color = netPnl >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        function renderDashboard() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const losses = trades.filter(t => t.pnl < 0).length;
+            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
+            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            const avgWin = wins ? trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0) / wins : 0;
+            const avgLoss = losses ? Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0) / losses) : 0;
+            const profitFactor = avgLoss ? (avgWin * wins) / (avgLoss * losses) : (wins ? '∞' : 0);
+            const avgR = (() => {
+                const withR = trades.filter(t => t.rMultiple != null);
+                return withR.length ? (withR.reduce((s, t) => s + t.rMultiple, 0) / withR.length).toFixed(2) : '—';
+            })();
+
+            const stats = [
+                { label: 'Total Trades', value: total },
+                { label: 'Win Rate', value: winRate + '%' },
+                { label: 'Net P&L', value: formatMoney(netPnl), cls: netPnl >= 0 ? 'positive' : 'negative' },
+                { label: 'Avg Win', value: formatMoney(avgWin), cls: 'positive' },
+                { label: 'Avg Loss', value: formatMoney(-avgLoss), cls: 'negative' },
+                { label: 'Profit Factor', value: typeof profitFactor === 'number' ? profitFactor.toFixed(2) : profitFactor },
+                { label: 'Avg R-Multiple', value: avgR },
+                { label: 'Wins / Losses', value: `${wins} / ${losses}` }
+            ];
+
+            document.getElementById('dashboard-stats').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="label">${s.label}</div>
+      <div class="value ${s.cls || ''}">${s.value}</div>
+    </div>
+  `).join('');
+
+            const tbody = document.querySelector('#recent-trades-table tbody');
+            const recent = trades.slice(0, 8);
+            tbody.innerHTML = recent.map(t => `
+    <tr>
+      <td>${formatDate(t.date)}</td>
+      <td>${t.instrument}</td>
+      <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+      <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+      <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+      <td>${t.setup || '—'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No trades yet</td></tr>';
+        }
+
+        function renderAllTrades() {
+            const marketFilter = document.getElementById('filter-market')?.value || 'all';
+            const resultFilter = document.getElementById('filter-result')?.value || 'all';
+            const search = (document.getElementById('search-trades')?.value || '').toLowerCase();
+            let filtered = [...trades];
+            if (marketFilter !== 'all') filtered = filtered.filter(t => t.market === marketFilter);
+            if (resultFilter === 'win') filtered = filtered.filter(t => t.pnl > 0);
+            if (resultFilter === 'loss') filtered = filtered.filter(t => t.pnl < 0);
+            if (search) {
+                filtered = filtered.filter(t =>
+                    (t.instrument || '').toLowerCase().includes(search) ||
+                    (t.setup || '').toLowerCase().includes(search) ||
+                    (t.notes || '').toLowerCase().includes(search)
+                );
+            }
+
+            const tbody = document.querySelector('#all-trades-table tbody');
+            const empty = document.getElementById('trades-empty');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+
+            tbody.innerHTML = filtered.map(t => `
+    <tr>
+      <td>${formatDate(t.date)}</td>
+      <td>${t.market}</td>
+      <td><strong>${t.instrument}</strong></td>
+      <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
+      <td>${t.entry}</td>
+      <td>${t.exit}</td>
+      <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
+      <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
+      <td>${t.setup || '—'}</td>
+      <td>
+        <button class="btn-icon" title="View" onclick="viewTrade('${t.id}')">👁️</button>
+        <button class="btn-icon" title="Edit" onclick="editTrade('${t.id}')">✏️</button>
+        <button class="btn-icon" title="Delete" onclick="deleteTrade('${t.id}')">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+        }
+
+        function renderDetailedStats() {
+            const total = trades.length;
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const losses = trades.filter(t => t.pnl < 0).length;
+            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
+            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+            const best = trades.length ? Math.max(...trades.map(t => t.pnl)) : 0;
+            const worst = trades.length ? Math.min(...trades.map(t => t.pnl)) : 0;
+
+            const stats = [
+                { label: 'Total Trades', value: total },
+                { label: 'Win Rate', value: winRate + '%' },
+                { label: 'Net P&L', value: formatMoney(netPnl), cls: netPnl >= 0 ? 'positive' : 'negative' },
+                { label: 'Best Trade', value: formatMoney(best), cls: 'positive' },
+                { label: 'Worst Trade', value: formatMoney(worst), cls: 'negative' },
+                { label: 'Total Wins', value: wins },
+                { label: 'Total Losses', value: losses },
+            ];
+
+            document.getElementById('detailed-stats').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="label">${s.label}</div>
+      <div class="value ${s.cls || ''}">${s.value}</div>
+    </div>
+  `).join('');
+
+            const byMarket = {};
+            trades.forEach(t => {
+                if (!byMarket[t.market]) byMarket[t.market] = { count: 0, pnl: 0, wins: 0 };
+                byMarket[t.market].count++;
+                byMarket[t.market].pnl += t.pnl || 0;
+                if (t.pnl > 0) byMarket[t.market].wins++;
+            });
+
+            document.getElementById('market-breakdown').innerHTML = Object.entries(byMarket)
+                .sort((a, b) => b[1].pnl - a[1].pnl)
+                .map(([m, d]) => `
+      <div class="breakdown-item">
+        <span>${m} <small style="color:var(--text-muted)">(${d.count} trades, ${(d.wins / d.count * 100).toFixed(0)}% WR)</small></span>
+        <span class="${d.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.pnl)}</span>
+      </div>
+    `).join('') || '<p class="muted">No data yet</p>';
+
+            const bySetup = {};
+            trades.forEach(t => {
+                const key = t.setup || 'No Setup';
+                if (!bySetup[key]) bySetup[key] = { count: 0, pnl: 0, wins: 0 };
+                bySetup[key].count++;
+                bySetup[key].pnl += t.pnl || 0;
+                if (t.pnl > 0) bySetup[key].wins++;
+            });
+
+            document.getElementById('setup-breakdown').innerHTML = Object.entries(bySetup)
+                .sort((a, b) => b[1].pnl - a[1].pnl)
+                .map(([s, d]) => `
+      <div class="breakdown-item">
+        <span>${s} <small style="color:var(--text-muted)">(${d.count}, ${(d.wins / d.count * 100).toFixed(0)}% WR)</small></span>
+        <span class="${d.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.pnl)}</span>
+      </div>
+    `).join('') || '<p class="muted">No data yet</p>';
+        }
+
+        function viewTrade(id) {
+            const t = trades.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('modal-body').innerHTML = `
+    <h3 style="margin-bottom:16px">${t.instrument} – ${t.direction}</h3>
+    <div class="modal-body-row"><span class="label">Date</span><span>${formatDate(t.date)}</span></div>
+    <div class="modal-body-row"><span class="label">Market</span><span>${t.market}</span></div>
+    <div class="modal-body-row"><span class="label">Entry → Exit</span><span>${t.entry} → ${t.exit}</span></div>
+    <div class="modal-body-row"><span class="label">Stop Loss / Target</span><span>${t.sl ?? '—'} / ${t.target ?? '—'}</span></div>
+    <div class="modal-body-row"><span class="label">Qty / Risk</span><span>${t.qty ?? '—'} / ${t.risk ? '₹' + t.risk : '—'}</span></div>
+    <div class="modal-body-row"><span class="label">P&L</span><span class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</span></div>
+    <div class="modal-body-row"><span class="label">R-Multiple</span><span>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</span></div>
+    <div class="modal-body-row"><span class="label">Setup</span><span>${t.setup || '—'}</span></div>
+    <div class="modal-body-row"><span class="label">Condition</span><span>${t.condition || '—'}</span></div>
+    <div class="modal-body-row"><span class="label">Emotions</span><span>${t.emotions || '—'}</span></div>
+    <div style="margin-top:16px">
+      <div class="label" style="margin-bottom:6px">Notes / Lessons</div>
+      <p style="font-size:14px;white-space:pre-wrap">${t.notes || '—'}</p>
+    </div>
+  `;
+            document.getElementById('trade-modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('trade-modal').classList.remove('open');
+        }
+
+        function editTrade(id) {
+            const t = trades.find(x => x.id === id);
+            if (t) fillForm(t);
+        }
+
+        function deleteTrade(id) {
+            if (!confirm('Delete this trade permanently?')) return;
+            trades = trades.filter(t => t.id !== id);
+            saveTrades();
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(trades, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `traders-diary-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('import-file').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                try {
+                    const imported = JSON.parse(ev.target.result);
+                    if (!Array.isArray(imported)) throw new Error('Invalid format');
+                    if (confirm(`Import ${imported.length} trades? This will add to existing data.`)) {
+                        imported.forEach(t => {
+                            if (!t.id) t.id = generateId();
+                            trades.unshift(t);
+                        });
+                        saveTrades();
+                        alert('Import successful!');
+                    }
+                } catch (err) {
+                    alert('Invalid JSON file');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        function clearAllData() {
+            if (!confirm('This will permanently delete ALL trades. Are you sure?')) return;
+            if (!confirm('Last chance – delete everything?')) return;
+            trades = [];
+            saveTrades();
+            alert('All data cleared.');
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => showView(btn.dataset.view));
+        });
+
+        document.getElementById('filter-market')?.addEventListener('change', renderAllTrades);
+        document.getElementById('filter-result')?.addEventListener('change', renderAllTrades);
+        document.getElementById('search-trades')?.addEventListener('input', renderAllTrades);
+
+        document.getElementById('trade-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        loadTrades();
+        updateUI();
+        showView('dashboard');
+
+        if (!document.getElementById('date').value) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('date').value = now.toISOString().slice(0, 16);
+        }
     </script>
 </body>
 
