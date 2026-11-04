@@ -1,4 +1,6 @@
+
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.views.generic import TemplateView
 
@@ -26,6 +28,13 @@ urlpatterns = [
         'login/',
         TemplateView.as_view(template_name='app/login.html'),
         name='login'
+    ),
+
+    # Logout URL
+    path(
+        'logout/',
+        auth_views.LogoutView.as_view(next_page='/'),
+        name='logout'
     ),
 
     path(

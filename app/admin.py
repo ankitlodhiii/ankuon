@@ -1,3 +1,20 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+admin.site.register(FocusItem)
+admin.site.register(CoreSkill)
+admin.site.register(LifeGoal)
+admin.site.register(CustomGoal)
+admin.site.register(Emi)
+admin.site.register(Receivable)
+admin.site.register(Payable)
+admin.site.register(MoneyRule)
+admin.site.register(MindsetPoint)
+admin.site.register(IncomeSource)
+admin.site.register(RoutineRow)
+admin.site.register(Skill)
+admin.site.register(GitaShloka)
+admin.site.register(Journal)
+admin.site.register(Note)
+admin.site.register(Balance)
+admin.site.register(Setting)

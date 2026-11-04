@@ -2,1260 +2,608 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trader’s Diary – Crypto • Indian Markets • Forex</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Box Planner</title>
     <style>
         :root {
-            --bg: #0b0f19;
-            --bg-card: #121826;
-            --bg-hover: #1a2234;
-            --border: #1e2a3a;
-            --text: #e8eef7;
-            --text-muted: #8b9bb4;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --radius: 12px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.5;
-            min-height: 100vh;
+            padding: 16px;
+            line-height: 1.4;
         }
 
-        .app {
-            display: flex;
-            min-height: 100vh;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-card);
-            border-right: 1px solid var(--border);
+        header {
             display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding: 0 8px 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .logo-icon {
-            font-size: 28px;
-        }
-
-        .logo h1 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .tagline {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
+        h1 {
+            font-size: 1.6rem;
+            color: var(--primary);
         }
 
         .nav {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            text-align: left;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .nav-btn:hover {
-            background: var(--bg-hover);
-            color: var(--text);
-        }
-
-        .nav-btn.active {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--primary);
-        }
-
-        .sidebar-footer {
-            border-top: 1px solid var(--border);
-            padding-top: 16px;
-        }
-
-        .quick-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .qs-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-        }
-
-        .qs-label {
-            color: var(--text-muted);
-        }
-
-        .qs-value {
-            font-weight: 600;
-        }
-
-        /* Main */
-        .main {
-            flex: 1;
-            margin-left: 260px;
-            padding: 32px 40px;
-            max-width: 1200px;
-        }
-
-        .view {
-            display: none;
-        }
-
-        .view.active {
-            display: block;
-        }
-
-        .view-header {
-            margin-bottom: 28px;
-        }
-
-        .view-header h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .view-header p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .filters {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .filters select,
-        .filters input {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-        .filters input {
-            min-width: 220px;
-        }
-
-        /* Cards & Stats */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
+            gap: 8px;
             align-items: center;
-            margin-bottom: 16px;
         }
 
-        .card h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-        }
-
-        .stat-card .label {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .stat-card .value {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .stat-card .value.positive {
-            color: var(--success);
-        }
-
-        .stat-card .value.negative {
-            color: var(--danger);
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Tables */
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        .trades-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .trades-table th {
-            text-align: left;
-            padding: 10px 12px;
-            color: var(--text-muted);
-            font-weight: 500;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .trades-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .trades-table tr:hover td {
-            background: var(--bg-hover);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-long {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .badge-short {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        .badge-win {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .badge-loss {
-            color: var(--danger);
-            font-weight: 600;
-        }
-
-        .btn-icon {
-            background: transparent;
+        button {
+            background: var(--primary);
+            color: white;
             border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .btn-icon:hover {
-            background: var(--bg-hover);
-            color: var(--text);
-        }
-
-        /* Form */
-        .form-card {
-            max-width: 800px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 10px 12px;
+            padding: 8px 14px;
             border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.15s;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        button.secondary {
+            background: #64748b;
+        }
+
+        button.secondary:hover {
+            background: #475569;
+        }
+
+        button.danger {
+            background: var(--danger);
+        }
+
+        button.small {
+            padding: 4px 10px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== DAY BOX ===== */
+        .day-box {
+            background: var(--card);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .day-box.today {
             border-color: var(--primary);
         }
 
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.15s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background: var(--bg-hover);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-danger:hover {
-            background: rgba(239, 68, 68, 0.25);
-        }
-
-        .btn-text {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .settings-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-
-        .muted {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
-
-        /* Breakdown lists */
-        .breakdown-item {
+        .day-header {
+            background: #f8fafc;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
             border-bottom: 1px solid var(--border);
-            font-size: 13px;
         }
 
-        .breakdown-item:last-child {
+        .day-header:hover {
+            background: #f1f5f9;
+        }
+
+        .day-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .day-title .weekday {
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-left: 6px;
+        }
+
+        .indicators {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot.note {
+            background: #3b82f6;
+        }
+
+        .dot.goal {
+            background: #8b5cf6;
+        }
+
+        .dot.task {
+            background: #10b981;
+        }
+
+        .dot.budget {
+            background: #f59e0b;
+        }
+
+        .day-body {
+            display: none;
+            padding: 16px;
+        }
+
+        .day-box.open .day-body {
+            display: block;
+        }
+
+        .day-box.open .day-header {
+            background: #eef2ff;
+        }
+
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section h3 {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            margin-bottom: 6px;
+        }
+
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .task-item:last-child {
             border-bottom: none;
         }
 
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .task-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
         }
 
-        .modal.open {
+        .task-text.done {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+
+        .add-row {
             display: flex;
+            gap: 8px;
+            margin-top: 6px;
         }
 
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            max-width: 560px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .modal-body-row {
+        .budget-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
         }
 
-        .modal-body-row .label {
-            color: var(--text-muted);
+        .budget-item:last-child {
+            border-bottom: none;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 72px;
-                padding: 16px 8px;
+        .budget-amount.income {
+            color: var(--success);
+        }
+
+        .budget-amount.expense {
+            color: var(--danger);
+        }
+
+        .budget-form {
+            display: grid;
+            grid-template-columns: 1fr 90px 90px 40px;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .budget-summary {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--danger);
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            .budget-form {
+                grid-template-columns: 1fr 1fr;
             }
 
-            .logo h1,
-            .tagline,
-            .nav-btn,
-            .sidebar-footer {
-                display: none;
-            }
-
-            .logo {
-                justify-content: center;
-                border: none;
-                margin: 0;
-                padding-bottom: 16px;
-            }
-
-            .main {
-                margin-left: 72px;
-                padding: 20px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .two-col {
-                grid-template-columns: 1fr;
+            .budget-form button {
+                grid-column: span 2;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="app">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <span class="logo-icon">📒</span>
-                <div>
-                    <h1>Trader’s Diary</h1>
-                    <p class="tagline">Crypto • NSE/BSE • Forex</p>
-                </div>
+    <div class="container">
+        <header>
+            <h1>📅 Date Box Planner</h1>
+            <div class="nav">
+                <button class="secondary" onclick="changeMonth(-1)">← Prev</button>
+                <span id="monthLabel" style="font-weight:600; min-width:140px; text-align:center;"></span>
+                <button class="secondary" onclick="changeMonth(1)">Next →</button>
+                <button onclick="goToday()">Today</button>
             </div>
+        </header>
 
-            <nav class="nav">
-                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
-                <button class="nav-btn" data-view="trades">All Trades</button>
-                <button class="nav-btn" data-view="add">+ Add Trade</button>
-                <button class="nav-btn" data-view="stats">Statistics</button>
-                <button class="nav-btn" data-view="settings">Settings</button>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="quick-stats" id="quick-stats">
-                    <div class="qs-item">
-                        <span class="qs-label">Total Trades</span>
-                        <span class="qs-value" id="qs-total">0</span>
-                    </div>
-                    <div class="qs-item">
-                        <span class="qs-label">Win Rate</span>
-                        <span class="qs-value" id="qs-winrate">0%</span>
-                    </div>
-                    <div class="qs-item">
-                        <span class="qs-label">Net P&L</span>
-                        <span class="qs-value" id="qs-pnl">₹0</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main">
-            <!-- Dashboard View -->
-            <section id="view-dashboard" class="view active">
-                <header class="view-header">
-                    <h2>Dashboard</h2>
-                    <p>Overview of your trading performance</p>
-                </header>
-
-                <div class="stats-grid" id="dashboard-stats"></div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Recent Trades</h3>
-                        <button class="btn-text" onclick="showView('trades')">View All →</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table class="trades-table" id="recent-trades-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Instrument</th>
-                                    <th>Dir</th>
-                                    <th>P&L</th>
-                                    <th>R</th>
-                                    <th>Setup</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- All Trades View -->
-            <section id="view-trades" class="view">
-                <header class="view-header">
-                    <h2>All Trades</h2>
-                    <div class="filters">
-                        <select id="filter-market">
-                            <option value="all">All Markets</option>
-                            <option value="Indian Stocks">Indian Stocks</option>
-                            <option value="Crypto">Crypto</option>
-                            <option value="Forex">Forex</option>
-                            <option value="Commodities">Commodities</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <select id="filter-result">
-                            <option value="all">All Results</option>
-                            <option value="win">Wins</option>
-                            <option value="loss">Losses</option>
-                        </select>
-                        <input type="text" id="search-trades" placeholder="Search instrument / setup..." />
-                    </div>
-                </header>
-
-                <div class="card">
-                    <div class="table-wrap">
-                        <table class="trades-table" id="all-trades-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Market</th>
-                                    <th>Instrument</th>
-                                    <th>Dir</th>
-                                    <th>Entry</th>
-                                    <th>Exit</th>
-                                    <th>P&L</th>
-                                    <th>R</th>
-                                    <th>Setup</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                    <p class="empty-state" id="trades-empty" style="display:none;">No trades yet. Add your first trade!
-                    </p>
-                </div>
-            </section>
-
-            <!-- Add / Edit Trade View -->
-            <section id="view-add" class="view">
-                <header class="view-header">
-                    <h2 id="form-title">Add New Trade</h2>
-                    <p>Log every detail for better review</p>
-                </header>
-
-                <form id="trade-form" class="card form-card">
-                    <input type="hidden" id="trade-id" />
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Date & Time *</label>
-                            <input type="datetime-local" id="date" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Market *</label>
-                            <select id="market" required>
-                                <option value="Indian Stocks">Indian Stocks (NSE/BSE)</option>
-                                <option value="Crypto">Crypto</option>
-                                <option value="Forex">Forex</option>
-                                <option value="Commodities">Commodities</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Instrument *</label>
-                            <input type="text" id="instrument" placeholder="Nifty, BankNifty, BTCUSDT, EURUSD..."
-                                required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Direction *</label>
-                            <select id="direction" required>
-                                <option value="Long">Long</option>
-                                <option value="Short">Short</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Entry Price *</label>
-                            <input type="number" id="entry" step="any" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Exit Price *</label>
-                            <input type="number" id="exit" step="any" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Stop Loss</label>
-                            <input type="number" id="sl" step="any" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Target</label>
-                            <input type="number" id="target" step="any" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Position Size (Qty / Lots)</label>
-                            <input type="number" id="qty" step="any" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Risk Amount (₹ / $)</label>
-                            <input type="number" id="risk" step="any" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>P&L (₹ / $) *</label>
-                            <input type="number" id="pnl" step="any" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>R-Multiple</label>
-                            <input type="number" id="rMultiple" step="0.01"
-                                placeholder="Auto-calculated if Risk filled" />
-                        </div>
-
-                        <div class="form-group full">
-                            <label>Setup / Strategy Name</label>
-                            <input type="text" id="setup"
-                                placeholder="e.g. Opening Range Breakout, Order Block, RSI Divergence" />
-                        </div>
-
-                        <div class="form-group full">
-                            <label>Market Condition</label>
-                            <select id="condition">
-                                <option value="">Select...</option>
-                                <option value="Trending">Trending</option>
-                                <option value="Ranging">Ranging</option>
-                                <option value="High Volatility">High Volatility</option>
-                                <option value="News Driven">News Driven</option>
-                                <option value="Low Volatility">Low Volatility</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group full">
-                            <label>Emotions / Mental State</label>
-                            <textarea id="emotions" rows="2"
-                                placeholder="Calm, FOMO, Revenge, Overconfident, Tired..."></textarea>
-                        </div>
-
-                        <div class="form-group full">
-                            <label>Notes / Lessons</label>
-                            <textarea id="notes" rows="3"
-                                placeholder="What went well? What will you improve next time?"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="submit-btn">Save Trade</button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Statistics View -->
-            <section id="view-stats" class="view">
-                <header class="view-header">
-                    <h2>Statistics</h2>
-                    <p>Deep dive into your performance</p>
-                </header>
-
-                <div class="stats-grid" id="detailed-stats"></div>
-
-                <div class="two-col">
-                    <div class="card">
-                        <h3>Performance by Market</h3>
-                        <div id="market-breakdown"></div>
-                    </div>
-                    <div class="card">
-                        <h3>Performance by Setup</h3>
-                        <div id="setup-breakdown"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Settings View -->
-            <section id="view-settings" class="view">
-                <header class="view-header">
-                    <h2>Settings & Data</h2>
-                </header>
-
-                <div class="card">
-                    <h3>Data Management</h3>
-                    <p class="muted">Your data is stored locally in this browser. Export regularly for backup.</p>
-                    <div class="settings-actions">
-                        <button class="btn btn-primary" onclick="exportData()">Export All Trades (JSON)</button>
-                        <button class="btn btn-secondary"
-                            onclick="document.getElementById('import-file').click()">Import Trades</button>
-                        <input type="file" id="import-file" accept=".json" hidden />
-                        <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>About</h3>
-                    <p>Trader’s Diary – Simple offline trading journal for Crypto, Indian Markets (NSE/BSE), Forex &
-                        more.</p>
-                    <p class="muted">All data stays on your device. No account required.</p>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Trade Detail Modal -->
-    <div class="modal" id="trade-modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <div id="modal-body"></div>
-        </div>
+        <div id="daysContainer"></div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'traders_diary_v1';
-        let trades = [];
-        let editingId = null;
+        let current = new Date();
+        let data = JSON.parse(localStorage.getItem('dateBoxPlanner') || '{}');
 
-        function loadTrades() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                trades = raw ? JSON.parse(raw) : [];
-            } catch (e) {
-                trades = [];
+        function formatDate(d) {
+            return d.toISOString().split('T')[0];
+        }
+
+        function getDayData(dateStr) {
+            if (!data[dateStr]) {
+                data[dateStr] = { notes: '', goals: '', tasks: [], budget: [] };
+            }
+            return data[dateStr];
+        }
+
+        function save() {
+            localStorage.setItem('dateBoxPlanner', JSON.stringify(data));
+        }
+
+        function changeMonth(dir) {
+            current.setMonth(current.getMonth() + dir);
+            render();
+        }
+
+        function goToday() {
+            current = new Date();
+            render();
+            // open today's box
+            setTimeout(() => {
+                const todayBox = document.querySelector('.day-box.today');
+                if (todayBox) {
+                    todayBox.classList.add('open');
+                    todayBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 50);
+        }
+
+        function toggleDay(dateStr) {
+            const box = document.getElementById('box-' + dateStr);
+            box.classList.toggle('open');
+        }
+
+        function render() {
+            const year = current.getFullYear();
+            const month = current.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayStr = formatDate(new Date());
+
+            document.getElementById('monthLabel').textContent =
+                current.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+
+            const container = document.getElementById('daysContainer');
+            container.innerHTML = '';
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const dateObj = new Date(dateStr + 'T00:00:00');
+                const dayData = getDayData(dateStr);
+                const isToday = dateStr === todayStr;
+
+                // indicators
+                let dots = '';
+                if (dayData.notes) dots += '<span class="dot note" title="Notes"></span>';
+                if (dayData.goals) dots += '<span class="dot goal" title="Goals"></span>';
+                if (dayData.tasks.length) dots += '<span class="dot task" title="Tasks"></span>';
+                if (dayData.budget.length) dots += '<span class="dot budget" title="Budget"></span>';
+
+                const weekday = dateObj.toLocaleDateString('en-IN', { weekday: 'short' });
+
+                const box = document.createElement('div');
+                box.className = 'day-box' + (isToday ? ' today' : '');
+                box.id = 'box-' + dateStr;
+
+                box.innerHTML = `
+          <div class="day-header" onclick="toggleDay('${dateStr}')">
+            <div class="day-title">
+              ${d} <span class="weekday">${weekday}</span>
+              ${isToday ? ' • Today' : ''}
+            </div>
+            <div class="indicators">${dots}</div>
+          </div>
+
+          <div class="day-body">
+            <!-- NOTES -->
+            <div class="section">
+              <h3>📝 Notes</h3>
+              <textarea id="notes-${dateStr}" placeholder="Write notes for this day...">${dayData.notes || ''}</textarea>
+            </div>
+
+            <!-- GOALS -->
+            <div class="section">
+              <h3>🎯 Goals for this day</h3>
+              <textarea id="goals-${dateStr}" placeholder="What do you want to achieve?">${dayData.goals || ''}</textarea>
+            </div>
+
+            <!-- TASKS -->
+            <div class="section">
+              <h3>✅ Tasks / To-Do</h3>
+              <div id="tasks-${dateStr}">
+                ${renderTasksHTML(dayData.tasks, dateStr)}
+              </div>
+              <div class="add-row">
+                <input type="text" id="newtask-${dateStr}" placeholder="Add a new task...">
+                <button class="small" onclick="addTask('${dateStr}')">Add</button>
+              </div>
+            </div>
+
+            <!-- BUDGET -->
+            <div class="section">
+              <h3>💰 Budget / Expenses</h3>
+              <div id="budget-${dateStr}">
+                ${renderBudgetHTML(dayData.budget, dateStr)}
+              </div>
+              <div class="budget-form">
+                <input type="text" id="bdesc-${dateStr}" placeholder="Description">
+                <input type="number" id="bamount-${dateStr}" placeholder="Amount" step="0.01">
+                <select id="btype-${dateStr}" style="padding:9px; border-radius:8px; border:1px solid var(--border);">
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </select>
+                <button class="small" onclick="addBudget('${dateStr}')">+</button>
+              </div>
+              <div class="budget-summary">
+                <span>Daily Balance:</span>
+                <span id="balance-${dateStr}">${calcBalance(dayData.budget)}</span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button onclick="saveDay('${dateStr}')">💾 Save Day</button>
+              <button class="danger small" onclick="clearDay('${dateStr}')">Clear Day</button>
+            </div>
+          </div>
+        `;
+
+                container.appendChild(box);
             }
         }
 
-        function saveTrades() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
-            updateUI();
+        function renderTasksHTML(tasks, dateStr) {
+            if (!tasks || tasks.length === 0) {
+                return '<div class="empty">No tasks yet</div>';
+            }
+            return tasks.map((t, i) => `
+        <div class="task-item">
+          <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask('${dateStr}', ${i})">
+          <span class="task-text ${t.done ? 'done' : ''}" style="flex:1">${t.text}</span>
+          <button class="danger small" onclick="deleteTask('${dateStr}', ${i})">✕</button>
+        </div>
+      `).join('');
         }
 
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        function renderBudgetHTML(items, dateStr) {
+            if (!items || items.length === 0) {
+                return '<div class="empty">No budget entries</div>';
+            }
+            return items.map((b, i) => `
+        <div class="budget-item">
+          <span>${b.desc}</span>
+          <div>
+            <span class="budget-amount ${b.type}">${b.type === 'income' ? '+' : '-'}₹${Number(b.amount).toFixed(2)}</span>
+            <button class="danger small" style="margin-left:8px" onclick="deleteBudget('${dateStr}', ${i})">✕</button>
+          </div>
+        </div>
+      `).join('');
         }
 
-        function formatDate(iso) {
-            if (!iso) return '—';
-            const d = new Date(iso);
-            return d.toLocaleDateString('en-IN', {
-                day: '2-digit', month: 'short', year: '2-digit',
-                hour: '2-digit', minute: '2-digit'
+        function calcBalance(items) {
+            let bal = 0;
+            (items || []).forEach(i => {
+                bal += i.type === 'income' ? Number(i.amount) : -Number(i.amount);
             });
+            const cls = bal >= 0 ? 'positive' : 'negative';
+            return `<span class="${cls}">₹${bal.toFixed(2)}</span>`;
         }
 
-        function formatMoney(n) {
-            if (n === null || n === undefined || isNaN(n)) return '—';
-            const abs = Math.abs(n);
-            const formatted = abs >= 1000 ? abs.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : abs.toFixed(2);
-            return (n >= 0 ? '+' : '−') + '₹' + formatted;
+        // ===== ACTIONS =====
+        function addTask(dateStr) {
+            const input = document.getElementById('newtask-' + dateStr);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const day = getDayData(dateStr);
+            day.tasks.push({ text, done: false });
+            input.value = '';
+            document.getElementById('tasks-' + dateStr).innerHTML = renderTasksHTML(day.tasks, dateStr);
+            save();
+            updateIndicators(dateStr);
         }
 
-        function calcR(pnl, risk) {
-            if (!risk || risk === 0) return null;
-            return +(pnl / risk).toFixed(2);
+        function toggleTask(dateStr, index) {
+            const day = getDayData(dateStr);
+            day.tasks[index].done = !day.tasks[index].done;
+            document.getElementById('tasks-' + dateStr).innerHTML = renderTasksHTML(day.tasks, dateStr);
+            save();
         }
 
-        function showView(name) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            const view = document.getElementById('view-' + name);
-            if (view) view.classList.add('active');
-            const btn = document.querySelector(`.nav-btn[data-view="${name}"]`);
-            if (btn) btn.classList.add('active');
-            if (name === 'add' && !editingId) resetForm(true);
+        function deleteTask(dateStr, index) {
+            const day = getDayData(dateStr);
+            day.tasks.splice(index, 1);
+            document.getElementById('tasks-' + dateStr).innerHTML = renderTasksHTML(day.tasks, dateStr);
+            save();
+            updateIndicators(dateStr);
         }
 
-        function resetForm(keepView = false) {
-            editingId = null;
-            document.getElementById('trade-form').reset();
-            document.getElementById('trade-id').value = '';
-            document.getElementById('form-title').textContent = 'Add New Trade';
-            document.getElementById('submit-btn').textContent = 'Save Trade';
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('date').value = now.toISOString().slice(0, 16);
-            if (!keepView) showView('trades');
-        }
+        function addBudget(dateStr) {
+            const desc = document.getElementById('bdesc-' + dateStr).value.trim();
+            const amount = parseFloat(document.getElementById('bamount-' + dateStr).value);
+            const type = document.getElementById('btype-' + dateStr).value;
 
-        function fillForm(trade) {
-            editingId = trade.id;
-            document.getElementById('trade-id').value = trade.id;
-            document.getElementById('date').value = trade.date ? trade.date.slice(0, 16) : '';
-            document.getElementById('market').value = trade.market || 'Indian Stocks';
-            document.getElementById('instrument').value = trade.instrument || '';
-            document.getElementById('direction').value = trade.direction || 'Long';
-            document.getElementById('entry').value = trade.entry ?? '';
-            document.getElementById('exit').value = trade.exit ?? '';
-            document.getElementById('sl').value = trade.sl ?? '';
-            document.getElementById('target').value = trade.target ?? '';
-            document.getElementById('qty').value = trade.qty ?? '';
-            document.getElementById('risk').value = trade.risk ?? '';
-            document.getElementById('pnl').value = trade.pnl ?? '';
-            document.getElementById('rMultiple').value = trade.rMultiple ?? '';
-            document.getElementById('setup').value = trade.setup || '';
-            document.getElementById('condition').value = trade.condition || '';
-            document.getElementById('emotions').value = trade.emotions || '';
-            document.getElementById('notes').value = trade.notes || '';
-            document.getElementById('form-title').textContent = 'Edit Trade';
-            document.getElementById('submit-btn').textContent = 'Update Trade';
-            showView('add');
-        }
-
-        document.getElementById('pnl')?.addEventListener('input', autoR);
-        document.getElementById('risk')?.addEventListener('input', autoR);
-
-        function autoR() {
-            const pnl = parseFloat(document.getElementById('pnl').value);
-            const risk = parseFloat(document.getElementById('risk').value);
-            if (!isNaN(pnl) && !isNaN(risk) && risk !== 0) {
-                document.getElementById('rMultiple').value = calcR(pnl, risk);
-            }
-        }
-
-        document.getElementById('trade-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const pnl = parseFloat(document.getElementById('pnl').value);
-            const risk = parseFloat(document.getElementById('risk').value) || null;
-            let rMultiple = parseFloat(document.getElementById('rMultiple').value);
-            if (isNaN(rMultiple) && risk) rMultiple = calcR(pnl, risk);
-
-            const trade = {
-                id: editingId || generateId(),
-                date: document.getElementById('date').value,
-                market: document.getElementById('market').value,
-                instrument: document.getElementById('instrument').value.trim(),
-                direction: document.getElementById('direction').value,
-                entry: parseFloat(document.getElementById('entry').value),
-                exit: parseFloat(document.getElementById('exit').value),
-                sl: parseFloat(document.getElementById('sl').value) || null,
-                target: parseFloat(document.getElementById('target').value) || null,
-                qty: parseFloat(document.getElementById('qty').value) || null,
-                risk: risk,
-                pnl: pnl,
-                rMultiple: isNaN(rMultiple) ? null : rMultiple,
-                setup: document.getElementById('setup').value.trim(),
-                condition: document.getElementById('condition').value,
-                emotions: document.getElementById('emotions').value.trim(),
-                notes: document.getElementById('notes').value.trim(),
-                createdAt: editingId ? (trades.find(t => t.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString()
-            };
-
-            if (editingId) {
-                const idx = trades.findIndex(t => t.id === editingId);
-                if (idx !== -1) trades[idx] = trade;
-            } else {
-                trades.unshift(trade);
-            }
-            saveTrades();
-            resetForm();
-            showView('trades');
-        });
-
-        function updateUI() {
-            renderQuickStats();
-            renderDashboard();
-            renderAllTrades();
-            renderDetailedStats();
-        }
-
-        function renderQuickStats() {
-            const total = trades.length;
-            const wins = trades.filter(t => t.pnl > 0).length;
-            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
-            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
-            document.getElementById('qs-total').textContent = total;
-            document.getElementById('qs-winrate').textContent = winRate + '%';
-            const pnlEl = document.getElementById('qs-pnl');
-            pnlEl.textContent = formatMoney(netPnl);
-            pnlEl.style.color = netPnl >= 0 ? 'var(--success)' : 'var(--danger)';
-        }
-
-        function renderDashboard() {
-            const total = trades.length;
-            const wins = trades.filter(t => t.pnl > 0).length;
-            const losses = trades.filter(t => t.pnl < 0).length;
-            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
-            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
-            const avgWin = wins ? trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0) / wins : 0;
-            const avgLoss = losses ? Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0) / losses) : 0;
-            const profitFactor = avgLoss ? (avgWin * wins) / (avgLoss * losses) : (wins ? '∞' : 0);
-            const avgR = (() => {
-                const withR = trades.filter(t => t.rMultiple != null);
-                return withR.length ? (withR.reduce((s, t) => s + t.rMultiple, 0) / withR.length).toFixed(2) : '—';
-            })();
-
-            const stats = [
-                { label: 'Total Trades', value: total },
-                { label: 'Win Rate', value: winRate + '%' },
-                { label: 'Net P&L', value: formatMoney(netPnl), cls: netPnl >= 0 ? 'positive' : 'negative' },
-                { label: 'Avg Win', value: formatMoney(avgWin), cls: 'positive' },
-                { label: 'Avg Loss', value: formatMoney(-avgLoss), cls: 'negative' },
-                { label: 'Profit Factor', value: typeof profitFactor === 'number' ? profitFactor.toFixed(2) : profitFactor },
-                { label: 'Avg R-Multiple', value: avgR },
-                { label: 'Wins / Losses', value: `${wins} / ${losses}` }
-            ];
-
-            document.getElementById('dashboard-stats').innerHTML = stats.map(s => `
-    <div class="stat-card">
-      <div class="label">${s.label}</div>
-      <div class="value ${s.cls || ''}">${s.value}</div>
-    </div>
-  `).join('');
-
-            const tbody = document.querySelector('#recent-trades-table tbody');
-            const recent = trades.slice(0, 8);
-            tbody.innerHTML = recent.map(t => `
-    <tr>
-      <td>${formatDate(t.date)}</td>
-      <td>${t.instrument}</td>
-      <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
-      <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
-      <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
-      <td>${t.setup || '—'}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No trades yet</td></tr>';
-        }
-
-        function renderAllTrades() {
-            const marketFilter = document.getElementById('filter-market')?.value || 'all';
-            const resultFilter = document.getElementById('filter-result')?.value || 'all';
-            const search = (document.getElementById('search-trades')?.value || '').toLowerCase();
-            let filtered = [...trades];
-            if (marketFilter !== 'all') filtered = filtered.filter(t => t.market === marketFilter);
-            if (resultFilter === 'win') filtered = filtered.filter(t => t.pnl > 0);
-            if (resultFilter === 'loss') filtered = filtered.filter(t => t.pnl < 0);
-            if (search) {
-                filtered = filtered.filter(t =>
-                    (t.instrument || '').toLowerCase().includes(search) ||
-                    (t.setup || '').toLowerCase().includes(search) ||
-                    (t.notes || '').toLowerCase().includes(search)
-                );
-            }
-
-            const tbody = document.querySelector('#all-trades-table tbody');
-            const empty = document.getElementById('trades-empty');
-            if (filtered.length === 0) {
-                tbody.innerHTML = '';
-                empty.style.display = 'block';
+            if (!desc || isNaN(amount) || amount <= 0) {
+                alert('Enter valid description and amount');
                 return;
             }
-            empty.style.display = 'none';
 
-            tbody.innerHTML = filtered.map(t => `
-    <tr>
-      <td>${formatDate(t.date)}</td>
-      <td>${t.market}</td>
-      <td><strong>${t.instrument}</strong></td>
-      <td><span class="badge badge-${t.direction.toLowerCase()}">${t.direction}</span></td>
-      <td>${t.entry}</td>
-      <td>${t.exit}</td>
-      <td class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</td>
-      <td>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</td>
-      <td>${t.setup || '—'}</td>
-      <td>
-        <button class="btn-icon" title="View" onclick="viewTrade('${t.id}')">👁️</button>
-        <button class="btn-icon" title="Edit" onclick="editTrade('${t.id}')">✏️</button>
-        <button class="btn-icon" title="Delete" onclick="deleteTrade('${t.id}')">🗑️</button>
-      </td>
-    </tr>
-  `).join('');
+            const day = getDayData(dateStr);
+            day.budget.push({ desc, amount, type });
+
+            document.getElementById('bdesc-' + dateStr).value = '';
+            document.getElementById('bamount-' + dateStr).value = '';
+            document.getElementById('budget-' + dateStr).innerHTML = renderBudgetHTML(day.budget, dateStr);
+            document.getElementById('balance-' + dateStr).innerHTML = calcBalance(day.budget);
+            save();
+            updateIndicators(dateStr);
         }
 
-        function renderDetailedStats() {
-            const total = trades.length;
-            const wins = trades.filter(t => t.pnl > 0).length;
-            const losses = trades.filter(t => t.pnl < 0).length;
-            const winRate = total ? ((wins / total) * 100).toFixed(1) : 0;
-            const netPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
-            const best = trades.length ? Math.max(...trades.map(t => t.pnl)) : 0;
-            const worst = trades.length ? Math.min(...trades.map(t => t.pnl)) : 0;
+        function deleteBudget(dateStr, index) {
+            const day = getDayData(dateStr);
+            day.budget.splice(index, 1);
+            document.getElementById('budget-' + dateStr).innerHTML = renderBudgetHTML(day.budget, dateStr);
+            document.getElementById('balance-' + dateStr).innerHTML = calcBalance(day.budget);
+            save();
+            updateIndicators(dateStr);
+        }
 
-            const stats = [
-                { label: 'Total Trades', value: total },
-                { label: 'Win Rate', value: winRate + '%' },
-                { label: 'Net P&L', value: formatMoney(netPnl), cls: netPnl >= 0 ? 'positive' : 'negative' },
-                { label: 'Best Trade', value: formatMoney(best), cls: 'positive' },
-                { label: 'Worst Trade', value: formatMoney(worst), cls: 'negative' },
-                { label: 'Total Wins', value: wins },
-                { label: 'Total Losses', value: losses },
-            ];
+        function saveDay(dateStr) {
+            const day = getDayData(dateStr);
+            day.notes = document.getElementById('notes-' + dateStr).value;
+            day.goals = document.getElementById('goals-' + dateStr).value;
+            save();
+            updateIndicators(dateStr);
+            alert('Saved!');
+        }
 
-            document.getElementById('detailed-stats').innerHTML = stats.map(s => `
-    <div class="stat-card">
-      <div class="label">${s.label}</div>
-      <div class="value ${s.cls || ''}">${s.value}</div>
-    </div>
-  `).join('');
+        function clearDay(dateStr) {
+            if (!confirm('Clear everything for this day?')) return;
+            data[dateStr] = { notes: '', goals: '', tasks: [], budget: [] };
+            save();
+            // re-render just this box
+            const wasOpen = document.getElementById('box-' + dateStr).classList.contains('open');
+            render();
+            if (wasOpen) {
+                document.getElementById('box-' + dateStr).classList.add('open');
+            }
+        }
 
-            const byMarket = {};
-            trades.forEach(t => {
-                if (!byMarket[t.market]) byMarket[t.market] = { count: 0, pnl: 0, wins: 0 };
-                byMarket[t.market].count++;
-                byMarket[t.market].pnl += t.pnl || 0;
-                if (t.pnl > 0) byMarket[t.market].wins++;
+        function updateIndicators(dateStr) {
+            // simple way: just re-render whole month (fast enough)
+            const openBoxes = [...document.querySelectorAll('.day-box.open')].map(b => b.id);
+            render();
+            openBoxes.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('open');
             });
-
-            document.getElementById('market-breakdown').innerHTML = Object.entries(byMarket)
-                .sort((a, b) => b[1].pnl - a[1].pnl)
-                .map(([m, d]) => `
-      <div class="breakdown-item">
-        <span>${m} <small style="color:var(--text-muted)">(${d.count} trades, ${(d.wins / d.count * 100).toFixed(0)}% WR)</small></span>
-        <span class="${d.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.pnl)}</span>
-      </div>
-    `).join('') || '<p class="muted">No data yet</p>';
-
-            const bySetup = {};
-            trades.forEach(t => {
-                const key = t.setup || 'No Setup';
-                if (!bySetup[key]) bySetup[key] = { count: 0, pnl: 0, wins: 0 };
-                bySetup[key].count++;
-                bySetup[key].pnl += t.pnl || 0;
-                if (t.pnl > 0) bySetup[key].wins++;
-            });
-
-            document.getElementById('setup-breakdown').innerHTML = Object.entries(bySetup)
-                .sort((a, b) => b[1].pnl - a[1].pnl)
-                .map(([s, d]) => `
-      <div class="breakdown-item">
-        <span>${s} <small style="color:var(--text-muted)">(${d.count}, ${(d.wins / d.count * 100).toFixed(0)}% WR)</small></span>
-        <span class="${d.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(d.pnl)}</span>
-      </div>
-    `).join('') || '<p class="muted">No data yet</p>';
         }
 
-        function viewTrade(id) {
-            const t = trades.find(x => x.id === id);
-            if (!t) return;
-            document.getElementById('modal-body').innerHTML = `
-    <h3 style="margin-bottom:16px">${t.instrument} – ${t.direction}</h3>
-    <div class="modal-body-row"><span class="label">Date</span><span>${formatDate(t.date)}</span></div>
-    <div class="modal-body-row"><span class="label">Market</span><span>${t.market}</span></div>
-    <div class="modal-body-row"><span class="label">Entry → Exit</span><span>${t.entry} → ${t.exit}</span></div>
-    <div class="modal-body-row"><span class="label">Stop Loss / Target</span><span>${t.sl ?? '—'} / ${t.target ?? '—'}</span></div>
-    <div class="modal-body-row"><span class="label">Qty / Risk</span><span>${t.qty ?? '—'} / ${t.risk ? '₹' + t.risk : '—'}</span></div>
-    <div class="modal-body-row"><span class="label">P&L</span><span class="${t.pnl >= 0 ? 'badge-win' : 'badge-loss'}">${formatMoney(t.pnl)}</span></div>
-    <div class="modal-body-row"><span class="label">R-Multiple</span><span>${t.rMultiple != null ? t.rMultiple + 'R' : '—'}</span></div>
-    <div class="modal-body-row"><span class="label">Setup</span><span>${t.setup || '—'}</span></div>
-    <div class="modal-body-row"><span class="label">Condition</span><span>${t.condition || '—'}</span></div>
-    <div class="modal-body-row"><span class="label">Emotions</span><span>${t.emotions || '—'}</span></div>
-    <div style="margin-top:16px">
-      <div class="label" style="margin-bottom:6px">Notes / Lessons</div>
-      <p style="font-size:14px;white-space:pre-wrap">${t.notes || '—'}</p>
-    </div>
-  `;
-            document.getElementById('trade-modal').classList.add('open');
-        }
-
-        function closeModal() {
-            document.getElementById('trade-modal').classList.remove('open');
-        }
-
-        function editTrade(id) {
-            const t = trades.find(x => x.id === id);
-            if (t) fillForm(t);
-        }
-
-        function deleteTrade(id) {
-            if (!confirm('Delete this trade permanently?')) return;
-            trades = trades.filter(t => t.id !== id);
-            saveTrades();
-        }
-
-        function exportData() {
-            const dataStr = JSON.stringify(trades, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `traders-diary-${new Date().toISOString().slice(0, 10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        document.getElementById('import-file').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function (ev) {
-                try {
-                    const imported = JSON.parse(ev.target.result);
-                    if (!Array.isArray(imported)) throw new Error('Invalid format');
-                    if (confirm(`Import ${imported.length} trades? This will add to existing data.`)) {
-                        imported.forEach(t => {
-                            if (!t.id) t.id = generateId();
-                            trades.unshift(t);
-                        });
-                        saveTrades();
-                        alert('Import successful!');
-                    }
-                } catch (err) {
-                    alert('Invalid JSON file');
-                }
-            };
-            reader.readAsText(file);
-            e.target.value = '';
+        // Enter key support for tasks
+        document.addEventListener('keypress', e => {
+            if (e.key === 'Enter' && e.target.id.startsWith('newtask-')) {
+                const dateStr = e.target.id.replace('newtask-', '');
+                addTask(dateStr);
+            }
         });
 
-        function clearAllData() {
-            if (!confirm('This will permanently delete ALL trades. Are you sure?')) return;
-            if (!confirm('Last chance – delete everything?')) return;
-            trades = [];
-            saveTrades();
-            alert('All data cleared.');
-        }
-
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => showView(btn.dataset.view));
-        });
-
-        document.getElementById('filter-market')?.addEventListener('change', renderAllTrades);
-        document.getElementById('filter-result')?.addEventListener('change', renderAllTrades);
-        document.getElementById('search-trades')?.addEventListener('input', renderAllTrades);
-
-        document.getElementById('trade-modal').addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
-        });
-
-        loadTrades();
-        updateUI();
-        showView('dashboard');
-
-        if (!document.getElementById('date').value) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('date').value = now.toISOString().slice(0, 16);
-        }
+        // Start
+        render();
+        // Auto-open today
+        setTimeout(() => {
+            const todayBox = document.querySelector('.day-box.today');
+            if (todayBox) {
+                todayBox.classList.add('open');
+            }
+        }, 100);
     </script>
 </body>
 
